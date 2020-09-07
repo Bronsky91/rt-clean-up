@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { useState } from "react";
 import styles from "../styles/Home.module.css";
 import axios from "axios";
 
@@ -8,7 +9,7 @@ export default function Home() {
     password: "",
   });
 
-  const [formData, updateFormData] = React.useState(initialFormData);
+  const [formData, updateFormData] = useState(initialFormData);
 
   const handleChange = (e) => {
     updateFormData({
@@ -23,7 +24,7 @@ export default function Home() {
     e.preventDefault();
     console.log(formData);
     axios
-      .post("/api/hello", {data: formData})
+      .post("/api/hello", { data: formData })
       .then((res) => console.log(res));
     console.log("testing form");
   };
@@ -44,17 +45,6 @@ export default function Home() {
           <input type="submit" value="Submit" />
         </form>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{" "}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
     </div>
   );
 }
