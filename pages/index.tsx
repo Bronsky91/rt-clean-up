@@ -13,7 +13,6 @@ export default function Home() {
 
   const [formData, updateFormData] = useState(initialFormData);
   const [contactList, setContactList] = useState([{ id: 0 }]);
-  const [formValues, updateFormValues] = useState(initialFormData)
 
   const handleChange = (event) => {
     const target = event.target;
@@ -32,7 +31,7 @@ export default function Home() {
   };
 
   const populateList = (): void => {
-    axios.get("/api/populate-contacts").then((res) => {
+    axios.get("/api/get-contacts").then((res) => {
       const contacts: RedtailContact[] = res.data;
       setContactList(
         contacts.map((contact) => {
@@ -43,12 +42,16 @@ export default function Home() {
   };
 
   const contactSelected = (e) => {
-    const contactId = e.target.value;
-    // TODO: Get Contact from DB by ID and
-    console.log(contactId);
-    // updateFormValues({
- 
-    // })
+    const id = e.target.value;
+    axios.post("/api/get-contact", { id }).then((res) => {
+      const contact: RedtailContact = res.data[0];
+      console.log(contact);
+      updateFormData({
+        name: contact.last_name,
+        writing: contact.first_name,
+        advisor: contact.type,
+      });
+    });
   };
 
   return (
@@ -71,16 +74,26 @@ export default function Home() {
             type="text"
             name="name"
             onChange={handleChange}
-            value={form}
+            value={formData.name}
           />
         </label>
         <label>
           Advisor:
-          <input type="text" name="advisor" onChange={handleChange} />
+          <input
+            type="text"
+            name="advisor"
+            onChange={handleChange}
+            value={formData.advisor}
+          />
         </label>
         <label>
           Writing:
-          <input type="text" name="writing" onChange={handleChange} />
+          <input
+            type="text"
+            name="writing"
+            onChange={handleChange}
+            value={formData.writing}
+          />
         </label>
         <input type="submit" value="Submit" onClick={handleSubmit} />
       </main>

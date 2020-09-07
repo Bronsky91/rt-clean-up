@@ -10,4 +10,5 @@ type Data = {
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   res.statusCode = 200;
   console.log(req.body);
+  res.end();
 };
