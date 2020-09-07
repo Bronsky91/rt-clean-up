@@ -8,8 +8,18 @@
     "start": "next start"
   },
   "dependencies": {
+    "exceljs": "^4.1.1",
+    "mysql": "^2.18.1",
+    "mysql-import": "^4.0.24",
     "next": "9.5.3",
     "react": "16.13.1",
     "react-dom": "16.13.1"
+  },
+  "devDependencies": {
+    "@types/node": "^14.6.4",
+    "@types/react": "^16.9.49",
+    "@typescript-eslint/eslint-plugin": "^4.0.1",
+    "@typescript-eslint/parser": "^4.0.1",
+    "eslint": "^7.8.1"
   }
 }
