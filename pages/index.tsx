@@ -25,9 +25,9 @@ export default function Home() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post("/api/contact-submit", { data: formData })
-      .then((res) => console.log(res));
+    axios.post("/api/contact-submit", { data: formData }).then((res) => {
+      console.log("Submitted Contact!");
+    });
   };
 
   const populateList = (): void => {
@@ -45,7 +45,6 @@ export default function Home() {
     const id = e.target.value;
     axios.post("/api/get-contact", { id }).then((res) => {
       const contact: RedtailContact = res.data[0];
-      console.log(contact);
       updateFormData({
         name: contact.last_name,
         writing: contact.first_name,
@@ -62,7 +61,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <button onClick={populateList}>Populate</button>
+        <button onClick={populateList}>Populate Contact List</button>
         <select onChange={contactSelected} name="contact-list" size={3}>
           {contactList.map((contact, index) => (
             <option key={index}>{contact.id}</option>
