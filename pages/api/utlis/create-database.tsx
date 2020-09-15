@@ -2,12 +2,12 @@ import { createConnection, Connection } from "mysql";
 import { promisify } from "util";
 import { dumpImporter } from "./dump-importer";
 
-export const createDatabase = async () => {
+export const createDatabase = async (database: string, filePath: string) => {
   // Creates a DB based on a Redtail CRM Backup
   const host = "127.0.0.1";
   const user = "root";
   const password = "friend91";
-  const database = 'rtbackup'
+  // const database = 'rtbackup'
   const makeCon = () => {
     const connection: Connection = createConnection({
       host,
@@ -42,7 +42,7 @@ export const createDatabase = async () => {
   };
   const con = makeCon();
   await con.query(`CREATE DATABASE ${database}`);
-  await dumpImporter(host, user, password, database);
+  await dumpImporter(host, user, password, database, filePath);
 
   const db = makeDb();
 
