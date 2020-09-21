@@ -4,12 +4,13 @@ import styles from "../../styles/Home.module.css";
 import axios from "axios";
 import { RedtailContact } from "../../interfaces/redtail.interface";
 import { useRouter } from "next/router";
+import { API_URL } from "../../constants";
 
 export default function ContactForm() {
   const router = useRouter();
   const { databaseName } = router.query;
 
-  // TODO: if databaseName > populate form 
+  // TODO: if databaseName > populate form -- May not work for larger DB loads
 
   const initialFormData = Object.freeze({
     name: "",
@@ -31,14 +32,16 @@ export default function ContactForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post("/api/contact-submit", { data: formData }).then((res) => {
-      console.log("Submitted Contact!");
-    });
+    axios
+      .post(API_URL + "/rt/contact-submit", { data: formData })
+      .then((res) => {
+        console.log("Submitted Contact!");
+      });
   };
 
   const populateList = (): void => {
-    axios.get("/api/get-contacts").then((res) => {
-      const contacts: RedtailContact[] = res.data;
+    axios.get(API_URL + "/rt/get-contacts").then((res) => {
+      const contacts: RedtailContact[] = res.data.contacts;
       setContactList(
         contacts.map((contact) => {
           return { id: contact.id };
@@ -49,7 +52,8 @@ export default function ContactForm() {
 
   const contactSelected = (e) => {
     const id = e.target.value;
-    axios.post("/api/get-contact", { id }).then((res) => {
+    axios.post(API_URL + "/rt/get-contact", { id }).then((res) => {
+      console.log(res.data);
       const contact: RedtailContact = res.data[0];
       updateFormData({
         name: contact.last_name,

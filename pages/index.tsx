@@ -3,6 +3,7 @@ import styles from "../styles/Home.module.css";
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { API_URL } from "../constants";
 
 export default function Home() {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function Home() {
   const onFormSubmit = (e) => {
     e.preventDefault(); // Stop form submit
     fileUpload(file).then((response) => {
+      // console.log(response.data);
       // After submit move to Contact Clean Up Form Page
       const databaseName = response.data.databaseName;
       router.push({
@@ -24,11 +26,11 @@ export default function Home() {
     updateFormData({ file: e.target.files[0] });
   };
 
-  const fileUpload = (file) => {
-    const url = "/api/backup-upload";
+  const fileUpload = (f) => {
+    const url = API_URL + "/rt/backup-upload";
+    // const url = "api/backup-upload";
     const formData = new FormData();
-    console.log(file.file);
-    formData.append("file", file.file);
+    formData.append("backup", f.file);
     const config = {
       headers: {
         "content-type": "multipart/form-data",
