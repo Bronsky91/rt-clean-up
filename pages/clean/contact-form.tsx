@@ -42,6 +42,7 @@ export default function ContactForm() {
   const populateList = (): void => {
     axios.get(API_URL + "/rt/get-contacts").then((res) => {
       const contacts: RedtailContact[] = res.data.contacts;
+      console.log(res.data);
       setContactList(
         contacts.map((contact) => {
           return { id: contact.id };
