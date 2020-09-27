@@ -10,7 +10,7 @@ export default function ContactForm() {
   const router = useRouter();
   const { databaseName } = router.query;
 
-  // TODO: if databaseName > populate form -- May not work for larger DB loads
+  // TODO: Indicate that the database is being imported and created on the server somehow
 
   const initialFormData = Object.freeze({
     name: "",
@@ -33,35 +33,44 @@ export default function ContactForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post(API_URL + "/rt/contact-submit", { data: formData })
+      .post(
+        API_URL + "/rt/contact-submit",
+        { data: formData },
+        { withCredentials: true }
+      )
       .then((res) => {
         console.log("Submitted Contact!");
       });
   };
 
   const populateList = (): void => {
-    axios.get(API_URL + "/rt/get-contacts").then((res) => {
-      const contacts: RedtailContact[] = res.data.contacts;
-      console.log(res.data);
-      setContactList(
-        contacts.map((contact) => {
-          return { id: contact.id };
-        })
-      );
-    });
+    //! Temp solution
+    axios
+      .get(API_URL + "/rt/get-contacts", { withCredentials: true })
+      .then((res) => {
+        const contacts: RedtailContact[] = res.data.contacts;
+        console.log(res.data);
+        setContactList(
+          contacts.map((contact) => {
+            return { id: contact.id };
+          })
+        );
+      });
   };
 
   const contactSelected = (e) => {
     const id = e.target.value;
-    axios.post(API_URL + "/rt/get-contact", { id }).then((res) => {
-      console.log(res.data);
-      const contact: RedtailContact = res.data[0];
-      updateFormData({
-        name: contact.last_name,
-        writing: contact.first_name,
-        advisor: contact.type,
+    axios
+      .post(API_URL + "/rt/get-contact", { id }, { withCredentials: true })
+      .then((res) => {
+        console.log(res.data);
+        const contact: RedtailContact = res.data[0];
+        updateFormData({
+          name: contact.last_name,
+          writing: contact.first_name,
+          advisor: contact.type,
+        });
       });
-    });
   };
 
   return (

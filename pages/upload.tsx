@@ -35,6 +35,7 @@ export default function Upload() {
       headers: {
         "content-type": "multipart/form-data",
       },
+      withCredentials: true,
     };
     return axios.post(url, formData, config);
   };
