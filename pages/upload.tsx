@@ -43,7 +43,7 @@ export default function Upload() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>Redtail Clean Up Tool</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

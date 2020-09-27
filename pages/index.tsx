@@ -1,12 +1,8 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import axios from "axios";
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { API_URL, GOOGLE_AUTH_URL } from "../constants";
+import { GOOGLE_AUTH_URL } from "../constants";
 
-export default function Upload() {
-  const router = useRouter();
+export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
