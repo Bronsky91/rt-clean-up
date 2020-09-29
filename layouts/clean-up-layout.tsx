@@ -7,7 +7,7 @@ export default function CleanUpLayout({ children }) {
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.logo}>
-          <img src="/lps-logo.png" alt="LinkPOINT Solutions Logo" />
+          <img src="/linkpoint-logo.png" alt="LinkPoint Solutions Logo" />
         </div>
         <div className={styles.h1}>RedTail Clean Up Tool</div>
       </header>

@@ -7,7 +7,6 @@
   height: 82rem;
   margin: auto;
   padding: 1rem;
-  background-color: beige;
 }
 
 .header {
@@ -21,17 +20,18 @@
 
 .logo {
   display: flex;
-  align-content: center;
   justify-content: center;
   width: 30rem;
+  img {
+    width: 29rem;
+    padding-top: 1rem;
+  }
 }
 
 .h1 {
   display: flex;
-  align-content: center;
   justify-content: center;
   width: 120rem;
-  display: flex;
   font-size: 6.2rem;
   font-weight: 900;
   color: white;
@@ -43,7 +43,7 @@
   align-items: stretch;
   width: 150rem;
   height: 70rem;
-  background-image: url("/bg.jpg");
+  background-image: url("/linkpoint-bg.png");
 }
 
 .nav {
@@ -68,5 +68,4 @@
 .main {
   width: 120rem;
   height: 70rem;
-  background-color: rgba(255, 0, 0, 0.2);
 }
