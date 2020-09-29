@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useState } from "react";
-import styles from "../../styles/Home.module.css";
+import styles from "../../styles/ContactForm.module.scss";
 import axios from "axios";
 import { RedtailContact } from "../../interfaces/redtail.interface";
 import { useRouter } from "next/router";
@@ -79,43 +79,52 @@ export default function ContactForm() {
         <title>Redtail Clean Up Tool</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main className={styles.main}>
-        <button onClick={populateList}>Populate Contact List</button>
-        <select onChange={contactSelected} name="contact-list" size={3}>
-          {contactList.map((contact, index) => (
-            <option key={index}>{contact.id}</option>
-          ))}
-        </select>
-        <label>
-          Name:
-          <input
-            type="text"
-            name="name"
-            onChange={handleChange}
-            value={formData.name}
-          />
-        </label>
-        <label>
-          Advisor:
-          <input
-            type="text"
-            name="advisor"
-            onChange={handleChange}
-            value={formData.advisor}
-          />
-        </label>
-        <label>
-          Writing:
-          <input
-            type="text"
-            name="writing"
-            onChange={handleChange}
-            value={formData.writing}
-          />
-        </label>
-        <input type="submit" value="Update" onClick={handleSubmit} />
-      </main>
+      <div className={styles.header}>
+        <img
+          src="/lps-logo.png"
+          alt="LinkPOINT Solutions Logo"
+          className="logo"
+        />
+      </div>
+      <div className={styles.wrapper}>
+        <div className={styles.nav}>nav</div>
+        <main className={styles.main}>
+          <button onClick={populateList}>Populate Contact List</button>
+          <select onChange={contactSelected} name="contact-list" size={3}>
+            {contactList.map((contact, index) => (
+              <option key={index}>{contact.id}</option>
+            ))}
+          </select>
+          <label>
+            Name:
+            <input
+              type="text"
+              name="name"
+              onChange={handleChange}
+              value={formData.name}
+            />
+          </label>
+          <label>
+            Advisor:
+            <input
+              type="text"
+              name="advisor"
+              onChange={handleChange}
+              value={formData.advisor}
+            />
+          </label>
+          <label>
+            Writing:
+            <input
+              type="text"
+              name="writing"
+              onChange={handleChange}
+              value={formData.writing}
+            />
+          </label>
+          <input type="submit" value="Update" onClick={handleSubmit} />
+        </main>
+      </div>
     </div>
   );
 }

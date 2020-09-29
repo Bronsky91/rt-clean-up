@@ -1,4 +1,11 @@
-html,
+html {
+  /**
+  * 62.5% of typical browser default 16px = 10px
+  * This makes rem math easier (1.6rem for 16px, etc.)
+  */
+  font-size: 62.5%;
+}
+
 body {
   padding: 0;
   margin: 0;
