@@ -1,0 +1,72 @@
+.container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  width: 152rem;
+  height: 82rem;
+  margin: auto;
+  padding: 1rem;
+  background-color: beige;
+}
+
+.header {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  width: 150rem;
+  height: 10rem;
+  background-color: #bfcad3;
+}
+
+.logo {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  width: 30rem;
+}
+
+.h1 {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  width: 120rem;
+  display: flex;
+  font-size: 6.2rem;
+  font-weight: 900;
+  color: white;
+}
+
+.wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: stretch;
+  width: 150rem;
+  height: 70rem;
+  background-image: url("/bg.jpg");
+}
+
+.nav {
+  display: flex;
+  flex-flow: column nowrap;
+  width: 30rem;
+  height: 70rem;
+  background-color: rgba(31, 113, 168, 0.56);
+  padding-top: 7.5rem;
+  a {
+    align-self: center;
+    font-size: 3rem;
+    font-weight: 600;
+    color: white;
+    line-height: 7rem;
+    .active {
+      text-shadow: 0 3px 6px;
+    }
+  }
+}
+
+.main {
+  width: 120rem;
+  height: 70rem;
+  background-color: rgba(255, 0, 0, 0.2);
+}
