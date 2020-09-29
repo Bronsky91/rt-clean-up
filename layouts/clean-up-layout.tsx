@@ -1,8 +1,12 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import styles from "../styles/CleanUpLayout.module.scss";
 
 export default function CleanUpLayout({ children }) {
+  const router = useRouter();
+  const { databaseName } = router.query;
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -16,7 +20,7 @@ export default function CleanUpLayout({ children }) {
           <Link
             href={{
               pathname: "/clean/dashboard",
-              query: "", // TODO: figure out how to pass databaseName to Layout
+              query: { databaseName },
             }}
           >
             <a>DASHBOARD</a>
@@ -24,7 +28,7 @@ export default function CleanUpLayout({ children }) {
           <Link
             href={{
               pathname: "/clean/contacts",
-              query: "", // TODO: figure out how to pass databaseName to Layout
+              query: { databaseName },
             }}
           >
             <a>CONTACTS</a>
@@ -32,7 +36,7 @@ export default function CleanUpLayout({ children }) {
           <Link
             href={{
               pathname: "/clean/data-cleanup",
-              query: "", // TODO: figure out how to pass databaseName to Layout
+              query: { databaseName },
             }}
           >
             <a>DATA CLEANUP</a>
@@ -40,7 +44,7 @@ export default function CleanUpLayout({ children }) {
           <Link
             href={{
               pathname: "/clean/import-data",
-              query: "", // TODO: figure out how to pass databaseName to Layout
+              query: { databaseName },
             }}
           >
             <a>IMPORT DATA</a>
