@@ -1,5 +1,5 @@
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
+import styles from "../styles/Home.module.scss";
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/router";
@@ -16,8 +16,7 @@ export default function Upload() {
       // After submit move to Contact Clean Up Form Page
       const databaseName = response.data.databaseName;
       router.push({
-        pathname: "/clean/contact-form",
-        query: { databaseName },
+        pathname: "/clean/contacts",
       });
     });
   };

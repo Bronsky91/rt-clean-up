@@ -1,6 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
-import "../styles/globals.css";
+import "../styles/globals.scss";
 
 export default function MyApp({ Component, pageProps }) {
   const router = useRouter();

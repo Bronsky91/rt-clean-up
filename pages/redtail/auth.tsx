@@ -3,7 +3,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { API_URL } from "../../constants";
-import styles from "../../styles/Home.module.css";
+import styles from "../../styles/Home.module.scss";
 
 export default function Home() {
   const router = useRouter();
@@ -35,7 +35,7 @@ export default function Home() {
       .then((res) => {
         console.log("Redtail Auth Submitted");
         router.push({
-          pathname: "/clean/contact-form",
+          pathname: "/clean/contact",
         });
       })
       .catch((reason) => alert("Auth failed"));

@@ -1,14 +1,18 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import styles from "../styles/CleanUpLayout.module.scss";
+import styles from "../styles/PageLayout.module.scss";
 
-export default function CleanUpLayout({ children }) {
+export default function PageLayout({ children }) {
   const router = useRouter();
   const { databaseName } = router.query;
 
   return (
     <div className={styles.container}>
+      <Head>
+        <title>Redtail Clean Up Tool</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <header className={styles.header}>
         <div className={styles.logo}>
           <img src="/linkpoint-logo.png" alt="LinkPoint Solutions Logo" />
@@ -20,7 +24,6 @@ export default function CleanUpLayout({ children }) {
           <Link
             href={{
               pathname: "/clean/dashboard",
-              query: { databaseName },
             }}
           >
             <a>DASHBOARD</a>
@@ -28,7 +31,6 @@ export default function CleanUpLayout({ children }) {
           <Link
             href={{
               pathname: "/clean/contacts",
-              query: { databaseName },
             }}
           >
             <a>CONTACTS</a>
@@ -36,7 +38,6 @@ export default function CleanUpLayout({ children }) {
           <Link
             href={{
               pathname: "/clean/data-cleanup",
-              query: { databaseName },
             }}
           >
             <a>DATA CLEANUP</a>
@@ -44,7 +45,6 @@ export default function CleanUpLayout({ children }) {
           <Link
             href={{
               pathname: "/clean/import-data",
-              query: { databaseName },
             }}
           >
             <a>IMPORT DATA</a>

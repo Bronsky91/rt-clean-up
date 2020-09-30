@@ -1,14 +1,13 @@
 import { useState } from "react";
-import CleanupLayout from "../../layouts/clean-up-layout";
-import styles from "../../styles/ContactForm.module.scss";
+import PageLayout from "../../layouts/page-layout";
+import styles from "../../styles/ContactsPage.module.scss";
 import axios from "axios";
 import { RedtailContact } from "../../interfaces/redtail.interface";
 import { useRouter } from "next/router";
 import { API_URL } from "../../constants";
 
-export default function ContactForm() {
+export default function ContactsPage() {
   const router = useRouter();
-  const { databaseName } = router.query;
 
   // TODO: Indicate that the database is being imported and created on the server somehow
 
@@ -63,7 +62,6 @@ export default function ContactForm() {
     axios
       .post(API_URL + "/rt/get-contact", { id }, { withCredentials: true })
       .then((res) => {
-        console.log(res.data);
         const contact: RedtailContact = res.data[0];
         updateFormData({
           name: contact.last_name,
@@ -113,4 +111,4 @@ export default function ContactForm() {
   );
 }
 
-ContactForm.Layout = CleanupLayout;
+ContactsPage.Layout = PageLayout;
