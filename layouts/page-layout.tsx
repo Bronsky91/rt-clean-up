@@ -20,10 +20,10 @@ export default function PageLayout({ children }) {
       </header>
       <div className={styles.wrapper}>
         <nav className={styles.nav}>
-          <Link href="/clean/dashboard">
+          <Link href="/dashboard">
             <a
               className={
-                router.pathname == "/clean/dashboard"
+                router.pathname == "/dashboard"
                   ? styles.active
                   : styles.inactive
               }
@@ -31,21 +31,19 @@ export default function PageLayout({ children }) {
               DASHBOARD
             </a>
           </Link>
-          <Link href="/clean/contacts">
+          <Link href="/contacts">
             <a
               className={
-                router.pathname == "/clean/contacts"
-                  ? styles.active
-                  : styles.inactive
+                router.pathname == "/contacts" ? styles.active : styles.inactive
               }
             >
               CONTACTS
             </a>
           </Link>
-          <Link href="/clean/data-cleanup">
+          <Link href="/data-cleanup">
             <a
               className={
-                router.pathname == "/clean/data-cleanup"
+                router.pathname == "/data-cleanup"
                   ? styles.active
                   : styles.inactive
               }
@@ -53,10 +51,10 @@ export default function PageLayout({ children }) {
               DATA CLEANUP
             </a>
           </Link>
-          <Link href="/clean/import-data">
+          <Link href="/import-data">
             <a
               className={
-                router.pathname == "/clean/import-data"
+                router.pathname == "/import-data"
                   ? styles.active
                   : styles.inactive
               }

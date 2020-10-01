@@ -1,11 +1,11 @@
-import Head from "next/head";
-import styles from "../styles/Home.module.scss";
+import PageLayout from "../layouts/page-layout";
+import styles from "../styles/ImportDataPage.module.scss";
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { API_URL } from "../constants";
 
-export default function Upload() {
+export default function ImportDataPage() {
   const router = useRouter();
   const [file, updateFormData] = useState({ file: null });
 
@@ -16,7 +16,7 @@ export default function Upload() {
       // After submit move to Contact Clean Up Form Page
       const databaseName = response.data.databaseName;
       router.push({
-        pathname: "/clean/dashboard",
+        pathname: "/dashboard",
       });
     });
   };
@@ -40,19 +40,18 @@ export default function Upload() {
   };
 
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Redtail Clean Up Tool</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <form onSubmit={onFormSubmit}>
-          <h1>RT Backup Upload</h1>
-          <input onChange={onChange} type="file" />
-          <button type="submit">Upload</button>
-        </form>
-      </main>
+    <div className={styles.importPageContainer}>
+      <div className={styles.importTitle}>Import Redtail Backup Data</div>
+      <div className={styles.uploadContainer}>
+        <main className={styles.uploadInput}>
+          <form onSubmit={onFormSubmit}>
+            <input onChange={onChange} type="file" />
+            <button type="submit">Upload</button>
+          </form>
+        </main>
+      </div>
     </div>
   );
 }
+
+ImportDataPage.Layout = PageLayout;

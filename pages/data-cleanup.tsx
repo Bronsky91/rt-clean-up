@@ -1,10 +1,8 @@
-import PageLayout from "../../layouts/page-layout";
-import styles from "../../styles/ContactsPage.module.scss";
+import PageLayout from "../layouts/page-layout";
 import axios from "axios";
 import { useState } from "react";
-import { RedtailContact } from "../../interfaces/redtail.interface";
-import { useRouter } from "next/router";
-import { API_URL } from "../../constants";
+import { RedtailContact } from "../interfaces/redtail.interface";
+import { API_URL } from "../constants";
 
 export default function DataCleanupPage() {
   // TODO: Indicate that the database is being imported and created on the server somehow

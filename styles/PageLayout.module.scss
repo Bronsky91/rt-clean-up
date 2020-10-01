@@ -3,17 +3,17 @@
   flex-flow: row wrap;
   justify-content: flex-start;
   align-content: flex-start;
-  width: 152rem;
-  height: 82rem;
+  // width: 152rem;
+  // height: 82rem;
   margin: auto;
-  padding: 1rem;
+  // padding: 1rem;
 }
 
 .header {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  width: 150rem;
+  width: 100%;
   height: 10rem;
   background-color: #bfcad3;
 }
@@ -24,8 +24,7 @@
   width: 30rem;
   img {
     width: 29rem;
-    padding-top: 1rem;
-    opacity: 70%;
+    padding: 1rem;
   }
 }
 
@@ -42,16 +41,17 @@
   display: flex;
   flex-flow: row nowrap;
   align-items: stretch;
-  width: 150rem;
-  height: 70rem;
+  width: 100%;
+  height: 100vh;
   background-image: url("/linkpoint-bg.png");
+  background-size: cover;
 }
 
 .nav {
   display: flex;
   flex-flow: column nowrap;
   width: 30rem;
-  height: 70rem;
+  height: 100vh;
   background-color: rgba(31, 113, 168, 0.56);
   padding-top: 7.5rem;
   a {
@@ -72,7 +72,7 @@
 }
 
 .main {
-  width: 120rem;
-  height: 70rem;
+  width: 100%;
+  height: 100vh;
   background-color: rgba(255, 255, 255, 0.65);
 }

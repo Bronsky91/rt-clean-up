@@ -1,4 +1,4 @@
-import PageLayout from "../../layouts/page-layout";
+import PageLayout from "../layouts/page-layout";
 
 export default function DashboardPage() {
   return <></>;

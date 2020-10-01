@@ -35,7 +35,7 @@ export default function Home() {
       .then((res) => {
         console.log("Redtail Auth Submitted");
         router.push({
-          pathname: "/clean/contact",
+          pathname: "/data-cleanup",
         });
       })
       .catch((reason) => alert("Auth failed"));
