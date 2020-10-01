@@ -58,12 +58,17 @@
     align-self: center;
     font-size: 3rem;
     font-weight: 600;
-    color: white;
     line-height: 7rem;
-    .active {
-      text-shadow: 0 3px 6px;
-    }
+    color: white;
   }
+}
+
+.inactive {
+  text-shadow: none;
+}
+
+.active {
+  text-shadow: 0 3px 6px;
 }
 
 .main {

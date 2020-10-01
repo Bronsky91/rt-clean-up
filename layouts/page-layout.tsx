@@ -5,7 +5,6 @@ import styles from "../styles/PageLayout.module.scss";
 
 export default function PageLayout({ children }) {
   const router = useRouter();
-  const { databaseName } = router.query;
 
   return (
     <div className={styles.container}>
@@ -21,33 +20,49 @@ export default function PageLayout({ children }) {
       </header>
       <div className={styles.wrapper}>
         <nav className={styles.nav}>
-          <Link
-            href={{
-              pathname: "/clean/dashboard",
-            }}
-          >
-            <a>DASHBOARD</a>
+          <Link href="/clean/dashboard">
+            <a
+              className={
+                router.pathname == "/clean/dashboard"
+                  ? styles.active
+                  : styles.inactive
+              }
+            >
+              DASHBOARD
+            </a>
           </Link>
-          <Link
-            href={{
-              pathname: "/clean/contacts",
-            }}
-          >
-            <a>CONTACTS</a>
+          <Link href="/clean/contacts">
+            <a
+              className={
+                router.pathname == "/clean/contacts"
+                  ? styles.active
+                  : styles.inactive
+              }
+            >
+              CONTACTS
+            </a>
           </Link>
-          <Link
-            href={{
-              pathname: "/clean/data-cleanup",
-            }}
-          >
-            <a>DATA CLEANUP</a>
+          <Link href="/clean/data-cleanup">
+            <a
+              className={
+                router.pathname == "/clean/data-cleanup"
+                  ? styles.active
+                  : styles.inactive
+              }
+            >
+              DATA CLEANUP
+            </a>
           </Link>
-          <Link
-            href={{
-              pathname: "/clean/import-data",
-            }}
-          >
-            <a>IMPORT DATA</a>
+          <Link href="/clean/import-data">
+            <a
+              className={
+                router.pathname == "/clean/import-data"
+                  ? styles.active
+                  : styles.inactive
+              }
+            >
+              IMPORT DATA
+            </a>
           </Link>
         </nav>
         <main className={styles.main}>{children}</main>
