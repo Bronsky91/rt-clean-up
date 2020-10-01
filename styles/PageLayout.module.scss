@@ -1,3 +1,5 @@
+$headerHeight: 10rem;
+
 .container {
   display: flex;
   flex-flow: row wrap;
@@ -14,7 +16,7 @@
   flex-flow: row nowrap;
   align-items: center;
   width: 100%;
-  height: 10rem;
+  height: $headerHeight;
   background-color: #bfcad3;
 }
 
@@ -42,7 +44,7 @@
   flex-flow: row nowrap;
   align-items: stretch;
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - $headerHeight);
   background-image: url("/linkpoint-bg.png");
   background-size: cover;
 }
@@ -51,7 +53,7 @@
   display: flex;
   flex-flow: column nowrap;
   width: 30rem;
-  height: 100vh;
+  height: calc(100vh - $headerHeight);
   background-color: rgba(31, 113, 168, 0.56);
   padding-top: 7.5rem;
   a {
@@ -73,6 +75,6 @@
 
 .main {
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 10rem); // Using $HeaderHeight here doesn't work??
   background-color: rgba(255, 255, 255, 0.65);
 }

@@ -31,7 +31,7 @@ export default function PageLayout({ children }) {
               DASHBOARD
             </a>
           </Link>
-          <Link href="/contacts">
+          {/* <Link href="/contacts">
             <a
               className={
                 router.pathname == "/contacts" ? styles.active : styles.inactive
@@ -39,7 +39,7 @@ export default function PageLayout({ children }) {
             >
               CONTACTS
             </a>
-          </Link>
+          </Link> */}
           <Link href="/data-cleanup">
             <a
               className={

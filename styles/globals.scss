@@ -21,3 +21,9 @@ a {
 * {
   box-sizing: border-box;
 }
+
+*,
+*:focus,
+*:hover {
+  outline: none;
+}

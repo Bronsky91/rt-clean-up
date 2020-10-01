@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="314" height="306" viewBox="0 0 314 306">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#linear-gradient);
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#5f0080"/>
+      <stop offset="1" stop-color="#a87bdb"/>
+    </linearGradient>
+  </defs>
+  <rect id="AdobeStock_213805044" class="cls-1" width="314" height="306" rx="32"/>
+</svg>
