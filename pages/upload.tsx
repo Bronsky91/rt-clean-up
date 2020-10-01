@@ -16,7 +16,7 @@ export default function Upload() {
       // After submit move to Contact Clean Up Form Page
       const databaseName = response.data.databaseName;
       router.push({
-        pathname: "/clean/contacts",
+        pathname: "/clean/dashboard",
       });
     });
   };
