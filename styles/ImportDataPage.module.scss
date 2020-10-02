@@ -29,8 +29,18 @@
   display: flex;
   justify-content: center;
 }
+.uploadContainer:hover {
+  cursor: pointer;
+}
 
 .uploadInput {
   height: 10%;
   margin: auto;
+  flex-direction: column;
+  width: 111px; // Width of drop image
+  height: 86px; // Height of drop image
+}
+
+.fileUpload {
+  display: none;
 }
