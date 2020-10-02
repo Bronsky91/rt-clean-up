@@ -37,7 +37,7 @@ export default function ImportDataPage() {
     }
 
     console.log('File "Uploaded"!');
-
+    setShowError(initialFileMessageState);
     // fileUpload(file).then((response) => {
     //   console.log(response.data);
     //   // TODO: After submit show button to clean up page and disable upload function
@@ -92,7 +92,14 @@ export default function ImportDataPage() {
         onDrop={dropHandler}
         onDragOver={dragOverHandler}
       >
-        {fileError.show ? <div>{fileError.text}</div> : null}
+        {fileError.show ? (
+          <div className={styles.errorContainer}>
+            <div className={styles.errorText}>{fileError.text}</div>
+          </div>
+        ) : (
+          <div className={styles.topContainer}></div>
+        )}
+
         <div className={styles.uploadInput}>
           <img src="drop-file.png" className={styles.dropImage}></img>
           <input
@@ -102,7 +109,10 @@ export default function ImportDataPage() {
             onChange={onChange}
           />
         </div>
-        <div>Click and Choose a File or Drag One Here</div>
+        <div className={styles.importMessage}>
+          <div>Click and Choose a File or Drag One Here</div>
+          <div className={styles.importSubText}>.sql files only</div>
+        </div>
       </div>
     </div>
   );
