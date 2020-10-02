@@ -9,14 +9,44 @@ import { API_URL } from "../constants";
 export default function ImportDataPage() {
   const router = useRouter();
 
+  const initialFileMessageState = { show: false, text: "" };
+  const [fileError, setShowError] = useState(initialFileMessageState);
+  const [fileSuccess, setShowSuccess] = useState(initialFileMessageState);
+
   const hiddenFileInput = React.useRef(null);
 
   const handleClick = (e) => {
     hiddenFileInput.current.click();
   };
 
-  const isFileSQL = (file: File) => {
-    // TODO: check if file extension is .sql
+  const checkFileAndUpload = (fileArray: File[]) => {
+    const file = fileArray[0];
+
+    if (fileArray.length > 1) {
+      return setShowError({
+        show: true,
+        text: "Only Upload one file, Please try again.",
+      });
+    }
+
+    if (fileIsNotSQL(fileArray[0].name)) {
+      return setShowError({
+        show: true,
+        text: "Incorrect file type, SQL files only. Please try again.",
+      });
+    }
+
+    console.log('File "Uploaded"!');
+
+    // fileUpload(file).then((response) => {
+    //   console.log(response.data);
+    //   // TODO: After submit show button to clean up page and disable upload function
+    // });
+  };
+
+  const fileIsNotSQL = (fileName: string): boolean => {
+    const sqlRegex = /\.sql$/i;
+    return sqlRegex.exec(fileName) === null;
   };
 
   const fileUpload = (file: File) => {
@@ -34,34 +64,23 @@ export default function ImportDataPage() {
     return axios.post(url, formData, config);
   };
 
-  const dropHandler = (e) => {
-    console.log("File(s) dropped");
-
-    // Prevent default behavior (Prevent file from being opened)
-    e.preventDefault();
-
-    console.log(e.dataTransfer.files);
-    // TODO: Grab file, isFileSQL() and upload
-  };
-
   const dragOverHandler = (e) => {
     console.log("File(s) in drop zone");
-
+    // TODO: CSS Changes to the Drop Zone?
     // Prevent default behavior (Prevent file from being opened)
     e.preventDefault();
+  };
+
+  const dropHandler = (e) => {
+    console.log("File(s) dropped");
+    // Prevent default behavior (Prevent file from being opened)
+    e.preventDefault();
+
+    checkFileAndUpload(e.dataTransfer.files);
   };
 
   const onChange = (e) => {
-    const file = e.target.files[0];
-    // TODO: isFileSQL() and upload
-    fileUpload(file).then((response) => {
-      // console.log(response.data);
-      // After submit move to Contact Clean Up Form Page
-      const databaseName = response.data.databaseName;
-      router.push({
-        pathname: "/dashboard",
-      });
-    });
+    checkFileAndUpload(e.target.files);
   };
 
   return (
@@ -73,6 +92,7 @@ export default function ImportDataPage() {
         onDrop={dropHandler}
         onDragOver={dragOverHandler}
       >
+        {fileError.show ? <div>{fileError.text}</div> : null}
         <div className={styles.uploadInput}>
           <img src="drop-file.png" className={styles.dropImage}></img>
           <input
@@ -82,6 +102,7 @@ export default function ImportDataPage() {
             onChange={onChange}
           />
         </div>
+        <div>Click and Choose a File or Drag One Here</div>
       </div>
     </div>
   );

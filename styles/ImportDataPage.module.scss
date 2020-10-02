@@ -27,6 +27,7 @@
   background-color: rgba(255, 255, 255, 0.6);
   margin-top: 12rem;
   display: flex;
+  flex-direction: column;
   justify-content: center;
 }
 .uploadContainer:hover {
