@@ -8,13 +8,16 @@ import { API_URL } from "../constants";
 import { useRouter } from "next/router";
 import Home from ".";
 
+
+
 export default function ImportDataPage(props) {
+  console.log(props);
   const router = useRouter();
 
   const isAuth = props.auth;
   useEffect(() => {
     if (isAuth) return; // do nothing if the user is logged in
-    router.replace("/data-cleanup", "/", { shallow: true });
+    router.replace("/import-data", "/", { shallow: true });
   }, [isAuth]);
 
   if (!isAuth) return <Home />;
