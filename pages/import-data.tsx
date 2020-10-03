@@ -73,6 +73,11 @@ export default function ImportDataPage() {
       if (result.status === 200) {
         setUploadComplete(true);
         setProcessing(false);
+      } else if (result.status === 500) {
+        setShowError({
+          show: true,
+          text: "There's already a Database on this Account",
+        });
       } else {
         setTimeout(checkBackupProcessed, 1000);
       }
