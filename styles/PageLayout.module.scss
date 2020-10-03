@@ -52,6 +52,7 @@ $headerHeight: 10rem;
 .nav {
   display: flex;
   flex-flow: column nowrap;
+  min-width: 30rem;
   width: 30rem;
   height: calc(100vh - $headerHeight);
   background-color: rgba(31, 113, 168, 0.56);
