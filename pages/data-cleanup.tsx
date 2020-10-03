@@ -1,11 +1,23 @@
 import PageLayout from "../layouts/page-layout";
 import styles from "../styles/DataCleanupPage.module.scss";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RedtailContact } from "../interfaces/redtail.interface";
 import { API_URL } from "../constants";
+import { useRouter } from "next/router";
+import Home from ".";
 
-export default function DataCleanupPage() {
+export default function DataCleanupPage(props) {
+  const router = useRouter();
+
+  const isAuth = props.auth;
+  useEffect(() => {
+    if (isAuth) return; // do nothing if the user is logged in
+    router.replace("/data-cleanup", "/", { shallow: true });
+  }, [isAuth]);
+
+  if (!isAuth) return <Home />;
+
   // TODO: Indicate that the database is being imported and created on the server somehow
 
   const initialFormData = Object.freeze({

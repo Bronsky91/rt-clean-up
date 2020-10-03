@@ -24,7 +24,11 @@ export default function Home() {
         <title>Redtail Clean Up Tool</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Modal isOpen={true} style={customStyles} contentLabel="Example Modal">
+      <Modal
+        isOpen={true}
+        style={customStyles}
+        contentLabel="Clean Up Tool Sign in"
+      >
         <h2 className={styles.loginTitle}>Redtail Clean Up Tool</h2>
         <div className={styles.loginButton}>
           <a href={GOOGLE_AUTH_URL}>

@@ -1,12 +1,24 @@
 import PageLayout from "../layouts/page-layout";
 import styles from "../styles/ImportDataPage.module.scss";
 import axios from "axios";
-import React from "react";
+import React, { useEffect } from "react";
 import Loader from "react-loader-spinner";
 import { useState } from "react";
 import { API_URL } from "../constants";
+import { useRouter } from "next/router";
+import Home from ".";
 
-export default function ImportDataPage() {
+export default function ImportDataPage(props) {
+  const router = useRouter();
+
+  const isAuth = props.auth;
+  useEffect(() => {
+    if (isAuth) return; // do nothing if the user is logged in
+    router.replace("/data-cleanup", "/", { shallow: true });
+  }, [isAuth]);
+
+  if (!isAuth) return <Home />;
+
   const initialFileMessageState = { show: false, text: "" };
   const [fileError, setShowError] = useState(initialFileMessageState);
   const [processing, setProcessing] = useState(false);
