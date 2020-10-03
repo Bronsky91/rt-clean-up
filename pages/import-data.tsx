@@ -2,16 +2,15 @@ import PageLayout from "../layouts/page-layout";
 import styles from "../styles/ImportDataPage.module.scss";
 import axios from "axios";
 import React from "react";
+import Loader from "react-loader-spinner";
 import { useState } from "react";
-import { useRouter } from "next/router";
 import { API_URL } from "../constants";
 
 export default function ImportDataPage() {
-  const router = useRouter();
-
   const initialFileMessageState = { show: false, text: "" };
   const [fileError, setShowError] = useState(initialFileMessageState);
-  const [fileSuccess, setShowSuccess] = useState(initialFileMessageState);
+  const [processing, setProcessing] = useState(false);
+  const [uploadComplete, setUploadComplete] = useState(false);
 
   const hiddenFileInput = React.useRef(null);
 
@@ -36,12 +35,8 @@ export default function ImportDataPage() {
       });
     }
 
-    console.log('File "Uploaded"!');
     setShowError(initialFileMessageState);
-    // fileUpload(file).then((response) => {
-    //   console.log(response.data);
-    //   // TODO: After submit show button to clean up page and disable upload function
-    // });
+    fileUpload(file);
   };
 
   const fileIsNotSQL = (fileName: string): boolean => {
@@ -51,7 +46,7 @@ export default function ImportDataPage() {
 
   const fileUpload = (file: File) => {
     const url = API_URL + "/rt/backup-upload";
-    // const url = "api/backup-upload";
+
     const formData = new FormData();
     formData.append("backup", file);
     const config = {
@@ -60,13 +55,34 @@ export default function ImportDataPage() {
       },
       withCredentials: true,
     };
-    console.log("uploading...");
-    return axios.post(url, formData, config);
+
+    axios.post(url, formData, config).then((res) => {
+      if (res.status === 200) {
+        setProcessing(true);
+        pollProcess();
+      }
+    });
+  };
+
+  const pollProcess = async () => {
+    // Our check function
+    const checkBackupProcessed = async () => {
+      const result = await axios.get(API_URL + `/rt/check-backup-upload`, {
+        withCredentials: true,
+      });
+      if (result.status === 200) {
+        setUploadComplete(true);
+        setProcessing(false);
+      } else {
+        setTimeout(checkBackupProcessed, 1000);
+      }
+    };
+
+    // Do first check as soon as the JavaScript engine is available to do it
+    setTimeout(checkBackupProcessed, 0);
   };
 
   const dragOverHandler = (e) => {
-    console.log("File(s) in drop zone");
-    // TODO: CSS Changes to the Drop Zone?
     // Prevent default behavior (Prevent file from being opened)
     e.preventDefault();
   };
@@ -101,18 +117,46 @@ export default function ImportDataPage() {
         )}
 
         <div className={styles.uploadInput}>
-          <img src="drop-file.png" className={styles.dropImage}></img>
+          {processing ? (
+            <Loader
+              type="Circles"
+              color="#1F71A8"
+              height={100}
+              width={100}
+              timeout={0}
+            />
+          ) : uploadComplete ? (
+            <img src="green-check.png" className={styles.dropImage}></img>
+          ) : (
+            <div>
+              <img src="drop-file.png" className={styles.dropImage}></img>
+            </div>
+          )}
           <input
             ref={hiddenFileInput}
             type="file"
             className={styles.fileUpload}
             onChange={onChange}
+            disabled={processing || uploadComplete}
           />
         </div>
-        <div className={styles.importMessage}>
-          <div>Click and Choose a File or Drag One Here</div>
-          <div className={styles.importSubText}>.sql files only</div>
-        </div>
+        {processing ? (
+          <div className={styles.importMessage}>
+            <div>Processing your Backup File</div>
+            <div className={styles.importSubText}>....</div>
+          </div>
+        ) : (
+          <div className={styles.importMessage}>
+            <div>
+              {uploadComplete
+                ? `Database Imported`
+                : `Click and Choose a File or Drag One Here`}
+            </div>
+            <div className={styles.importSubText}>
+              {uploadComplete ? `clean up time!` : `.sql files only`}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

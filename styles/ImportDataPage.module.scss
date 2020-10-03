@@ -36,9 +36,13 @@
 
 .uploadInput {
   height: 10%;
-  margin-left: 45%;
-  margin-top: 10%;
+  margin: 0 auto;
   flex-direction: column;
+  width: 111px; // Width of drop image
+  height: 86px; // Height of drop image
+}
+
+.dropImage {
   width: 111px; // Width of drop image
   height: 86px; // Height of drop image
 }
@@ -67,6 +71,7 @@
 }
 
 .importSubText {
+  padding-top: 1rem;
   color: #b1b1b5;
   opacity: 0.77;
   font-family: Poppins;
@@ -79,4 +84,8 @@
   text-align: center;
   color: #b8090f;
   padding-top: 10px;
+}
+
+.dragOverStyle {
+  background-color: rbga(88 149 194, 0.6);
 }
