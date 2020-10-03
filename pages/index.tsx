@@ -27,7 +27,8 @@ export default function Home() {
       <Modal
         isOpen={true}
         style={customStyles}
-        contentLabel="Clean Up Tool Sign in"
+        contentLabel="Login"
+        ariaHideApp={false}
       >
         <h2 className={styles.loginTitle}>Redtail Clean Up Tool</h2>
         <div className={styles.loginButton}>
