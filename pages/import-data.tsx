@@ -8,7 +8,17 @@ import { API_URL } from "../constants";
 import { useRouter } from "next/router";
 import Home from ".";
 
-export default function ImportDataPage() {
+export default function ImportDataPage(props) {
+  const router = useRouter();
+  const isAuth = props.isAuth;
+
+  useEffect(() => {
+    if (isAuth) return; // do nothing if the user is logged in
+    router.replace("/import-data", "/", { shallow: true });
+  }, [isAuth]);
+
+  if (!isAuth) return <Home />;
+
   const initialFileMessageState = { show: false, text: "" };
 
   const [fileError, setShowError] = useState(initialFileMessageState);

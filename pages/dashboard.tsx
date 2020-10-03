@@ -1,8 +1,21 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import Home from ".";
 import PageLayout from "../layouts/page-layout";
 import styles from "../styles/DashboardPage.module.scss";
 
-export default function DashboardPage() {
+export default function DashboardPage(props) {
+  const router = useRouter();
+  const isAuth = props.isAuth;
+  
+  useEffect(() => {
+    if (isAuth) return; // do nothing if the user is logged in
+    router.replace("/dashboard", "/", { shallow: true });
+  }, [isAuth]);
+
+  if (!isAuth) return <Home />;
+
   return (
     <div className={styles.dashboardContainer}>
       <Link href="/import-data">
