@@ -75,8 +75,12 @@ export default function PageLayout({ children }) {
               </a>
             </Link>
           </div>
-          <div className={styles.redtailConnect} onClick={openModal}>
-            Connect
+          <div className={styles.redtailConnectContainer} onClick={openModal}>
+            <img
+              className={styles.redtailConnectImg}
+              src="redtail-logo.png"
+            ></img>
+            <div className={styles.redtailConnectText}>Connect</div>
           </div>
         </nav>
         <main className={styles.main}>{children}</main>

@@ -86,14 +86,29 @@ $headerHeight: 10rem;
   background-color: rgba(255, 255, 255, 0.65);
 }
 
-.redtailConnect {
-  align-self: center;
+.redtailConnectContainer {
+  text-align: center;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.redtailConnectText {
   font-size: 3rem;
   font-weight: 600;
   line-height: 7rem;
   color: white;
+  text-shadow: 0 3px 6px rgba(248, 124, 124, 0.19);
+  color: #b3272f;
 }
 
-.redtailConnect:hover {
+.redtailConnectImg {
+  width: 73px;
+  height: 73px;
+  margin-right: 1rem;
+}
+
+.redtailConnectContainer:hover {
   cursor: pointer;
 }
