@@ -49,9 +49,15 @@ $headerHeight: 10rem;
   background-size: cover;
 }
 
+.topNav {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
 .nav {
   display: flex;
   flex-flow: column nowrap;
+  justify-content: space-between;
   min-width: 30rem;
   width: 30rem;
   height: calc(100vh - $headerHeight);
@@ -78,4 +84,16 @@ $headerHeight: 10rem;
   width: 100%;
   height: calc(100vh - 10rem); // Using $HeaderHeight here doesn't work??
   background-color: rgba(255, 255, 255, 0.65);
+}
+
+.redtailConnect {
+  align-self: center;
+  font-size: 3rem;
+  font-weight: 600;
+  line-height: 7rem;
+  color: white;
+}
+
+.redtailConnect:hover {
+  cursor: pointer;
 }
