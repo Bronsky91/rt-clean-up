@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { RedtailContact } from "../interfaces/redtail.interface";
 import { API_URL } from "../constants";
 import { useRouter } from "next/router";
-import Home from ".";
+import Login from "./login";
 
 export default function DataCleanupPage(props) {
   const router = useRouter();
@@ -13,10 +13,10 @@ export default function DataCleanupPage(props) {
 
   useEffect(() => {
     if (isAuth) return; // do nothing if the user is logged in
-    router.replace("/data-cleanup", "/", { shallow: true });
+    router.replace(router.pathname, "/login", { shallow: true });
   }, [isAuth]);
 
-  if (!isAuth) return <Home />;
+  if (!isAuth) return <Login />;
 
   // TODO: Indicate that the database is being imported and created on the server somehow
 

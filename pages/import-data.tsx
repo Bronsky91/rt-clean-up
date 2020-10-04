@@ -6,7 +6,7 @@ import Loader from "react-loader-spinner";
 import { useState } from "react";
 import { API_URL } from "../constants";
 import { useRouter } from "next/router";
-import Home from ".";
+import Login from "./login";
 
 export default function ImportDataPage(props) {
   const router = useRouter();
@@ -14,10 +14,10 @@ export default function ImportDataPage(props) {
 
   useEffect(() => {
     if (isAuth) return; // do nothing if the user is logged in
-    router.replace("/import-data", "/", { shallow: true });
+    router.replace(router.pathname, "/login", { shallow: true });
   }, [isAuth]);
 
-  if (!isAuth) return <Home />;
+  if (!isAuth) return <Login />;
 
   const initialFileMessageState = { show: false, text: "" };
 
