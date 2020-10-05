@@ -32,10 +32,7 @@ export default function RedtailAuthModal(props) {
       { withCredentials: true }
     )
       .then((res) => {
-        console.log("Redtail Auth Submitted");
-        router.push({
-          pathname: "/data-cleanup",
-        });
+        props.closeModal();
       })
       .catch((reason) => alert("Auth failed"));
   };
@@ -93,7 +90,12 @@ export default function RedtailAuthModal(props) {
             value={formData.password}
           />
         </div>
-        <input type="submit" value="Connect" onClick={handleSubmit} className={styles.connectButton} />
+        <input
+          type="submit"
+          value="Connect"
+          onClick={handleSubmit}
+          className={styles.connectButton}
+        />
       </div>
     </Modal>
   );

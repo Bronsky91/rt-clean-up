@@ -4,10 +4,20 @@ import { useRouter } from "next/router";
 import styles from "../styles/PageLayout.module.scss";
 import { useState } from "react";
 import RedtailAuthModal from "../components/redtailAuthModal";
+import Axios from "axios";
+import { API_URL } from "../constants";
 
 export default function PageLayout({ children }) {
   const router = useRouter();
+
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [isRedtailAuth, setRedtailAuth] = useState(false);
+
+  Axios.get(API_URL + "/users/rt-auth-check", {
+    withCredentials: true,
+  })
+    .then((res) => setRedtailAuth(res.data.redtailAuth))
+    .catch(() => setRedtailAuth(false));
 
   function openModal() {
     setIsOpen(true);
@@ -32,12 +42,10 @@ export default function PageLayout({ children }) {
       <div className={styles.wrapper}>
         <nav className={styles.nav}>
           <div className={styles.topNav}>
-            <Link href="/dashboard">
+            <Link href="/">
               <a
                 className={
-                  router.pathname === "/dashboard"
-                    ? styles.active
-                    : styles.inactive
+                  router.pathname === "/" ? styles.active : styles.inactive
                 }
               >
                 DASHBOARD
@@ -78,9 +86,11 @@ export default function PageLayout({ children }) {
           <div className={styles.redtailConnectContainer} onClick={openModal}>
             <img
               className={styles.redtailConnectImg}
-              src="redtail-logo.png"
+              src={isRedtailAuth ? "redtail-logo-fill.png" : "redtail-logo.png"}
             ></img>
-            <div className={styles.redtailConnectText}>Connect</div>
+            <div className={styles.redtailConnectText}>
+              {isRedtailAuth ? "Connected" : "Connect"}
+            </div>
           </div>
         </nav>
         <main className={styles.main}>{children}</main>
