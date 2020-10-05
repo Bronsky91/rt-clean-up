@@ -42,8 +42,8 @@ export default function DashboardPage(props) {
         <a>
           <div className={styles.buttonContainer}>
             <img src="/excel-block.svg"></img>
-            <div className={styles.upperText}>DOWNLOAD</div>
-            <div className={styles.lowerText}>Excel</div>
+            <div className={styles.upperText}>EXCEL</div>
+            <div className={styles.lowerText}>Convert</div>
           </div>
         </a>
       </Link>
