@@ -71,7 +71,7 @@ export default function PageLayout({ children }) {
                 DATA CLEANUP
               </a>
             </Link>
-            <Link href="/import-data">
+            {/* <Link href="/import-data">
               <a
                 className={
                   router.pathname === "/import-data"
@@ -81,7 +81,7 @@ export default function PageLayout({ children }) {
               >
                 IMPORT DATA
               </a>
-            </Link>
+            </Link> */}
           </div>
           <div className={styles.redtailConnectContainer} onClick={openModal}>
             <img

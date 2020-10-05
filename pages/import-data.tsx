@@ -118,7 +118,9 @@ export default function ImportDataPage(props) {
 
   return (
     <div className={styles.importPageContainer}>
-      <div className={styles.importTitle}>Import Redtail Backup Data</div>
+      <div className={styles.importTitle}>
+        Upload Redtail Backup to Convert to Excel
+      </div>
       <div
         className={styles.uploadContainer}
         onClick={handleClick}

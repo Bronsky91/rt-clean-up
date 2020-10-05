@@ -18,7 +18,7 @@ export default function DashboardPage(props) {
 
   return (
     <div className={styles.dashboardContainer}>
-      <Link href="/import-data">
+      {/* <Link href="/import-data">
         <a>
           <div className={styles.buttonContainer}>
             <img src="/sql-block.svg"></img>
@@ -26,7 +26,7 @@ export default function DashboardPage(props) {
             <div className={styles.lowerText}>Upload</div>
           </div>
         </a>
-      </Link>
+      </Link> */}
       <Link href="/data-cleanup">
         <a>
           <div className={styles.buttonContainer}>
@@ -38,7 +38,7 @@ export default function DashboardPage(props) {
       </Link>
 
       {/* No Excel page/function yet */}
-      <Link href="#">
+      <Link href="/import-data">
         <a>
           <div className={styles.buttonContainer}>
             <img src="/excel-block.svg"></img>
