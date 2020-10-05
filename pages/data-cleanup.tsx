@@ -2,7 +2,10 @@ import PageLayout from "../layouts/page-layout";
 import styles from "../styles/DataCleanupPage.module.scss";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { RedtailContact } from "../interfaces/redtail.interface";
+import {
+  RedtailContact,
+  RedtailContactMaster,
+} from "../interfaces/redtail.interface";
 import { API_URL } from "../constants";
 import { useRouter } from "next/router";
 import Login from "./login";
@@ -50,7 +53,7 @@ export default function DataCleanupPage(props) {
   });
 
   const [formData, updateFormData] = useState(initialFormData);
-  const [contactList, setContactList] = useState([{ id: 0 }]);
+  const [contactList, setContactList] = useState([{ id: 0, lastName: "" }]);
 
   const handleChange = (e) => {
     const target = e.target;
@@ -80,10 +83,9 @@ export default function DataCleanupPage(props) {
       .get(API_URL + "/rt/get-contacts", { withCredentials: true })
       .then((res) => {
         const contacts: RedtailContact[] = res.data.contacts;
-        console.log(res.data);
         setContactList(
           contacts.map((contact) => {
-            return { id: contact.id };
+            return { id: contact.ClientID, lastName: contact.LastName };
           })
         );
       });
@@ -94,40 +96,54 @@ export default function DataCleanupPage(props) {
     axios
       .post(API_URL + "/rt/get-contact", { id }, { withCredentials: true })
       .then((res) => {
-        const contact: RedtailContact = res.data[0];
+        const data: RedtailContactMaster = res.data;
         updateFormData({
-          family_name: "",
-          salutation: contact.salutation_id
-            ? contact.salutation_id.toString()
+          family_name: data.ContactRecord.Familyname,
+          salutation: data.ContactRecord.Salutation
+            ? data.ContactRecord.Salutation.toString()
             : "",
-          first_name: contact.first_name,
-          middle_name: contact.middle_name,
-          last_name: contact.last_name,
-          nickname: contact.nickname,
-          gender: contact.gender ? contact.gender.toString() : "",
-          category: contact.category_id ? contact.category_id.toString() : "",
-          status: contact.status_id ? contact.status_id.toString() : "",
-          source: contact.source_id ? contact.source_id.toString() : "",
-          referred_by: contact.referred_by,
-          servicing_advisor: contact.servicing_advisor_id
-            ? contact.servicing_advisor_id.toString()
+          first_name: data.ContactRecord.Firstname,
+          middle_name: data.ContactRecord.Middlename,
+          last_name: data.ContactRecord.Lastname,
+          nickname: data.ContactRecord.Nickname,
+          gender: data.ContactRecord.Gender
+            ? data.ContactRecord.Gender.toString()
             : "",
-          writing_advisor: contact.writing_advisor_id
-            ? contact.writing_advisor_id.toString()
+          category: data.ContactRecord.CategoryID
+            ? data.ContactRecord.CategoryID.toString()
             : "",
-          phone_numbers: [{ phone_number: "", type: "", primary: false }],
-          email_addresses: [{ email_address: "", type: "", primary: false }],
-          street_addresses: [
-            {
-              street_address: "",
-              secondary_address: "",
-              city: "",
-              state: "",
-              zip: "",
-              type: "",
-              primary: false,
-            },
-          ],
+          status: data.ContactRecord.StatusID
+            ? data.ContactRecord.StatusID.toString()
+            : "",
+          source: data.ContactRecord.SourceID
+            ? data.ContactRecord.SourceID.toString()
+            : "",
+          referred_by: data.ContactRecord.ReferredBy,
+          servicing_advisor: data.ContactRecord.ServicingAdvisorID
+            ? data.ContactRecord.ServicingAdvisorID.toString()
+            : "",
+          writing_advisor: data.ContactRecord.WritingAdvisorID
+            ? data.ContactRecord.WritingAdvisorID.toString()
+            : "",
+          phone_numbers: data.Phone.map((p) => ({
+            phone_number: p.Number,
+            type: p.TypeID,
+            primary: p.Primary,
+          })),
+          email_addresses: data.Internet.map((i) => ({
+            email_address: i.Address,
+            type: i.Type,
+            primary: i.Primary,
+          })),
+          street_addresses: data.Address.map((a) => ({
+            street_address: a.Address1,
+            secondary_address: a.Address2,
+            city: a.City,
+            state: a.State,
+            zip: a.Zip,
+            type: a.TypeID,
+            primary: a.Primary,
+          })),
         });
       });
   };
@@ -155,16 +171,18 @@ export default function DataCleanupPage(props) {
         <input
           className={styles.contactSearch}
           type="text"
-          placeholder="Search.."
+          placeholder="Search Last Name.."
         />
         <select
           className={styles.contactSelect}
           onChange={contactSelected}
           name="contact-list"
-          size={100}
+          size={50}
         >
           {contactList.map((contact, index) => (
-            <option key={index}>{contact.id}</option>
+            <option key={index} value={contact.id || ""}>
+              {contact.id}, {contact.lastName}
+            </option>
           ))}
         </select>
       </div>
@@ -343,6 +361,9 @@ export default function DataCleanupPage(props) {
                 </button>
                 <button className={styles.undoButton} onClick={undoContact}>
                   UNDO
+                </button>
+                <button className={styles.saveButton} onClick={populateList}>
+                  Populate
                 </button>
               </div>
             </div>
