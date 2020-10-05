@@ -52,8 +52,8 @@ export default function DataCleanupPage(props) {
   const [formData, updateFormData] = useState(initialFormData);
   const [contactList, setContactList] = useState([{ id: 0 }]);
 
-  const handleChange = (event) => {
-    const target = event.target;
+  const handleChange = (e) => {
+    const target = e.target;
     updateFormData({
       ...formData,
       // Trimming any whitespace
@@ -132,7 +132,15 @@ export default function DataCleanupPage(props) {
       });
   };
 
-  const toggleFilterModal = (event) => {
+  const toggleFilterModal = (e) => {
+    // TODO
+  };
+
+  const saveContact = (e) => {
+    // TODO
+  };
+
+  const undoContact = (e) => {
     // TODO
   };
 
@@ -160,100 +168,215 @@ export default function DataCleanupPage(props) {
           ))}
         </select>
       </div>
-      <div className={styles.contactForm}>
-        <div className={styles.formField}>
-          <label className={styles.formLabel}>Family Name</label>
-          <input
-            className={styles.formInput}
-            type="text"
-            name="family_name"
-            onChange={handleChange}
-            value={formData.family_name}
-          />
-        </div>
-        <div className={styles.formField}>
-          <label className={styles.formLabel}>Salutation</label>
-          <input
-            className={styles.formInput}
-            type="text"
-            name="salutation"
-            onChange={handleChange}
-            value={formData.salutation}
-          />
-        </div>
-        <div className={styles.formField}>
-          <label className={styles.formLabel}>First Name</label>
-          <input
-            className={styles.formInput}
-            type="text"
-            name="first_name"
-            onChange={handleChange}
-            value={formData.first_name}
-          />
-        </div>
-        <div className={styles.formField}>
-          <label className={styles.formLabel}>Middle Name</label>
-          <input
-            className={styles.formInput}
-            type="text"
-            name="middle_name"
-            onChange={handleChange}
-            value={formData.middle_name}
-          />
-        </div>
-        <div className={styles.formField}>
-          <label className={styles.formLabel}>Last Name</label>
-          <input
-            className={styles.formInput}
-            type="text"
-            name="last_name"
-            onChange={handleChange}
-            value={formData.last_name}
-          />
-        </div>
-        <div className={styles.formField}>
-          <label className={styles.formLabel}>Nickname</label>
-          <input
-            className={styles.formInput}
-            type="text"
-            name="nickname"
-            onChange={handleChange}
-            value={formData.nickname}
-          />
-        </div>
-        <div className={styles.formField}>
-          <label className={styles.formLabel}>Gender</label>
-          <input
-            className={styles.formInput}
-            type="text"
-            name="gender"
-            onChange={handleChange}
-            value={formData.gender}
-          />
-        </div>
-        <div className={styles.formField}>
-          <label className={styles.formLabel}>Category</label>
-          <input
-            className={styles.formInput}
-            type="text"
-            name="category"
-            onChange={handleChange}
-            value={formData.category}
-          />
-        </div>
-        <div className={styles.formField}>
-          <label className={styles.formLabel}>Status</label>
-          <input
-            className={styles.formInput}
-            type="text"
-            name="status"
-            onChange={handleChange}
-            value={formData.status}
-          />
+      <div className={styles.editPanel}>
+        <div className={styles.formRow}>
+          <div className={styles.formColumn}>
+            <div className={styles.formField}>
+              <label className={styles.formLabel}>Family Name</label>
+              <input
+                className={styles.formInput}
+                type="text"
+                name="family_name"
+                onChange={handleChange}
+                value={formData.family_name}
+              />
+            </div>
+            <div className={styles.formField}>
+              <label className={styles.formLabel}>Salutation</label>
+              <input
+                className={styles.formInput}
+                type="text"
+                name="salutation"
+                onChange={handleChange}
+                value={formData.salutation}
+              />
+            </div>
+            <div className={styles.formField}>
+              <label className={styles.formLabel}>First Name</label>
+              <input
+                className={styles.formInput}
+                type="text"
+                name="first_name"
+                onChange={handleChange}
+                value={formData.first_name}
+              />
+            </div>
+            <div className={styles.formField}>
+              <label className={styles.formLabel}>Middle Name</label>
+              <input
+                className={styles.formInput}
+                type="text"
+                name="middle_name"
+                onChange={handleChange}
+                value={formData.middle_name}
+              />
+            </div>
+            <div className={styles.formField}>
+              <label className={styles.formLabel}>Last Name</label>
+              <input
+                className={styles.formInput}
+                type="text"
+                name="last_name"
+                onChange={handleChange}
+                value={formData.last_name}
+              />
+            </div>
+            <div className={styles.formField}>
+              <label className={styles.formLabel}>Nickname</label>
+              <input
+                className={styles.formInput}
+                type="text"
+                name="nickname"
+                onChange={handleChange}
+                value={formData.nickname}
+              />
+            </div>
+            <div className={styles.formField}>
+              <label className={styles.formLabel}>Gender</label>
+              <input
+                className={styles.formInput}
+                type="text"
+                name="gender"
+                onChange={handleChange}
+                value={formData.gender}
+              />
+            </div>
+            <div className={styles.formField}>
+              <label className={styles.formLabel}>Category</label>
+              <input
+                className={styles.formInput}
+                type="text"
+                name="category"
+                onChange={handleChange}
+                value={formData.category}
+              />
+            </div>
+            <div className={styles.formField}>
+              <label className={styles.formLabel}>Status</label>
+              <input
+                className={styles.formInput}
+                type="text"
+                name="status"
+                onChange={handleChange}
+                value={formData.status}
+              />
+            </div>
+          </div>
+
+          <div className={styles.formColumn}>
+            <div className={styles.formRow}>
+              <div className={styles.formColumn}>
+                <div className={styles.formField}>
+                  <label className={styles.formLabel}>Source</label>
+                  <input
+                    className={styles.formInput}
+                    type="text"
+                    name="source"
+                    onChange={handleChange}
+                    value={formData.source}
+                  />
+                </div>
+                <div className={styles.formField}>
+                  <label className={styles.formLabel}>Referred By</label>
+                  <input
+                    className={styles.formInput}
+                    type="text"
+                    name="referred_by"
+                    onChange={handleChange}
+                    value={formData.referred_by}
+                  />
+                </div>
+                <div className={styles.formField}>
+                  <label className={styles.formLabel}>Servicing Advisor</label>
+                  <input
+                    className={styles.formInput}
+                    type="text"
+                    name="servicing_advisor"
+                    onChange={handleChange}
+                    value={formData.servicing_advisor}
+                  />
+                </div>
+                <div className={styles.formField}>
+                  <label className={styles.formLabel}>Writing Advisor</label>
+                  <input
+                    className={styles.formInput}
+                    type="text"
+                    name="writing_advisor"
+                    onChange={handleChange}
+                    value={formData.writing_advisor}
+                  />
+                </div>
+              </div>
+              <div className={styles.formColumn}>
+                <div className={styles.formRow}>
+                  <div className={styles.formHeader}>
+                    <label className={styles.formLabel}>Phone Number</label>
+                  </div>
+                  <div className={styles.formHeader}>
+                    <label className={styles.formLabel}>Type</label>
+                  </div>
+                  <div className={styles.formHeader}>
+                    <label className={styles.formLabel}>Primary?</label>
+                  </div>
+                </div>
+                <div className={styles.formRowScroll}></div>
+              </div>
+            </div>
+            <div className={styles.formRow}>
+              <div className={styles.formColumn}>
+                <div className={styles.formRow}>
+                  <div className={styles.formHeader}>
+                    <label className={styles.formLabel}>Email Address</label>
+                  </div>
+                  <div className={styles.formHeader}>
+                    <label className={styles.formLabel}>Type</label>
+                  </div>
+                  <div className={styles.formHeader}>
+                    <label className={styles.formLabel}>Primary?</label>
+                  </div>
+                </div>
+                <div className={styles.formRowScroll}></div>
+              </div>
+              <div className={styles.formColumn}>
+                <button className={styles.saveButton} onClick={saveContact}>
+                  SAVE
+                </button>
+                <button className={styles.undoButton} onClick={undoContact}>
+                  UNDO
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <button onClick={populateList}>Populate Contact List</button>
-        <input type="submit" value="Update" onClick={handleSubmit} />
+        <div className={styles.formRow}>
+          <div className={styles.formColumn}>
+            <div className={styles.formRow}>
+              <div className={styles.formHeader}>
+                <label className={styles.formLabel}>Street Address</label>
+              </div>
+              <div className={styles.formHeader}>
+                <label className={styles.formLabel}>Secondary Address</label>
+              </div>
+              <div className={styles.formHeader}>
+                <label className={styles.formLabel}>City</label>
+              </div>
+              <div className={styles.formHeader}>
+                <label className={styles.formLabel}>State</label>
+              </div>
+              <div className={styles.formHeader}>
+                <label className={styles.formLabel}>Zip</label>
+              </div>
+              <div className={styles.formHeader}>
+                <label className={styles.formLabel}>Type</label>
+              </div>
+              <div className={styles.formHeader}>
+                <label className={styles.formLabel}>Primary?</label>
+              </div>
+            </div>
+            <div className={styles.formRowScroll}></div>
+          </div>
+        </div>
       </div>
     </div>
   );
