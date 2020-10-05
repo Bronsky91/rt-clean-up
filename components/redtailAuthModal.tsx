@@ -2,6 +2,7 @@ import Axios from "axios";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Modal from "react-modal";
+import styles from "../styles/RedtailAuth.module.scss";
 import { API_URL } from "../constants";
 
 export default function RedtailAuthModal(props) {
@@ -43,8 +44,8 @@ export default function RedtailAuthModal(props) {
     content: {
       top: "50%",
       left: "50%",
-      width: "50rem",
-      height: "40rem",
+      width: "65rem",
+      height: "60rem",
       right: "auto",
       bottom: "auto",
       marginRight: "-50%",
@@ -56,30 +57,44 @@ export default function RedtailAuthModal(props) {
     <Modal
       isOpen={props.modalIsOpen}
       style={customStyles}
-      contentLabel="Login"
+      contentLabel="Redtail Login"
       ariaHideApp={false}
     >
-      <h1>Connect Your Redtail Account</h1>
-      <button onClick={props.closeModal}>close</button>
-      <label>
-        Redtail Username:
-        <input
-          type="text"
-          name="username"
-          onChange={handleChange}
-          value={formData.username}
-        />
-      </label>
-      <label>
-        Password:
-        <input
-          type="password"
-          name="password"
-          onChange={handleChange}
-          value={formData.password}
-        />
-      </label>
-      <input type="submit" value="Connect" onClick={handleSubmit} />
+      <div className={styles.container}>
+        <div className={styles.top}>
+          <img className={styles.linkPointLogo} src="linkpoint-logo.png"></img>
+          <input
+            type="image"
+            src="close.png"
+            onClick={props.closeModal}
+            className={styles.close}
+          ></input>
+        </div>
+        <div className={styles.signIn}>
+          <img src="redtail-logo.png" className={styles.redtailLogo}></img>
+          <h1 className={styles.title}>Sign In</h1>
+        </div>
+        <div className={styles.subtext}>Connect your to Redtail Database</div>
+        <div className={styles.inputContainer}>
+          <input
+            type="text"
+            placeholder="Username"
+            className={styles.textInput}
+            name="username"
+            onChange={handleChange}
+            value={formData.username}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className={styles.textInput}
+            name="password"
+            onChange={handleChange}
+            value={formData.password}
+          />
+        </div>
+        <input type="submit" value="Connect" onClick={handleSubmit} className={styles.connectButton} />
+      </div>
     </Modal>
   );
 }
