@@ -23,7 +23,8 @@
     "react-dom": "16.13.1",
     "react-loader-spinner": "^3.1.14",
     "react-modal": "^3.11.2",
-    "sass": "^1.26.11"
+    "sass": "^1.26.11",
+    "uuid": "^8.3.1"
   },
   "devDependencies": {
     "@types/node": "^14.6.4",

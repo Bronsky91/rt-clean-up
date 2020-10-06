@@ -1,3 +1,5 @@
+$field-height: 4.5rem;
+
 .container {
   display: flex;
   flex-flow: row wrap;
@@ -142,14 +144,14 @@
 .formField {
   background-color: #4357ab;
   width: 36rem;
-  height: 5rem;
+  height: $field-height;
   margin: 0.2rem;
 }
 
 .formLabel {
   color: white;
   width: 13rem;
-  height: 5rem;
+  height: $field-height;
   display: inline-block;
   text-align: center;
   font-size: 1.5rem;
@@ -157,19 +159,19 @@
 
 .formLabelledInput {
   width: 23rem;
-  height: 5rem;
+  height: $field-height;
 }
 
 .formHeader {
   background-color: #4357ab;
   margin: 0.2rem;
-  height: 5rem;
+  height: $field-height;
   width: 13rem;
 }
 
 .formSoloInput {
   margin: 0.2rem;
-  height: 5rem;
+  height: $field-height;
   width: 13rem;
 }
 
@@ -184,9 +186,9 @@
   flex-flow: row nowrap;
 }
 
-.formRowScroll {
+.formColumnScroll {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column nowrap;
   overflow: auto;
-  //height: 15.6rem;
+  height: ($field-height * 3) + 1rem;
 }

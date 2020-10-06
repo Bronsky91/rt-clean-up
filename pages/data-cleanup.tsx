@@ -422,7 +422,7 @@ export default function DataCleanupPage(props) {
                     <label className={styles.formLabel}>Primary?</label>
                   </div>
                 </div>
-                <div className={styles.formRowScroll}>
+                <div className={styles.formColumnScroll}>
                   {formData.phone_numbers.map((obj, index) => (
                     <div className={styles.formRow} key={obj.key}>
                       <input
@@ -439,7 +439,7 @@ export default function DataCleanupPage(props) {
                       />
                       <input
                         type="radio"
-                        name="address"
+                        name="phone_number"
                         value=""
                         defaultChecked={obj.primary || false}
                       />
@@ -461,7 +461,7 @@ export default function DataCleanupPage(props) {
                     <label className={styles.formLabel}>Primary?</label>
                   </div>
                 </div>
-                <div className={styles.formRowScroll}>
+                <div className={styles.formColumnScroll}>
                   {formData.email_addresses.map((obj, index) => (
                     <div className={styles.formRow} key={obj.key}>
                       <input
@@ -478,7 +478,7 @@ export default function DataCleanupPage(props) {
                       />
                       <input
                         type="radio"
-                        name="address"
+                        name="email_address"
                         value=""
                         defaultChecked={obj.primary || false}
                       />
@@ -523,7 +523,7 @@ export default function DataCleanupPage(props) {
                 <label className={styles.formLabel}>Primary?</label>
               </div>
             </div>
-            <div className={styles.formRowScroll}></div>
+            <div className={styles.formColumnScroll}>
             {formData.street_addresses.map((obj, index) => (
               <div className={styles.formRow} key={obj.key}>
                 <input
@@ -564,12 +564,13 @@ export default function DataCleanupPage(props) {
                 />
                 <input
                   type="radio"
-                  name="address"
+                  name="street_address"
                   value=""
                   defaultChecked={obj.primary || false}
                 />
               </div>
             ))}
+          </div>
           </div>
         </div>
       </form>
