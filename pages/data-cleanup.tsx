@@ -17,13 +17,54 @@ export default function DataCleanupPage(props) {
   const isAuth = props.isAuth;
 
   useEffect(() => {
-    if (isAuth) return; // do nothing if the user is logged in
-    router.replace(router.pathname, "/login", { shallow: true });
+    let mounted = true;
+    if (isAuth) {
+      // If authenticated, load contact data
+
+      // TODO: Indicate that the database is being imported and created on the server somehow
+
+      axios
+        .get(`${API_URL}/rt/get-contacts`, { withCredentials: true })
+        .then((res) => {
+          if (mounted) {
+            const result = res.data;
+            const contacts: RedtailContact[] = result.contacts.Detail;
+            const totalCount: number = result.contacts.TotalRecords;
+            const pageCount: number = Math.ceil(totalCount / 50);
+
+            updatePageData({
+              current_page: 1,
+              total_pages: pageCount,
+            });
+
+            setContactList(
+              contacts.map((contact) => {
+                return { id: contact.ClientID, lastName: contact.LastName };
+              })
+            );
+          }
+        });
+
+      axios
+        .get(API_URL + "/rt/dropdowns", { withCredentials: true })
+        .then((res) => {
+          if (mounted) {
+            const dropDownData = res.data;
+            updateDropdownData(dropDownData);
+          }
+        });
+
+      return () => {
+        mounted = false;
+      };
+    } else {
+      // If unauthenticated, redirect router to login page
+      router.replace(router.pathname, "/login", { shallow: true });
+    }
   }, [isAuth]);
 
+  // If unathenticated, load login component
   if (!isAuth) return <Login />;
-
-  // TODO: Indicate that the database is being imported and created on the server somehow
 
   const initialPageData = Object.freeze({
     current_page: 1,
@@ -79,6 +120,7 @@ export default function DataCleanupPage(props) {
   const [contactList, setContactList] = useState([{ id: 0, lastName: "" }]);
   const [pageData, updatePageData] = useState(initialPageData);
   const handleChange = (e) => {
+    e.preventDefault();
     const target = e.target;
     updateFormData({
       ...formData,
@@ -100,37 +142,8 @@ export default function DataCleanupPage(props) {
       });
   };
 
-  const populateList = (): void => {
-    //! Temp solution
-    axios
-      .get(API_URL + "/rt/get-contacts", { withCredentials: true })
-      .then((res) => {
-        const result = res.data;
-        const contacts: RedtailContact[] = result.contacts.Detail;
-        const totalCount: number = result.contacts.TotalRecords;
-        const pageCount: number = Math.ceil(totalCount / 50);
-
-        updatePageData({
-          current_page: 1,
-          total_pages: pageCount,
-        });
-
-        setContactList(
-          contacts.map((contact) => {
-            return { id: contact.ClientID, lastName: contact.LastName };
-          })
-        );
-      });
-
-    axios
-      .get(API_URL + "/rt/dropdowns", { withCredentials: true })
-      .then((res) => {
-        const dropDownData = res.data;
-        updateDropdownData(dropDownData);
-      });
-  };
-
   const contactSelected = (e) => {
+    e.preventDefault();
     const id = e.target.value;
     axios
       .post(API_URL + "/rt/get-contact", { id }, { withCredentials: true })
@@ -166,19 +179,19 @@ export default function DataCleanupPage(props) {
             ? data.ContactRecord.WritingAdvisorID.toString()
             : "",
           phone_numbers: data.Phone.map((obj, index) => ({
-            key: formData.phone_numbers[index].key,
+            key: uuid(),
             phone_number: obj.Number,
             type: obj.TypeID,
             primary: obj.Primary,
           })),
           email_addresses: data.Internet.map((obj, index) => ({
-            key: formData.email_addresses[index].key,
+            key: uuid(),
             email_address: obj.Address,
             type: obj.Type,
             primary: obj.Primary,
           })),
           street_addresses: data.Address.map((obj, index) => ({
-            key: formData.street_addresses[index].key,
+            key: uuid(),
             street_address: obj.Address1,
             secondary_address: obj.Address2,
             city: obj.City,
@@ -192,18 +205,22 @@ export default function DataCleanupPage(props) {
   };
 
   const toggleFilterModal = (e) => {
+    e.preventDefault();
     // TODO
   };
 
   const saveContact = (e) => {
+    e.preventDefault();
     // TODO
   };
 
   const undoContact = (e) => {
+    e.preventDefault();
     // TODO
   };
 
   const changePage = (e) => {
+    e.preventDefault();
     const target = e.target;
     updatePageData({
       current_page:
@@ -475,9 +492,6 @@ export default function DataCleanupPage(props) {
                 </button>
                 <button className={styles.undoButton} onClick={undoContact}>
                   UNDO
-                </button>
-                <button className={styles.saveButton} onClick={populateList}>
-                  Populate
                 </button>
               </div>
             </div>
