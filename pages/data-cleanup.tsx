@@ -108,7 +108,8 @@ export default function DataCleanupPage(props) {
     axios
       .get(API_URL + "/rt/dropdowns", { withCredentials: true })
       .then((res) => {
-        updateDropdownData(res.data);
+        const dropDownData = res.data;
+        updateDropdownData(dropDownData);
       });
   };
 
