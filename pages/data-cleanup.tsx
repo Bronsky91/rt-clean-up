@@ -24,6 +24,11 @@ export default function DataCleanupPage(props) {
 
   // TODO: Indicate that the database is being imported and created on the server somehow
 
+  const initialPageData = Object.freeze({
+    current_page: 1,
+    total_pages: 1,
+  });
+
   const initialFormData = Object.freeze({
     family_name: "",
     salutation: "",
@@ -65,7 +70,7 @@ export default function DataCleanupPage(props) {
   const [formData, updateFormData] = useState(initialFormData);
   const [dropdownData, updateDropdownData] = useState(redtailDropDowns);
   const [contactList, setContactList] = useState([{ id: 0, lastName: "" }]);
-
+  const [pageData, updatePageData] = useState(initialPageData);
   const handleChange = (e) => {
     const target = e.target;
     updateFormData({
@@ -97,6 +102,11 @@ export default function DataCleanupPage(props) {
         const contacts: RedtailContact[] = result.contacts.Detail;
         const totalCount: number = result.contacts.TotalRecords;
         const pageCount: number = Math.ceil(totalCount / 50);
+
+        updatePageData({
+          current_page: 1,
+          total_pages: pageCount,
+        });
 
         setContactList(
           contacts.map((contact) => {
@@ -182,6 +192,20 @@ export default function DataCleanupPage(props) {
     // TODO
   };
 
+  const changePage = (e) => {
+    const target = e.target;
+    updatePageData({
+      current_page:
+        Number.isInteger(target.value) &&
+        target.value > 0 &&
+        target.value <= pageData.total_pages
+          ? target.value
+          : pageData.current_page,
+      total_pages: pageData.total_pages,
+    });
+    // TODO: API call for new page's data
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.pageTitle}>Data Cleanup</div>
@@ -207,14 +231,25 @@ export default function DataCleanupPage(props) {
             </option>
           ))}
         </select>
+        <div className={styles.contactPageRow}>
+          <button onClick={saveContact}>&lt;</button>
+          <input
+            className={styles.contactPageInput}
+            type="text"
+            defaultValue={pageData.current_page}
+            onChange={changePage}
+          />{" "}
+          of {pageData.total_pages.toString() + " "}
+          <button onClick={saveContact}>&gt;</button>
+        </div>
       </div>
-      <div className={styles.editPanel}>
+      <form className={styles.editPanel} autoComplete="off">
         <div className={styles.formRow}>
           <div className={styles.formColumn}>
             <div className={styles.formField}>
               <label className={styles.formLabel}>Family Name</label>
               <input
-                className={styles.formInput}
+                className={styles.formLabelledInput}
                 type="text"
                 name="family_name"
                 onChange={handleChange}
@@ -224,7 +259,7 @@ export default function DataCleanupPage(props) {
             <div className={styles.formField}>
               <label className={styles.formLabel}>Salutation</label>
               <input
-                className={styles.formInput}
+                className={styles.formLabelledInput}
                 type="text"
                 name="salutation"
                 onChange={handleChange}
@@ -234,7 +269,7 @@ export default function DataCleanupPage(props) {
             <div className={styles.formField}>
               <label className={styles.formLabel}>First Name</label>
               <input
-                className={styles.formInput}
+                className={styles.formLabelledInput}
                 type="text"
                 name="first_name"
                 onChange={handleChange}
@@ -244,7 +279,7 @@ export default function DataCleanupPage(props) {
             <div className={styles.formField}>
               <label className={styles.formLabel}>Middle Name</label>
               <input
-                className={styles.formInput}
+                className={styles.formLabelledInput}
                 type="text"
                 name="middle_name"
                 onChange={handleChange}
@@ -254,7 +289,7 @@ export default function DataCleanupPage(props) {
             <div className={styles.formField}>
               <label className={styles.formLabel}>Last Name</label>
               <input
-                className={styles.formInput}
+                className={styles.formLabelledInput}
                 type="text"
                 name="last_name"
                 onChange={handleChange}
@@ -264,7 +299,7 @@ export default function DataCleanupPage(props) {
             <div className={styles.formField}>
               <label className={styles.formLabel}>Nickname</label>
               <input
-                className={styles.formInput}
+                className={styles.formLabelledInput}
                 type="text"
                 name="nickname"
                 onChange={handleChange}
@@ -274,7 +309,7 @@ export default function DataCleanupPage(props) {
             <div className={styles.formField}>
               <label className={styles.formLabel}>Gender</label>
               <input
-                className={styles.formInput}
+                className={styles.formLabelledInput}
                 type="text"
                 name="gender"
                 onChange={handleChange}
@@ -284,7 +319,7 @@ export default function DataCleanupPage(props) {
             <div className={styles.formField}>
               <label className={styles.formLabel}>Category</label>
               <input
-                className={styles.formInput}
+                className={styles.formLabelledInput}
                 type="text"
                 name="category"
                 onChange={handleChange}
@@ -294,7 +329,7 @@ export default function DataCleanupPage(props) {
             <div className={styles.formField}>
               <label className={styles.formLabel}>Status</label>
               <input
-                className={styles.formInput}
+                className={styles.formLabelledInput}
                 type="text"
                 name="status"
                 onChange={handleChange}
@@ -309,7 +344,7 @@ export default function DataCleanupPage(props) {
                 <div className={styles.formField}>
                   <label className={styles.formLabel}>Source</label>
                   <input
-                    className={styles.formInput}
+                    className={styles.formLabelledInput}
                     type="text"
                     name="source"
                     onChange={handleChange}
@@ -319,7 +354,7 @@ export default function DataCleanupPage(props) {
                 <div className={styles.formField}>
                   <label className={styles.formLabel}>Referred By</label>
                   <input
-                    className={styles.formInput}
+                    className={styles.formLabelledInput}
                     type="text"
                     name="referred_by"
                     onChange={handleChange}
@@ -329,7 +364,7 @@ export default function DataCleanupPage(props) {
                 <div className={styles.formField}>
                   <label className={styles.formLabel}>Servicing Advisor</label>
                   <input
-                    className={styles.formInput}
+                    className={styles.formLabelledInput}
                     type="text"
                     name="servicing_advisor"
                     onChange={handleChange}
@@ -339,7 +374,7 @@ export default function DataCleanupPage(props) {
                 <div className={styles.formField}>
                   <label className={styles.formLabel}>Writing Advisor</label>
                   <input
-                    className={styles.formInput}
+                    className={styles.formLabelledInput}
                     type="text"
                     name="writing_advisor"
                     onChange={handleChange}
@@ -359,7 +394,28 @@ export default function DataCleanupPage(props) {
                     <label className={styles.formLabel}>Primary?</label>
                   </div>
                 </div>
-                <div className={styles.formRowScroll}></div>
+                <div className={styles.formRowScroll}>
+                  {formData.phone_numbers.map((p) => (
+                    <div className={styles.formRow}>
+                      <input
+                        className={styles.formSoloInput}
+                        type="text"
+                        value={p.phone_number || ""}
+                      />
+                      <input
+                        className={styles.formSoloInput}
+                        type="text"
+                        value={p.type || ""}
+                      />
+                      <input
+                        type="radio"
+                        name="address"
+                        value=""
+                        defaultChecked={p.primary || false}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
             <div className={styles.formRow}>
@@ -375,7 +431,28 @@ export default function DataCleanupPage(props) {
                     <label className={styles.formLabel}>Primary?</label>
                   </div>
                 </div>
-                <div className={styles.formRowScroll}></div>
+                <div className={styles.formRowScroll}>
+                  {formData.email_addresses.map((e) => (
+                    <div className={styles.formRow}>
+                      <input
+                        className={styles.formSoloInput}
+                        type="text"
+                        value={e.email_address || ""}
+                      />
+                      <input
+                        className={styles.formSoloInput}
+                        type="text"
+                        value={e.type || ""}
+                      />
+                      <input
+                        type="radio"
+                        name="address"
+                        value=""
+                        defaultChecked={e.primary || false}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className={styles.formColumn}>
                 <button className={styles.saveButton} onClick={saveContact}>
@@ -418,9 +495,49 @@ export default function DataCleanupPage(props) {
               </div>
             </div>
             <div className={styles.formRowScroll}></div>
+            {formData.street_addresses.map((a) => (
+              <div className={styles.formRow}>
+                <input
+                  className={styles.formSoloInput}
+                  type="text"
+                  value={a.street_address || ""}
+                />
+                <input
+                  className={styles.formSoloInput}
+                  type="text"
+                  value={a.secondary_address || ""}
+                />
+                <input
+                  className={styles.formSoloInput}
+                  type="text"
+                  value={a.city || ""}
+                />
+                <input
+                  className={styles.formSoloInput}
+                  type="text"
+                  value={a.state || ""}
+                />
+                <input
+                  className={styles.formSoloInput}
+                  type="text"
+                  value={a.zip || ""}
+                />
+                <input
+                  className={styles.formSoloInput}
+                  type="text"
+                  value={a.type || ""}
+                />
+                <input
+                  type="radio"
+                  name="address"
+                  value=""
+                  defaultChecked={a.primary || false}
+                />
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

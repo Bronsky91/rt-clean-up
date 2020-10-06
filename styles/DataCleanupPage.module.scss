@@ -107,6 +107,14 @@
   border: none;
 }
 
+.contactPageRow {
+  margin: 0.2rem;
+}
+
+.contactPageInput {
+  width: 2rem;
+}
+
 .editPanel {
   display: flex;
   flex-flow: column nowrap;
@@ -147,13 +155,19 @@
   font-size: 1.5rem;
 }
 
-.formInput {
+.formLabelledInput {
   width: 23rem;
   height: 5rem;
 }
 
 .formHeader {
   background-color: #4357ab;
+  margin: 0.2rem;
+  height: 5rem;
+  width: 13rem;
+}
+
+.formSoloInput {
   margin: 0.2rem;
   height: 5rem;
   width: 13rem;
@@ -174,4 +188,5 @@
   display: flex;
   flex-flow: row nowrap;
   overflow: auto;
+  //height: 15.6rem;
 }
