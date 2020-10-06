@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import {
   RedtailContact,
   RedtailContactMaster,
+  RedtailSettingsData,
 } from "../interfaces/redtail.interface";
 import { API_URL } from "../constants";
 import { useRouter } from "next/router";
@@ -52,7 +53,17 @@ export default function DataCleanupPage(props) {
     ],
   });
 
+  const redtailDropDowns: RedtailSettingsData = {
+    statuses: [],
+    categories: [],
+    sources: [],
+    salutations: [],
+    servicingAdvisors: [],
+    writingAdvisors: [],
+  };
+
   const [formData, updateFormData] = useState(initialFormData);
+  const [dropdownData, updateDropdownData] = useState(redtailDropDowns);
   const [contactList, setContactList] = useState([{ id: 0, lastName: "" }]);
 
   const handleChange = (e) => {
@@ -82,12 +93,22 @@ export default function DataCleanupPage(props) {
     axios
       .get(API_URL + "/rt/get-contacts", { withCredentials: true })
       .then((res) => {
-        const contacts: RedtailContact[] = res.data.contacts;
+        const result = res.data;
+        const contacts: RedtailContact[] = result.contacts.Detail;
+        const totalCount: number = result.contacts.TotalRecords;
+        const pageCount: number = Math.ceil(totalCount / 50);
+
         setContactList(
           contacts.map((contact) => {
             return { id: contact.ClientID, lastName: contact.LastName };
           })
         );
+      });
+
+    axios
+      .get(API_URL + "/rt/dropdowns", { withCredentials: true })
+      .then((res) => {
+        updateDropdownData(res.data);
       });
   };
 

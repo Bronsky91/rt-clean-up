@@ -133,3 +133,55 @@ export interface PhoneEntity {
   Type: string;
   TypeID: string;
 }
+
+export interface RedtailStatus {
+  CSLCode: number;
+  Code: string;
+  DatabaseID: number;
+  Deleted: boolean;
+  LastUpdate: number;
+}
+
+export interface RedtailCategory {
+  Code: string;
+  DatabaseID: number;
+  Deleted: boolean;
+  MCCLCode: number;
+}
+
+export interface RedtailSource {
+  Code: string;
+  DatabaseID: number;
+  Deleted: boolean;
+  MCSLCode: number;
+}
+
+export interface RedtailSalutation {
+  Code: string;
+  Deleted: boolean;
+  RecAdd: string;
+  RecAddUser: number;
+  SalutationCode: number;
+}
+export interface RedtailServicingAdvisor {
+  Code: string;
+  DatabaseID: number;
+  Deleted: boolean;
+  SALCode: number;
+}
+
+export interface RedtailWritingAdvisor {
+  Code: string;
+  DatabaseID: number;
+  Deleted: boolean;
+  WALCode: number;
+}
+
+export interface RedtailSettingsData {
+  statuses: RedtailStatus[];
+  categories: RedtailCategory[];
+  sources: RedtailSource[];
+  salutations: RedtailSalutation[];
+  servicingAdvisors: RedtailServicingAdvisor[];
+  writingAdvisors: RedtailWritingAdvisor[];
+}
