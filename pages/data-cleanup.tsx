@@ -10,6 +10,7 @@ import {
 import { API_URL } from "../constants";
 import { useRouter } from "next/router";
 import Login from "./login";
+import { v4 as uuid } from "uuid";
 
 export default function DataCleanupPage(props) {
   const router = useRouter();
@@ -30,6 +31,7 @@ export default function DataCleanupPage(props) {
   });
 
   const initialFormData = Object.freeze({
+    key: uuid(),
     family_name: "",
     salutation: "",
     first_name: "",
@@ -43,10 +45,15 @@ export default function DataCleanupPage(props) {
     referred_by: "",
     servicing_advisor: "",
     writing_advisor: "",
-    phone_numbers: [{ phone_number: "", type: "", primary: false }],
-    email_addresses: [{ email_address: "", type: "", primary: false }],
+    phone_numbers: [
+      { key: uuid(), phone_number: "", type: "", primary: false },
+    ],
+    email_addresses: [
+      { key: uuid(), email_address: "", type: "", primary: false },
+    ],
     street_addresses: [
       {
+        key: uuid(),
         street_address: "",
         secondary_address: "",
         city: "",
@@ -130,6 +137,7 @@ export default function DataCleanupPage(props) {
       .then((res) => {
         const data: RedtailContactMaster = res.data;
         updateFormData({
+          key: formData.key,
           family_name: data.ContactRecord.Familyname,
           salutation: data.ContactRecord.Salutation
             ? data.ContactRecord.Salutation.toString()
@@ -157,24 +165,27 @@ export default function DataCleanupPage(props) {
           writing_advisor: data.ContactRecord.WritingAdvisorID
             ? data.ContactRecord.WritingAdvisorID.toString()
             : "",
-          phone_numbers: data.Phone.map((p) => ({
-            phone_number: p.Number,
-            type: p.TypeID,
-            primary: p.Primary,
+          phone_numbers: data.Phone.map((obj, index) => ({
+            key: formData.phone_numbers[index].key,
+            phone_number: obj.Number,
+            type: obj.TypeID,
+            primary: obj.Primary,
           })),
-          email_addresses: data.Internet.map((i) => ({
-            email_address: i.Address,
-            type: i.Type,
-            primary: i.Primary,
+          email_addresses: data.Internet.map((obj, index) => ({
+            key: formData.email_addresses[index].key,
+            email_address: obj.Address,
+            type: obj.Type,
+            primary: obj.Primary,
           })),
-          street_addresses: data.Address.map((a) => ({
-            street_address: a.Address1,
-            secondary_address: a.Address2,
-            city: a.City,
-            state: a.State,
-            zip: a.Zip,
-            type: a.TypeID,
-            primary: a.Primary,
+          street_addresses: data.Address.map((obj, index) => ({
+            key: formData.street_addresses[index].key,
+            street_address: obj.Address1,
+            secondary_address: obj.Address2,
+            city: obj.City,
+            state: obj.State,
+            zip: obj.Zip,
+            type: obj.TypeID,
+            primary: obj.Primary,
           })),
         });
       });
@@ -395,23 +406,25 @@ export default function DataCleanupPage(props) {
                   </div>
                 </div>
                 <div className={styles.formRowScroll}>
-                  {formData.phone_numbers.map((p) => (
-                    <div className={styles.formRow}>
+                  {formData.phone_numbers.map((obj, index) => (
+                    <div className={styles.formRow} key={obj.key}>
                       <input
                         className={styles.formSoloInput}
                         type="text"
-                        value={p.phone_number || ""}
+                        value={obj.phone_number || ""}
+                        onChange={handleChange}
                       />
                       <input
                         className={styles.formSoloInput}
                         type="text"
-                        value={p.type || ""}
+                        value={obj.type || ""}
+                        onChange={handleChange}
                       />
                       <input
                         type="radio"
                         name="address"
                         value=""
-                        defaultChecked={p.primary || false}
+                        defaultChecked={obj.primary || false}
                       />
                     </div>
                   ))}
@@ -432,23 +445,25 @@ export default function DataCleanupPage(props) {
                   </div>
                 </div>
                 <div className={styles.formRowScroll}>
-                  {formData.email_addresses.map((e) => (
-                    <div className={styles.formRow}>
+                  {formData.email_addresses.map((obj, index) => (
+                    <div className={styles.formRow} key={obj.key}>
                       <input
                         className={styles.formSoloInput}
                         type="text"
-                        value={e.email_address || ""}
+                        value={obj.email_address || ""}
+                        onChange={handleChange}
                       />
                       <input
                         className={styles.formSoloInput}
                         type="text"
-                        value={e.type || ""}
+                        value={obj.type || ""}
+                        onChange={handleChange}
                       />
                       <input
                         type="radio"
                         name="address"
                         value=""
-                        defaultChecked={e.primary || false}
+                        defaultChecked={obj.primary || false}
                       />
                     </div>
                   ))}
@@ -495,43 +510,49 @@ export default function DataCleanupPage(props) {
               </div>
             </div>
             <div className={styles.formRowScroll}></div>
-            {formData.street_addresses.map((a) => (
-              <div className={styles.formRow}>
+            {formData.street_addresses.map((obj, index) => (
+              <div className={styles.formRow} key={obj.key}>
                 <input
                   className={styles.formSoloInput}
                   type="text"
-                  value={a.street_address || ""}
+                  value={obj.street_address || ""}
+                  onChange={handleChange}
                 />
                 <input
                   className={styles.formSoloInput}
                   type="text"
-                  value={a.secondary_address || ""}
+                  value={obj.secondary_address || ""}
+                  onChange={handleChange}
                 />
                 <input
                   className={styles.formSoloInput}
                   type="text"
-                  value={a.city || ""}
+                  value={obj.city || ""}
+                  onChange={handleChange}
                 />
                 <input
                   className={styles.formSoloInput}
                   type="text"
-                  value={a.state || ""}
+                  value={obj.state || ""}
+                  onChange={handleChange}
                 />
                 <input
                   className={styles.formSoloInput}
                   type="text"
-                  value={a.zip || ""}
+                  value={obj.zip || ""}
+                  onChange={handleChange}
                 />
                 <input
                   className={styles.formSoloInput}
                   type="text"
-                  value={a.type || ""}
+                  value={obj.type || ""}
+                  onChange={handleChange}
                 />
                 <input
                   type="radio"
                   name="address"
                   value=""
-                  defaultChecked={a.primary || false}
+                  defaultChecked={obj.primary || false}
                 />
               </div>
             ))}
