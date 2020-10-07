@@ -55,6 +55,19 @@ export default function DataCleanupPage(props) {
           }
         });
 
+      // Get LocalStorage when on client side
+      const localStorageFormData = JSON.parse(
+        localStorage.getItem("dataCleanUpFormData")
+      );
+      const localStorageSelectedContactData = JSON.parse(
+        localStorage.getItem("dataCleanUpSelectedContactData")
+      );
+
+      if (localStorageSelectedContactData)
+        updateSelectedContact(localStorageSelectedContactData);
+
+      if (localStorageFormData) updateFormData(localStorageFormData);
+
       return () => {
         mounted = false;
       };
@@ -88,9 +101,7 @@ export default function DataCleanupPage(props) {
     referredBy: "",
     servicingAdvisor: "",
     writingAdvisor: "",
-    phoneNumbers: [
-      { key: uuid(), phoneNumber: "", type: "", primary: false },
-    ],
+    phoneNumbers: [{ key: uuid(), phoneNumber: "", type: "", primary: false }],
     emailAddresses: [
       { key: uuid(), emailAddress: "", type: "", primary: false },
     ],
@@ -109,21 +120,6 @@ export default function DataCleanupPage(props) {
   });
 
   let initialSelectedContact = { id: "", page: 1 };
-
-  // Get LocalStorage when on client side
-  if (typeof window !== "undefined") {
-    const localStorageFormData = JSON.parse(
-      localStorage.getItem("dataCleanUpFormData")
-    );
-    const localStorageSelectedContactData = JSON.parse(
-      localStorage.getItem("dataCleanUpSelectedContactData")
-    );
-
-    if (localStorageSelectedContactData)
-      initialSelectedContact = localStorageSelectedContactData;
-
-    if (localStorageFormData) initialFormData = localStorageFormData;
-  }
 
   const redtailDropDowns: RedtailSettingsData = {
     statuses: [],
@@ -150,11 +146,7 @@ export default function DataCleanupPage(props) {
       "dataCleanUpSelectedContactData",
       JSON.stringify(selectedContact)
     );
-    localStorage.setItem(
-      "dataCleanUpContactListData",
-      JSON.stringify(contactList)
-    );
-  }, [formData, selectedContact, contactList]);
+  }, [formData, selectedContact]);
 
   const handleChange = (e) => {
     e.preventDefault();
