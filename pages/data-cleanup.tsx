@@ -71,33 +71,34 @@ export default function DataCleanupPage(props) {
     current_page: 1,
     total_pages: 1,
   });
+  const initialContactListData = [];
 
   let initialFormData = Object.freeze({
     key: uuid(),
-    family_name: "",
+    familyName: "",
     salutation: "",
-    first_name: "",
-    middle_name: "",
-    last_name: "",
+    firstName: "",
+    middleName: "",
+    lastName: "",
     nickname: "",
     gender: "",
     category: "",
     status: "",
     source: "",
-    referred_by: "",
-    servicing_advisor: "",
-    writing_advisor: "",
-    phone_numbers: [
-      { key: uuid(), phone_number: "", type: "", primary: false },
+    referredBy: "",
+    servicingAdvisor: "",
+    writingAdvisor: "",
+    phoneNumbers: [
+      { key: uuid(), phoneNumber: "", type: "", primary: false },
     ],
-    email_addresses: [
-      { key: uuid(), email_address: "", type: "", primary: false },
+    emailAddresses: [
+      { key: uuid(), emailAddress: "", type: "", primary: false },
     ],
-    street_addresses: [
+    streetAddresses: [
       {
         key: uuid(),
-        street_address: "",
-        secondary_address: "",
+        streetAddress: "",
+        secondaryAddress: "",
         city: "",
         state: "",
         zip: "",
@@ -107,8 +108,7 @@ export default function DataCleanupPage(props) {
     ],
   });
 
-  let initialContactListData = [];
-  let initialSelectedContact = "";
+  let initialSelectedContact = { id: "", page: 1 };
 
   // Get LocalStorage when on client side
   if (typeof window !== "undefined") {
@@ -118,15 +118,11 @@ export default function DataCleanupPage(props) {
     const localStorageSelectedContactData = JSON.parse(
       localStorage.getItem("dataCleanUpSelectedContactData")
     );
-    const localStorageContactListData = JSON.parse(
-      localStorage.getItem("dataCleanUpContactListData")
-    );
 
-    initialSelectedContact = localStorageSelectedContactData;
-    initialContactListData = localStorageContactListData;
-    // if (localStorageFormData && localStorageFormData.contact_id > 0) {
-    initialFormData = localStorageFormData;
-    // }
+    if (localStorageSelectedContactData)
+      initialSelectedContact = localStorageSelectedContactData;
+
+    if (localStorageFormData) initialFormData = localStorageFormData;
   }
 
   const redtailDropDowns: RedtailSettingsData = {
@@ -188,7 +184,7 @@ export default function DataCleanupPage(props) {
     setLoadingState(true);
 
     const id = e.target.value;
-    updateSelectedContact(id);
+    updateSelectedContact({ id, page: 1 });
 
     axios
       .post(API_URL + "/rt/get-contact", { id }, { withCredentials: true })
@@ -196,13 +192,13 @@ export default function DataCleanupPage(props) {
         const data: RedtailContactMaster = res.data;
         updateFormData({
           key: formData.key,
-          family_name: data.ContactRecord.Familyname,
+          familyName: data.ContactRecord.Familyname,
           salutation: data.ContactRecord.Salutation
             ? data.ContactRecord.Salutation.toString()
             : "",
-          first_name: data.ContactRecord.Firstname,
-          middle_name: data.ContactRecord.Middlename,
-          last_name: data.ContactRecord.Lastname,
+          firstName: data.ContactRecord.Firstname,
+          middleName: data.ContactRecord.Middlename,
+          lastName: data.ContactRecord.Lastname,
           nickname: data.ContactRecord.Nickname,
           gender: data.ContactRecord.Gender
             ? data.ContactRecord.Gender.toString()
@@ -216,29 +212,29 @@ export default function DataCleanupPage(props) {
           source: data.ContactRecord.SourceID
             ? data.ContactRecord.SourceID.toString()
             : "",
-          referred_by: data.ContactRecord.ReferredBy,
-          servicing_advisor: data.ContactRecord.ServicingAdvisorID
+          referredBy: data.ContactRecord.ReferredBy,
+          servicingAdvisor: data.ContactRecord.ServicingAdvisorID
             ? data.ContactRecord.ServicingAdvisorID.toString()
             : "",
-          writing_advisor: data.ContactRecord.WritingAdvisorID
+          writingAdvisor: data.ContactRecord.WritingAdvisorID
             ? data.ContactRecord.WritingAdvisorID.toString()
             : "",
-          phone_numbers: data.Phone.map((obj, index) => ({
+          phoneNumbers: data.Phone.map((obj, index) => ({
             key: uuid(),
-            phone_number: obj.Number,
+            phoneNumber: obj.Number,
             type: obj.TypeID,
             primary: obj.Primary,
           })),
-          email_addresses: data.Internet.map((obj, index) => ({
+          emailAddresses: data.Internet.map((obj, index) => ({
             key: uuid(),
-            email_address: obj.Address,
+            emailAddress: obj.Address,
             type: obj.Type,
             primary: obj.Primary,
           })),
-          street_addresses: data.Address.map((obj, index) => ({
+          streetAddresses: data.Address.map((obj, index) => ({
             key: uuid(),
-            street_address: obj.Address1,
-            secondary_address: obj.Address2,
+            streetAddress: obj.Address1,
+            secondaryAddress: obj.Address2,
             city: obj.City,
             state: obj.State,
             zip: obj.Zip,
@@ -299,7 +295,7 @@ export default function DataCleanupPage(props) {
           onChange={contactSelected}
           name="contact-list"
           size={50}
-          value={selectedContact}
+          value={selectedContact.id}
         >
           {contactList.map((contact, index) => (
             <option key={index} value={contact.id}>
@@ -328,9 +324,9 @@ export default function DataCleanupPage(props) {
                 <input
                   className={styles.formLabelledInput}
                   type="text"
-                  name="family_name"
+                  name="familyName"
                   onChange={handleChange}
-                  value={formData.family_name}
+                  value={formData.familyName}
                 />
               </div>
               <div className={styles.formField}>
@@ -354,9 +350,9 @@ export default function DataCleanupPage(props) {
                 <input
                   className={styles.formLabelledInput}
                   type="text"
-                  name="first_name"
+                  name="firstName"
                   onChange={handleChange}
-                  value={formData.first_name}
+                  value={formData.firstName}
                 />
               </div>
               <div className={styles.formField}>
@@ -364,9 +360,9 @@ export default function DataCleanupPage(props) {
                 <input
                   className={styles.formLabelledInput}
                   type="text"
-                  name="middle_name"
+                  name="middleName"
                   onChange={handleChange}
-                  value={formData.middle_name}
+                  value={formData.middleName}
                 />
               </div>
               <div className={styles.formField}>
@@ -374,9 +370,9 @@ export default function DataCleanupPage(props) {
                 <input
                   className={styles.formLabelledInput}
                   type="text"
-                  name="last_name"
+                  name="lastName"
                   onChange={handleChange}
-                  value={formData.last_name}
+                  value={formData.lastName}
                 />
               </div>
               <div className={styles.formField}>
@@ -457,9 +453,9 @@ export default function DataCleanupPage(props) {
                     <input
                       className={styles.formLabelledInput}
                       type="text"
-                      name="referred_by"
+                      name="referredBy"
                       onChange={handleChange}
-                      value={formData.referred_by}
+                      value={formData.referredBy}
                     />
                   </div>
                   <div className={styles.formField}>
@@ -469,8 +465,8 @@ export default function DataCleanupPage(props) {
                     <select
                       className={styles.formLabelledInput}
                       onChange={handleChange}
-                      name="servicing_advisor"
-                      value={formData.servicing_advisor}
+                      name="servicingAdvisor"
+                      value={formData.servicingAdvisor}
                     >
                       <option value=""></option>
                       {dropdownData.servicingAdvisors.map((obj, index) => (
@@ -485,8 +481,8 @@ export default function DataCleanupPage(props) {
                     <select
                       className={styles.formLabelledInput}
                       onChange={handleChange}
-                      name="writing_advisor"
-                      value={formData.writing_advisor}
+                      name="writingAdvisor"
+                      value={formData.writingAdvisor}
                     >
                       <option value=""></option>
                       {dropdownData.writingAdvisors.map((obj, index) => (
@@ -510,12 +506,12 @@ export default function DataCleanupPage(props) {
                     </div>
                   </div>
                   <div className={styles.formColumnScroll}>
-                    {formData.phone_numbers.map((obj, index) => (
+                    {formData.phoneNumbers.map((obj, index) => (
                       <div className={styles.formRow} key={obj.key}>
                         <input
                           className={styles.formSoloInput}
                           type="text"
-                          value={obj.phone_number || ""}
+                          value={obj.phoneNumber || ""}
                           onChange={handleChange}
                         />
                         <input
@@ -526,7 +522,7 @@ export default function DataCleanupPage(props) {
                         />
                         <input
                           type="radio"
-                          name="phone_number"
+                          name="phoneNumber"
                           value=""
                           defaultChecked={obj.primary || false}
                         />
@@ -549,12 +545,12 @@ export default function DataCleanupPage(props) {
                     </div>
                   </div>
                   <div className={styles.formColumnScroll}>
-                    {formData.email_addresses.map((obj, index) => (
+                    {formData.emailAddresses.map((obj, index) => (
                       <div className={styles.formRow} key={obj.key}>
                         <input
                           className={styles.formSoloInput}
                           type="text"
-                          value={obj.email_address || ""}
+                          value={obj.emailAddress || ""}
                           onChange={handleChange}
                         />
                         <input
@@ -565,7 +561,7 @@ export default function DataCleanupPage(props) {
                         />
                         <input
                           type="radio"
-                          name="email_address"
+                          name="emailAddress"
                           value=""
                           defaultChecked={obj.primary || false}
                         />
@@ -611,18 +607,18 @@ export default function DataCleanupPage(props) {
                 </div>
               </div>
               <div className={styles.formColumnScroll}>
-                {formData.street_addresses.map((obj, index) => (
+                {formData.streetAddresses.map((obj, index) => (
                   <div className={styles.formRow} key={obj.key}>
                     <input
                       className={styles.formSoloInput}
                       type="text"
-                      value={obj.street_address || ""}
+                      value={obj.streetAddress || ""}
                       onChange={handleChange}
                     />
                     <input
                       className={styles.formSoloInput}
                       type="text"
-                      value={obj.secondary_address || ""}
+                      value={obj.secondaryAddress || ""}
                       onChange={handleChange}
                     />
                     <input
@@ -651,7 +647,7 @@ export default function DataCleanupPage(props) {
                     />
                     <input
                       type="radio"
-                      name="street_address"
+                      name="streetAddress"
                       value=""
                       defaultChecked={obj.primary || false}
                     />
