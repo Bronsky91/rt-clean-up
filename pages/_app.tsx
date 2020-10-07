@@ -20,7 +20,7 @@ MyApp.getInitialProps = async (args) => {
   let pageProps = {};
   let jwt;
 
-  if (args.ctx.req) {
+  if (args.ctx.req && args.ctx.req.headers.cookie) {
     const cookies = cookie.parse(args.ctx.req.headers.cookie);
     jwt = cookies.jwt;
   } else {
