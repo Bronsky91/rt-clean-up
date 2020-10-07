@@ -49,8 +49,9 @@ export default function DataCleanupPage(props) {
         .get(API_URL + "/rt/dropdowns", { withCredentials: true })
         .then((res) => {
           if (mounted) {
-            const dropDownData = res.data;
-            updateDropdownData(dropDownData);
+            const dropdownData = res.data;
+            console.log(dropdownData);
+            updateDropdownData(dropdownData);
           }
         });
 
@@ -119,6 +120,7 @@ export default function DataCleanupPage(props) {
   const [dropdownData, updateDropdownData] = useState(redtailDropDowns);
   const [contactList, setContactList] = useState([{ id: 0, lastName: "" }]);
   const [pageData, updatePageData] = useState(initialPageData);
+  
   const handleChange = (e) => {
     e.preventDefault();
     const target = e.target;
@@ -141,6 +143,11 @@ export default function DataCleanupPage(props) {
         console.log("Submitted Contact!");
       });
   };
+
+  const dropdownSelected = (e) => {
+    e.preventDefault();
+    // TODO
+  }
 
   const contactSelected = (e) => {
     e.preventDefault();
@@ -286,13 +293,15 @@ export default function DataCleanupPage(props) {
             </div>
             <div className={styles.formField}>
               <label className={styles.formLabel}>Salutation</label>
-              <input
+              <select
                 className={styles.formLabelledInput}
-                type="text"
+                onChange={dropdownSelected}
                 name="salutation"
-                onChange={handleChange}
-                value={formData.salutation}
-              />
+              >
+                {dropdownData.salutations.map((obj, index) => (
+                  <option key={index} value={obj.Code || ""} >{obj.Code || ""}</option>
+                ))}
+              </select>
             </div>
             <div className={styles.formField}>
               <label className={styles.formLabel}>First Name</label>
@@ -346,23 +355,27 @@ export default function DataCleanupPage(props) {
             </div>
             <div className={styles.formField}>
               <label className={styles.formLabel}>Category</label>
-              <input
+              <select
                 className={styles.formLabelledInput}
-                type="text"
+                onChange={dropdownSelected}
                 name="category"
-                onChange={handleChange}
-                value={formData.category}
-              />
+              >
+                {dropdownData.categories.map((obj, index) => (
+                  <option key={index} value={obj.Code || ""} >{obj.Code || ""}</option>
+                ))}
+              </select>
             </div>
             <div className={styles.formField}>
               <label className={styles.formLabel}>Status</label>
-              <input
+              <select
                 className={styles.formLabelledInput}
-                type="text"
+                onChange={dropdownSelected}
                 name="status"
-                onChange={handleChange}
-                value={formData.status}
-              />
+              >
+                {dropdownData.statuses.map((obj, index) => (
+                  <option key={index} value={obj.Code || ""} >{obj.Code || ""}</option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -371,13 +384,15 @@ export default function DataCleanupPage(props) {
               <div className={styles.formColumn}>
                 <div className={styles.formField}>
                   <label className={styles.formLabel}>Source</label>
-                  <input
+                  <select
                     className={styles.formLabelledInput}
-                    type="text"
+                    onChange={dropdownSelected}
                     name="source"
-                    onChange={handleChange}
-                    value={formData.source}
-                  />
+                  >
+                    {dropdownData.sources.map((obj, index) => (
+                      <option key={index} value={obj.Code || ""} >{obj.Code || ""}</option>
+                    ))}
+                  </select>
                 </div>
                 <div className={styles.formField}>
                   <label className={styles.formLabel}>Referred By</label>
@@ -391,23 +406,27 @@ export default function DataCleanupPage(props) {
                 </div>
                 <div className={styles.formField}>
                   <label className={styles.formLabel}>Servicing Advisor</label>
-                  <input
+                  <select
                     className={styles.formLabelledInput}
-                    type="text"
+                    onChange={dropdownSelected}
                     name="servicing_advisor"
-                    onChange={handleChange}
-                    value={formData.servicing_advisor}
-                  />
+                  >
+                    {dropdownData.servicingAdvisors.map((obj, index) => (
+                      <option key={index} value={obj.Code || ""} >{obj.Code || ""}</option>
+                    ))}
+                  </select>
                 </div>
                 <div className={styles.formField}>
                   <label className={styles.formLabel}>Writing Advisor</label>
-                  <input
+                  <select
                     className={styles.formLabelledInput}
-                    type="text"
+                    onChange={dropdownSelected}
                     name="writing_advisor"
-                    onChange={handleChange}
-                    value={formData.writing_advisor}
-                  />
+                  >
+                    {dropdownData.writingAdvisors.map((obj, index) => (
+                      <option key={index} value={obj.Code || ""} >{obj.Code || ""}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <div className={styles.formColumn}>
