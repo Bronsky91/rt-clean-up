@@ -1,6 +1,8 @@
 import PageLayout from "../layouts/page-layout";
 import styles from "../styles/DataCleanupPage.module.scss";
 import axios from "axios";
+import { v4 as uuid } from "uuid";
+import LoadingOverlay from "react-loading-overlay";
 import { useEffect, useState } from "react";
 import {
   RedtailContact,
@@ -10,20 +12,16 @@ import {
 import { API_URL } from "../constants";
 import { useRouter } from "next/router";
 import Login from "./login";
-import { v4 as uuid } from "uuid";
-import LoadingOverlay from "react-loading-overlay";
-
 export default function DataCleanupPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
 
   useEffect(() => {
-    let mounted = true; // used to avoid issue outlined here: https://www.debuggr.io/react-update-unmounted-component/
+    // mounted used to avoid issue outlined here: https://www.debuggr.io/react-update-unmounted-component/
+    let mounted = true;
+
     if (isAuth) {
       // If authenticated, load contact data
-
-      // TODO: Indicate that the database is being imported and created on the server somehow
-
       axios
         .get(`${API_URL}/rt/get-contacts`, { withCredentials: true })
         .then((res) => {
@@ -39,9 +37,11 @@ export default function DataCleanupPage(props) {
             });
 
             setContactList(
-              contacts.map((contact) => {
-                return { id: contact.ClientID, lastName: contact.LastName };
-              })
+              contacts
+                .map((contact) => {
+                  return { id: contact.ClientID, lastName: contact.LastName };
+                })
+                .sort((a, b) => a.id - b.id)
             );
           }
         });
@@ -50,8 +50,7 @@ export default function DataCleanupPage(props) {
         .get(API_URL + "/rt/dropdowns", { withCredentials: true })
         .then((res) => {
           if (mounted) {
-            const dropdownData = res.data;
-            console.log(dropdownData);
+            const dropdownData: RedtailSettingsData = res.data;
             updateDropdownData(dropdownData);
           }
         });
@@ -73,7 +72,7 @@ export default function DataCleanupPage(props) {
     total_pages: 1,
   });
 
-  const initialFormData = Object.freeze({
+  let initialFormData = Object.freeze({
     key: uuid(),
     family_name: "",
     salutation: "",
@@ -108,6 +107,28 @@ export default function DataCleanupPage(props) {
     ],
   });
 
+  let initialContactListData = [];
+  let initialSelectedContact = "";
+
+  // Get LocalStorage when on client side
+  if (typeof window !== "undefined") {
+    const localStorageFormData = JSON.parse(
+      localStorage.getItem("dataCleanUpFormData")
+    );
+    const localStorageSelectedContactData = JSON.parse(
+      localStorage.getItem("dataCleanUpSelectedContactData")
+    );
+    const localStorageContactListData = JSON.parse(
+      localStorage.getItem("dataCleanUpContactListData")
+    );
+
+    initialSelectedContact = localStorageSelectedContactData;
+    initialContactListData = localStorageContactListData;
+    // if (localStorageFormData && localStorageFormData.contact_id > 0) {
+    initialFormData = localStorageFormData;
+    // }
+  }
+
   const redtailDropDowns: RedtailSettingsData = {
     statuses: [],
     categories: [],
@@ -118,10 +139,26 @@ export default function DataCleanupPage(props) {
   };
 
   const [formData, updateFormData] = useState(initialFormData);
+  const [selectedContact, updateSelectedContact] = useState(
+    initialSelectedContact
+  );
+  const [contactList, setContactList] = useState(initialContactListData);
   const [dropdownData, updateDropdownData] = useState(redtailDropDowns);
-  const [contactList, setContactList] = useState([{ id: 0, lastName: "" }]);
   const [pageData, updatePageData] = useState(initialPageData);
   const [loadingContact, setLoadingState] = useState(false);
+
+  // Saves Form State to Local Storage after each change
+  useEffect(() => {
+    localStorage.setItem("dataCleanUpFormData", JSON.stringify(formData));
+    localStorage.setItem(
+      "dataCleanUpSelectedContactData",
+      JSON.stringify(selectedContact)
+    );
+    localStorage.setItem(
+      "dataCleanUpContactListData",
+      JSON.stringify(contactList)
+    );
+  }, [formData, selectedContact, contactList]);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -146,19 +183,16 @@ export default function DataCleanupPage(props) {
       });
   };
 
-  const dropdownSelected = (e) => {
-    e.preventDefault();
-    // TODO
-  };
-
   const contactSelected = (e) => {
     e.preventDefault();
     setLoadingState(true);
+
     const id = e.target.value;
+    updateSelectedContact(id);
+
     axios
       .post(API_URL + "/rt/get-contact", { id }, { withCredentials: true })
       .then((res) => {
-        setLoadingState(false);
         const data: RedtailContactMaster = res.data;
         updateFormData({
           key: formData.key,
@@ -212,6 +246,8 @@ export default function DataCleanupPage(props) {
             primary: obj.Primary,
           })),
         });
+
+        setLoadingState(false);
       });
   };
 
@@ -263,9 +299,10 @@ export default function DataCleanupPage(props) {
           onChange={contactSelected}
           name="contact-list"
           size={50}
+          value={selectedContact}
         >
           {contactList.map((contact, index) => (
-            <option key={index} value={contact.id || ""}>
+            <option key={index} value={contact.id}>
               {contact.id}, {contact.lastName}
             </option>
           ))}
@@ -300,11 +337,13 @@ export default function DataCleanupPage(props) {
                 <label className={styles.formLabel}>Salutation</label>
                 <select
                   className={styles.formLabelledInput}
-                  onChange={dropdownSelected}
+                  onChange={handleChange}
                   name="salutation"
+                  value={formData.salutation}
                 >
+                  <option value=""></option>
                   {dropdownData.salutations.map((obj, index) => (
-                    <option key={index} value={obj.Code || ""}>
+                    <option key={index} value={obj.SalutationCode || ""}>
                       {obj.Code || ""}
                     </option>
                   ))}
@@ -364,11 +403,13 @@ export default function DataCleanupPage(props) {
                 <label className={styles.formLabel}>Category</label>
                 <select
                   className={styles.formLabelledInput}
-                  onChange={dropdownSelected}
+                  onChange={handleChange}
                   name="category"
+                  value={formData.category}
                 >
+                  <option value=""></option>
                   {dropdownData.categories.map((obj, index) => (
-                    <option key={index} value={obj.Code || ""}>
+                    <option key={index} value={obj.MCCLCode || ""}>
                       {obj.Code || ""}
                     </option>
                   ))}
@@ -378,11 +419,13 @@ export default function DataCleanupPage(props) {
                 <label className={styles.formLabel}>Status</label>
                 <select
                   className={styles.formLabelledInput}
-                  onChange={dropdownSelected}
+                  onChange={handleChange}
                   name="status"
+                  value={formData.status}
                 >
+                  <option value=""></option>
                   {dropdownData.statuses.map((obj, index) => (
-                    <option key={index} value={obj.Code || ""}>
+                    <option key={index} value={obj.CSLCode || ""}>
                       {obj.Code || ""}
                     </option>
                   ))}
@@ -397,11 +440,13 @@ export default function DataCleanupPage(props) {
                     <label className={styles.formLabel}>Source</label>
                     <select
                       className={styles.formLabelledInput}
-                      onChange={dropdownSelected}
+                      onChange={handleChange}
                       name="source"
+                      value={formData.source}
                     >
+                      <option value=""></option>
                       {dropdownData.sources.map((obj, index) => (
-                        <option key={index} value={obj.Code || ""}>
+                        <option key={index} value={obj.MCSLCode || ""}>
                           {obj.Code || ""}
                         </option>
                       ))}
@@ -423,11 +468,13 @@ export default function DataCleanupPage(props) {
                     </label>
                     <select
                       className={styles.formLabelledInput}
-                      onChange={dropdownSelected}
+                      onChange={handleChange}
                       name="servicing_advisor"
+                      value={formData.servicing_advisor}
                     >
+                      <option value=""></option>
                       {dropdownData.servicingAdvisors.map((obj, index) => (
-                        <option key={index} value={obj.Code || ""}>
+                        <option key={index} value={obj.SALCode || ""}>
                           {obj.Code || ""}
                         </option>
                       ))}
@@ -437,11 +484,13 @@ export default function DataCleanupPage(props) {
                     <label className={styles.formLabel}>Writing Advisor</label>
                     <select
                       className={styles.formLabelledInput}
-                      onChange={dropdownSelected}
+                      onChange={handleChange}
                       name="writing_advisor"
+                      value={formData.writing_advisor}
                     >
+                      <option value=""></option>
                       {dropdownData.writingAdvisors.map((obj, index) => (
-                        <option key={index} value={obj.Code || ""}>
+                        <option key={index} value={obj.WALCode || ""}>
                           {obj.Code || ""}
                         </option>
                       ))}

@@ -17,7 +17,7 @@ export default function MyApp({ Component, pageProps }) {
 }
 
 MyApp.getInitialProps = async (args) => {
-  let pageProps = {};
+  let pageProps = { isAuth: false };
   let jwt;
 
   if (args.ctx.req && args.ctx.req.headers.cookie) {
@@ -27,6 +27,8 @@ MyApp.getInitialProps = async (args) => {
     jwt = Cookies.get("jwt");
   }
 
+
+
   const headers = jwt ? { cookie: jwt } : {};
   const result = await axios.get(API_URL + "/users/auth-check", {
     withCredentials: true,
@@ -34,10 +36,7 @@ MyApp.getInitialProps = async (args) => {
     headers,
   });
 
-  pageProps = { isAuth: result.status === 200 };
-  if (args.Component.getInitialProps) {
-    pageProps = await args.Component.getInitialProps(args.ctx);
-  }
+  pageProps.isAuth = result.status === 200;
 
   return {
     pageProps,
