@@ -12,7 +12,8 @@ import {
 import { API_URL } from "../constants";
 import { useRouter } from "next/router";
 import Login from "./login";
-import { getContactAndPopulateForm } from "../shared/utils/cleanup-utils";
+import { getContactAndPopulateForm } from "../shared/utils/get-contact-and-populate-form";
+import { applyLocalStorage } from "../shared/utils/apply-local-storage";
 export default function DataCleanupPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
@@ -45,13 +46,6 @@ export default function DataCleanupPage(props) {
               .sort((a, b) => a.id - b.id);
 
             setContactList(formattedContactList);
-
-            // Load First contact in the list
-            getContactAndPopulateForm(
-              updateFormData,
-              formData,
-              formattedContactList[0].id
-            );
           }
 
           axios
@@ -66,23 +60,13 @@ export default function DataCleanupPage(props) {
             });
         });
 
-      // Get LocalStorage when on client side
-      const localStorageFormData = JSON.parse(
-        localStorage.getItem("dataCleanUpFormData")
-      );
-      const localStorageSelectedContactData = JSON.parse(
-        localStorage.getItem("dataCleanUpSelectedContactData")
-      );
-
-      if (localStorageSelectedContactData)
-        updateSelectedContact(localStorageSelectedContactData);
-
-      if (localStorageFormData) updateFormData(localStorageFormData);
+      applyLocalStorage(updateSelectedContact, updateFormData);
 
       return () => {
         mounted = false;
       };
     } else {
+      console.log("no auth");
       // If unauthenticated, redirect router to login page and clear localStorage
       localStorage.clear();
       router.replace(router.pathname, "/login", { shallow: true });
@@ -252,7 +236,7 @@ export default function DataCleanupPage(props) {
             onChange={contactSelected}
             name="contact-list"
             size={50}
-            value={selectedContact.id}
+            value={selectedContact.id === "" ? undefined : selectedContact.id}
           >
             {contactList.map((contact, index) => (
               <option key={index} value={contact.id}>
