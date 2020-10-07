@@ -86,7 +86,7 @@ export default function DataCleanupPage(props) {
   });
   const initialContactListData = [];
 
-  let initialFormData = Object.freeze({
+  const initialFormData = Object.freeze({
     key: uuid(),
     familyName: "",
     salutation: "",
@@ -119,7 +119,7 @@ export default function DataCleanupPage(props) {
     ],
   });
 
-  let initialSelectedContact = { id: "", page: 1 };
+  const initialSelectedContact = { id: "", page: 1 };
 
   const redtailDropDowns: RedtailSettingsData = {
     statuses: [],
