@@ -377,7 +377,7 @@ export default function DataCleanupPage(props) {
                       <select className={styles.formLabelledInput}></select>
                     </div>
                   </div>
-                  S{/* -------- */}
+                  {/* -------- */}
                   <div className={styles.formColumn}>
                     <button className={styles.saveButton} onClick={saveContact}>
                       SAVE
