@@ -5,15 +5,20 @@ import { v4 as uuid } from "uuid";
 import LoadingOverlay from "react-loading-overlay";
 import { useEffect, useState } from "react";
 import {
-  RedtailContact,
-  RedtailContactMaster,
+  RedtailContactUpdate,
+  RedtailContactRec,
   RedtailSettingsData,
+  ContactFormData,
+  EmailAddressFormData,
+  StreetAddressFormData,
+  PhoneNumberFormData,
 } from "../interfaces/redtail.interface";
 import { API_URL } from "../constants";
 import { useRouter } from "next/router";
 import Login from "./login";
 import { getContactAndPopulateForm } from "../shared/utils/get-contact-and-populate-form";
 import { applyLocalStorage } from "../shared/utils/apply-local-storage";
+import { prepareContactSubmitData } from "../shared/utils/prepare-contact-submit-data";
 export default function DataCleanupPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
@@ -30,7 +35,7 @@ export default function DataCleanupPage(props) {
         .then((res) => {
           if (mounted) {
             const result = res.data;
-            const contacts: RedtailContact[] = result.contacts.Detail;
+            const contacts: RedtailContactRec[] = result.contacts.Detail;
             const totalCount: number = result.contacts.TotalRecords;
             const pageCount: number = Math.ceil(totalCount / 50);
 
@@ -41,7 +46,10 @@ export default function DataCleanupPage(props) {
 
             const formattedContactList = contacts
               .map((contact) => {
-                return { id: contact.ClientID, lastName: contact.LastName };
+                return {
+                  id: contact.Fields.ClientID,
+                  lastName: contact.Fields.Lastname,
+                };
               })
               .sort((a, b) => a.id - b.id);
 
@@ -76,13 +84,7 @@ export default function DataCleanupPage(props) {
   // If unathenticated, load login component
   if (!isAuth) return <Login />;
 
-  const initialPageData = Object.freeze({
-    current_page: 1,
-    total_pages: 1,
-  });
-  const initialContactListData = [];
-
-  const initialFormData = Object.freeze({
+  const initialFormDataOrig = Object.freeze({
     key: uuid(),
     familyName: "",
     salutation: "",
@@ -91,12 +93,12 @@ export default function DataCleanupPage(props) {
     lastName: "",
     nickname: "",
     gender: "",
-    category: "",
-    status: "",
-    source: "",
+    categoryID: "",
+    statusID: "",
+    sourceID: "",
     referredBy: "",
-    servicingAdvisor: "",
-    writingAdvisor: "",
+    servicingAdvisorID: "",
+    writingAdvisorID: "",
     phoneNumbers: [{ key: uuid(), phoneNumber: "", type: "", primary: false }],
     emailAddresses: [
       { key: uuid(), emailAddress: "", type: "", primary: false },
@@ -115,8 +117,6 @@ export default function DataCleanupPage(props) {
     ],
   });
 
-  const initialSelectedContact = { id: "", page: 1 };
-
   const redtailDropDowns: RedtailSettingsData = {
     statuses: [],
     categories: [],
@@ -126,13 +126,27 @@ export default function DataCleanupPage(props) {
     writingAdvisors: [],
   };
 
-  const [formData, updateFormData] = useState(initialFormData);
-  const [selectedContact, updateSelectedContact] = useState(
-    initialSelectedContact
+  const initialFormData = Object.freeze({
+    key: uuid(),
+    emailAddresses: [{ key: uuid() } as EmailAddressFormData],
+    phoneNumbers: [{ key: uuid() } as PhoneNumberFormData],
+    streetAddresses: [{ key: uuid() } as StreetAddressFormData],
+  } as ContactFormData);
+
+  const [sourceContactRef, updateSourceContactRef] = useState(
+    {} as RedtailContactRec
   );
-  const [contactList, setContactList] = useState(initialContactListData);
+  const [formData, updateFormData] = useState(initialFormData);
+  const [selectedContact, updateSelectedContact] = useState({
+    id: "",
+    page: 1,
+  });
+  const [contactList, setContactList] = useState([]);
   const [dropdownData, updateDropdownData] = useState(redtailDropDowns);
-  const [pageData, updatePageData] = useState(initialPageData);
+  const [pageData, updatePageData] = useState({
+    current_page: 1,
+    total_pages: 1,
+  });
   const [loadingPage, setLoadingPage] = useState(false);
   const [loadingContact, setLoadingState] = useState(false);
 
@@ -160,7 +174,7 @@ export default function DataCleanupPage(props) {
     axios
       .post(
         API_URL + "/rt/contact-submit",
-        { data: formData },
+        { data: prepareContactSubmitData(formData, sourceContactRef) },
         { withCredentials: true }
       )
       .then((res) => {
@@ -175,9 +189,12 @@ export default function DataCleanupPage(props) {
     const id = e.target.value;
     updateSelectedContact({ id, page: 1 });
 
-    getContactAndPopulateForm(updateFormData, formData, id).then(() =>
-      setLoadingState(false)
-    );
+    getContactAndPopulateForm(
+      sourceContactRef,
+      updateFormData,
+      formData,
+      id
+    ).then(() => setLoadingState(false));
   };
 
   const toggleFilterModal = (e) => {
@@ -342,7 +359,7 @@ export default function DataCleanupPage(props) {
                     className={styles.formLabelledInput}
                     onChange={handleChange}
                     name="category"
-                    value={formData.category}
+                    value={formData.categoryID}
                   >
                     <option value=""></option>
                     {dropdownData.categories.map((obj, index) => (
@@ -358,7 +375,7 @@ export default function DataCleanupPage(props) {
                     className={styles.formLabelledInput}
                     onChange={handleChange}
                     name="status"
-                    value={formData.status}
+                    value={formData.statusID}
                   >
                     <option value=""></option>
                     {dropdownData.statuses.map((obj, index) => (
@@ -379,7 +396,7 @@ export default function DataCleanupPage(props) {
                         className={styles.formLabelledInput}
                         onChange={handleChange}
                         name="source"
-                        value={formData.source}
+                        value={formData.sourceID}
                       >
                         <option value=""></option>
                         {dropdownData.sources.map((obj, index) => (
@@ -407,7 +424,7 @@ export default function DataCleanupPage(props) {
                         className={styles.formLabelledInput}
                         onChange={handleChange}
                         name="servicingAdvisor"
-                        value={formData.servicingAdvisor}
+                        value={formData.servicingAdvisorID}
                       >
                         <option value=""></option>
                         {dropdownData.servicingAdvisors.map((obj, index) => (
@@ -425,7 +442,7 @@ export default function DataCleanupPage(props) {
                         className={styles.formLabelledInput}
                         onChange={handleChange}
                         name="writingAdvisor"
-                        value={formData.writingAdvisor}
+                        value={formData.writingAdvisorID}
                       >
                         <option value=""></option>
                         {dropdownData.writingAdvisors.map((obj, index) => (

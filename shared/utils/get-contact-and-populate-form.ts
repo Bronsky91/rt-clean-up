@@ -1,43 +1,43 @@
 import Axios from "axios";
 import { API_URL } from "../../constants";
-import { RedtailContactMaster } from "../../interfaces/redtail.interface";
+import { RedtailContactRec } from "../../interfaces/redtail.interface";
 import { v4 as uuid } from "uuid";
 
-export const getContactAndPopulateForm = (updateFormData, formData, id) => {
+export const getContactAndPopulateForm = (
+  updateSourceContactRef,
+  updateFormData,
+  formData,
+  id
+) => {
   return Axios.post(
     API_URL + "/rt/get-contact",
     { id },
     { withCredentials: true }
   ).then((res) => {
-    const data: RedtailContactMaster = res.data;
+    const data: RedtailContactRec = res.data;
+
+    updateSourceContactRef(data);
+
     updateFormData({
       key: formData.key,
-      familyName: data.ContactRecord.Familyname,
-      salutation: data.ContactRecord.Salutation
-        ? data.ContactRecord.Salutation.toString()
+      familyName: data.Fields.Familyname,
+      salutation: data.Fields.Salutation
+        ? data.Fields.Salutation.toString()
         : "",
-      firstName: data.ContactRecord.Firstname,
-      middleName: data.ContactRecord.Middlename,
-      lastName: data.ContactRecord.Lastname,
-      nickname: data.ContactRecord.Nickname,
-      gender: data.ContactRecord.Gender
-        ? data.ContactRecord.Gender.toString()
+      firstName: data.Fields.Firstname,
+      middleName: data.Fields.Middlename,
+      lastName: data.Fields.Lastname,
+      nickname: data.Fields.Nickname,
+      gender: data.Fields.Gender ? data.Fields.Gender.toString() : "",
+      category: data.Fields.CategoryID ? data.Fields.CategoryID.toString() : "",
+      status: data.Fields.StatusID ? data.Fields.StatusID.toString() : "",
+      source: data.Fields.SourceID ? data.Fields.SourceID.toString() : "",
+      referredBy: data.Fields.ReferredBy,
+      servicingAdvisor: data.Fields.ServicingAdvisorID
+        ? data.Fields.ServicingAdvisorID.toString()
         : "",
-      category: data.ContactRecord.CategoryID
-        ? data.ContactRecord.CategoryID.toString()
-        : "",
-      status: data.ContactRecord.StatusID
-        ? data.ContactRecord.StatusID.toString()
-        : "",
-      source: data.ContactRecord.SourceID
-        ? data.ContactRecord.SourceID.toString()
-        : "",
-      referredBy: data.ContactRecord.ReferredBy,
-      servicingAdvisor: data.ContactRecord.ServicingAdvisorID
-        ? data.ContactRecord.ServicingAdvisorID.toString()
-        : "",
-      writingAdvisor: data.ContactRecord.WritingAdvisorID
-        ? data.ContactRecord.WritingAdvisorID.toString()
+      writingAdvisor: data.Fields.WritingAdvisorID
+        ? data.Fields.WritingAdvisorID.toString()
         : "",
       phoneNumbers: data.Phone.map((obj, index) => ({
         key: uuid(),
@@ -62,6 +62,5 @@ export const getContactAndPopulateForm = (updateFormData, formData, id) => {
         primary: obj.Primary,
       })),
     });
-
   });
 };
