@@ -2,7 +2,8 @@ $field-height: 4rem;
 
 .container {
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row;
+  margin-top: 2em;
 }
 
 .pageTitle {
@@ -53,7 +54,7 @@ $field-height: 4rem;
   margin: 0.6rem 0 0.6rem 1.8rem; // t r b l
   background-color: white;
   width: 70vw;
-  height: 80vh;
+  height: 84vh;
 }
 
 .editPanelUpperLeft {
@@ -73,18 +74,18 @@ $field-height: 4rem;
 
 .formField {
   background-color: #4357ab;
-  width: 30rem;
+  width: 32rem;
   height: $field-height;
   margin: 0.2rem;
 }
 
 .formLabel {
   color: white;
-  width: 10rem;
+  width: 12rem;
   height: $field-height;
   display: inline-block;
   text-align: left;
-  padding-left: .5rem;
+  padding-left: 0.5rem;
   font-size: 1.5rem;
   line-height: 250%;
 }
@@ -92,7 +93,7 @@ $field-height: 4rem;
 .formLabelledInput {
   width: 20rem;
   height: $field-height;
-  position: fixed;
+  position: relative;
 }
 
 .formHeader {

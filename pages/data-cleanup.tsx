@@ -173,7 +173,6 @@ export default function DataCleanupPage(props) {
       text="Gathering Contacts from Redtail..."
     >
       <div className={styles.container}>
-        <div className={styles.pageTitle}>Data Cleanup</div>
         <ConstListPanel
           contactSelected={contactSelected}
           selectedContact={selectedContact}
