@@ -1,4 +1,4 @@
-$field-height: 4.5rem;
+$field-height: 4rem;
 
 .container {
   display: flex;
@@ -14,11 +14,6 @@ $field-height: 4.5rem;
   letter-spacing: 0.28rem;
   color: #3f4f7a;
 }
-
-
-
-
-
 
 .saveButton {
   margin: 0.5rem auto;
@@ -52,8 +47,6 @@ $field-height: 4.5rem;
   border-radius: 3rem;
 }
 
-
-
 .editPanel {
   display: flex;
   flex-flow: column nowrap;
@@ -80,23 +73,26 @@ $field-height: 4.5rem;
 
 .formField {
   background-color: #4357ab;
-  width: 36rem;
+  width: 30rem;
   height: $field-height;
   margin: 0.2rem;
 }
 
 .formLabel {
   color: white;
-  width: 13rem;
+  width: 10rem;
   height: $field-height;
   display: inline-block;
-  text-align: center;
+  text-align: left;
+  padding-left: .5rem;
   font-size: 1.5rem;
+  line-height: 250%;
 }
 
 .formLabelledInput {
-  width: 23rem;
+  width: 20rem;
   height: $field-height;
+  position: fixed;
 }
 
 .formHeader {
