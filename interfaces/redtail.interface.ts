@@ -35,9 +35,41 @@ export interface ContactFieldsUpdate {
 }
 
 // Used when RECEIVING data from Redtail
+
+export interface RedtailContactListRec {
+  Age: number;
+  Category: string;
+  CategoryID: number;
+  ClientID: number;
+  ClientSince: string;
+  ClientType: string;
+  DateofBirth: string;
+  DateofBirthReminder: boolean;
+  FirstName: string;
+  Gender: string;
+  InputBy: string;
+  InputByID: number;
+  InputDate: string;
+  LastName: string;
+  MaritalDate: string;
+  MaritalStatus: string;
+  MiddleName: string;
+  Name: string;
+  ReferredBy: string;
+  ServicingAdvisor: string;
+  ServicingAdvisorID: number;
+  Source: string;
+  SourceID: number;
+  Status: string;
+  StatusID: number;
+  TaxID: string;
+  WritingAdvisor: string;
+  WritingAdvisorID: number;
+}
+
 export interface RedtailContactRec {
   Address?: AddressRec[] | null;
-  Fields: ContactFieldsRec;
+  ContactRecord: ContactFieldsRec;
   Internet?: InternetRec[] | null;
   Phone?: PhoneRec[] | null;
 }

@@ -1,24 +1,29 @@
 import PageLayout from "../layouts/page-layout";
 import styles from "../styles/DataCleanupPage.module.scss";
 import axios from "axios";
-import { v4 as uuid } from "uuid";
+import { v4 as uuid } from "../node_modules/uuid";
 import LoadingOverlay from "react-loading-overlay";
 import { useEffect, useState } from "react";
 import {
-  RedtailContactUpdate,
   RedtailContactRec,
   RedtailSettingsData,
   ContactFormData,
   EmailAddressFormData,
   StreetAddressFormData,
   PhoneNumberFormData,
+  RedtailContactListRec,
 } from "../interfaces/redtail.interface";
 import { API_URL } from "../constants";
 import { useRouter } from "next/router";
 import Login from "./login";
-import { getContactAndPopulateForm } from "../shared/utils/get-contact-and-populate-form";
-import { applyLocalStorage } from "../shared/utils/apply-local-storage";
-import { prepareContactSubmitData } from "../shared/utils/prepare-contact-submit-data";
+import { getContactAndPopulateForm } from "../utils/get-contact-and-populate-form";
+import { applyLocalStorage } from "../utils/apply-local-storage";
+import { prepareContactSubmitData } from "../utils/prepare-contact-submit-data";
+import ConstListPanel from "../components/contactListPanel";
+import {
+  createInitalFormData,
+  createInitialDropDownData,
+} from "../utils/create-initial-form-data";
 export default function DataCleanupPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
@@ -35,7 +40,7 @@ export default function DataCleanupPage(props) {
         .then((res) => {
           if (mounted) {
             const result = res.data;
-            const contacts: RedtailContactRec[] = result.contacts.Detail;
+            const contacts: RedtailContactListRec[] = result.contacts.Detail;
             const totalCount: number = result.contacts.TotalRecords;
             const pageCount: number = Math.ceil(totalCount / 50);
 
@@ -47,8 +52,8 @@ export default function DataCleanupPage(props) {
             const formattedContactList = contacts
               .map((contact) => {
                 return {
-                  id: contact.Fields.ClientID,
-                  lastName: contact.Fields.Lastname,
+                  id: contact.ClientID,
+                  lastName: contact.LastName,
                 };
               })
               .sort((a, b) => a.id - b.id);
@@ -68,13 +73,13 @@ export default function DataCleanupPage(props) {
             });
         });
 
+      // Update Form with LocalStorage if it's available
       applyLocalStorage(updateSelectedContact, updateFormData);
 
       return () => {
         mounted = false;
       };
     } else {
-      console.log("no auth");
       // If unauthenticated, redirect router to login page and clear localStorage
       localStorage.clear();
       router.replace(router.pathname, "/login", { shallow: true });
@@ -84,54 +89,8 @@ export default function DataCleanupPage(props) {
   // If unathenticated, load login component
   if (!isAuth) return <Login />;
 
-  const initialFormDataOrig = Object.freeze({
-    key: uuid(),
-    familyName: "",
-    salutation: "",
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    nickname: "",
-    gender: "",
-    categoryID: "",
-    statusID: "",
-    sourceID: "",
-    referredBy: "",
-    servicingAdvisorID: "",
-    writingAdvisorID: "",
-    phoneNumbers: [{ key: uuid(), phoneNumber: "", type: "", primary: false }],
-    emailAddresses: [
-      { key: uuid(), emailAddress: "", type: "", primary: false },
-    ],
-    streetAddresses: [
-      {
-        key: uuid(),
-        streetAddress: "",
-        secondaryAddress: "",
-        city: "",
-        state: "",
-        zip: "",
-        type: "",
-        primary: false,
-      },
-    ],
-  });
-
-  const redtailDropDowns: RedtailSettingsData = {
-    statuses: [],
-    categories: [],
-    sources: [],
-    salutations: [],
-    servicingAdvisors: [],
-    writingAdvisors: [],
-  };
-
-  const initialFormData = Object.freeze({
-    key: uuid(),
-    emailAddresses: [{ key: uuid() } as EmailAddressFormData],
-    phoneNumbers: [{ key: uuid() } as PhoneNumberFormData],
-    streetAddresses: [{ key: uuid() } as StreetAddressFormData],
-  } as ContactFormData);
+  const initialFormData: Readonly<ContactFormData> = createInitalFormData();
+  const redtailDropDowns: Readonly<RedtailSettingsData> = createInitialDropDownData();
 
   const [sourceContactRef, updateSourceContactRef] = useState(
     {} as RedtailContactRec
@@ -190,16 +149,11 @@ export default function DataCleanupPage(props) {
     updateSelectedContact({ id, page: 1 });
 
     getContactAndPopulateForm(
-      sourceContactRef,
+      updateSourceContactRef,
       updateFormData,
       formData,
       id
     ).then(() => setLoadingState(false));
-  };
-
-  const toggleFilterModal = (e) => {
-    e.preventDefault();
-    // TODO
   };
 
   const saveContact = (e) => {
@@ -212,21 +166,6 @@ export default function DataCleanupPage(props) {
     // TODO
   };
 
-  const changePage = (e) => {
-    e.preventDefault();
-    const target = e.target;
-    updatePageData({
-      current_page:
-        Number.isInteger(target.value) &&
-        target.value > 0 &&
-        target.value <= pageData.total_pages
-          ? target.value
-          : pageData.current_page,
-      total_pages: pageData.total_pages,
-    });
-    // TODO: API call for new page's data
-  };
-
   return (
     <LoadingOverlay
       active={loadingPage}
@@ -235,44 +174,13 @@ export default function DataCleanupPage(props) {
     >
       <div className={styles.container}>
         <div className={styles.pageTitle}>Data Cleanup</div>
-        <div className={styles.contactsPanel}>
-          <div className={styles.contactsTopRow}>
-            <label className={styles.contactsTitle}>Contacts</label>
-            <button
-              className={styles.filterButton}
-              onClick={toggleFilterModal}
-            />
-          </div>
-          <input
-            className={styles.contactSearch}
-            type="text"
-            placeholder="Search Last Name.."
-          />
-          <select
-            className={styles.contactSelect}
-            onChange={contactSelected}
-            name="contact-list"
-            size={50}
-            value={selectedContact.id === "" ? undefined : selectedContact.id}
-          >
-            {contactList.map((contact, index) => (
-              <option key={index} value={contact.id}>
-                {contact.id}, {contact.lastName}
-              </option>
-            ))}
-          </select>
-          <div className={styles.contactPageRow}>
-            <button onClick={saveContact}>&lt;</button>
-            <input
-              className={styles.contactPageInput}
-              type="text"
-              defaultValue={pageData.current_page}
-              onChange={changePage}
-            />{" "}
-            of {pageData.total_pages.toString() + " "}
-            <button onClick={saveContact}>&gt;</button>
-          </div>
-        </div>
+        <ConstListPanel
+          contactSelected={contactSelected}
+          selectedContact={selectedContact}
+          contactList={contactList}
+          pageData={pageData}
+          updatePageData={updatePageData}
+        ></ConstListPanel>
         <LoadingOverlay active={loadingContact} spinner text="Loading Contact">
           <form className={styles.editPanel} autoComplete="off">
             <div className={styles.formRow}>

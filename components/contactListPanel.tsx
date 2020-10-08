@@ -1,4 +1,26 @@
-export default function constListPanel() {
+import styles from "../styles/ContactListPanel.module.scss";
+
+export default function ConstListPanel(props) {
+  const toggleFilterModal = (e) => {
+    e.preventDefault();
+    // TODO
+  };
+
+  const changePage = (e) => {
+    e.preventDefault();
+    const target = e.target;
+    props.updatePageData({
+      current_page:
+        Number.isInteger(target.value) &&
+        target.value > 0 &&
+        target.value <= props.pageData.total_pages
+          ? target.value
+          : props.pageData.current_page,
+      total_pages: props.pageData.total_pages,
+    });
+    // TODO: API call for new page's data
+  };
+
   return (
     <div className={styles.contactsPanel}>
       <div className={styles.contactsTopRow}>
@@ -12,27 +34,29 @@ export default function constListPanel() {
       />
       <select
         className={styles.contactSelect}
-        onChange={contactSelected}
+        onChange={props.contactSelected}
         name="contact-list"
         size={50}
-        value={selectedContact.id === "" ? undefined : selectedContact.id}
+        value={
+          props.selectedContact.id === "" ? undefined : props.selectedContact.id
+        }
       >
-        {contactList.map((contact, index) => (
+        {props.contactList.map((contact, index) => (
           <option key={index} value={contact.id}>
             {contact.id}, {contact.lastName}
           </option>
         ))}
       </select>
       <div className={styles.contactPageRow}>
-        <button onClick={saveContact}>&lt;</button>
+        <button>&lt;</button>
         <input
           className={styles.contactPageInput}
           type="text"
-          defaultValue={pageData.current_page}
+          defaultValue={props.pageData.current_page}
           onChange={changePage}
         />{" "}
-        of {pageData.total_pages.toString() + " "}
-        <button onClick={saveContact}>&gt;</button>
+        of {props.pageData.total_pages.toString() + " "}
+        <button>&gt;</button>
       </div>
     </div>
   );
