@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import styles from "../styles/PageLayout.module.scss";
 import { useState } from "react";
-import RedtailAuthModal from "../components/redtailAuthModal";
+import RedtailAuthModal from "../components/redtail-auth-modal";
 import Axios from "axios";
 import { API_URL } from "../constants";
 

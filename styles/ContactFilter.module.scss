@@ -1,0 +1,149 @@
+.container {
+  background-image: url("/linkpoint-bg.png");
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: fixed;
+  width: 50em;
+  height: 30em;
+  margin-top: 30em;
+  margin-left: 60em;
+  z-index: 2;
+}
+
+.layer {
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+  border: solid 1px rgba(67, 87, 171, 0.49);
+  background-color: rgba(255, 255, 255, 0.74);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+%flex {
+  display: flex;
+}
+
+%flexRow {
+  @extend %flex;
+  flex-direction: row;
+}
+
+%flexColumn {
+  @extend %flex;
+  flex-direction: column;
+}
+
+.flexColumnContainer {
+  @extend %flexColumn;
+}
+
+.flexTopRow {
+  @extend %flexRow;
+  height: 80%;
+  width: 100%;
+}
+
+.flexButtonRow {
+  @extend %flexRow;
+  height: 20%;
+  width: 100%;
+  justify-content: center;
+}
+
+.filterColumn {
+  @extend %flexColumn;
+  margin-left: 1em;
+}
+
+.filterByTitle {
+  font-size: 3rem;
+  font-weight: 600;
+  text-align: center;
+  color: #4357ab;
+}
+
+.titleBar {
+  margin-left: 1rem;
+  width: 15rem;
+  height: 0;
+  border: solid 1px #707070;
+}
+
+.filterItem {
+  display: inline-block;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #4357ab;
+  @extend %flexRow;
+  text-align: center;
+  background: none;
+  border: none;
+  margin-top: 1.5rem;
+  padding: 0;
+}
+
+.filterItem:hover {
+  cursor: pointer;
+}
+
+.arrow {
+  height: 30px;
+  object-fit: contain;
+  position: fixed;
+}
+
+.itemsContainer {
+  @extend %flexColumn;
+}
+
+.itemRow {
+  @extend %flexRow;
+}
+
+.itemCheckbox {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: solid 1px #707070;
+  margin-left: 2em;
+}
+
+.item {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #8e8e8e;
+  margin-left: 0.5em;
+}
+
+.itemsContainer {
+  height: 20em;
+  width: 28em;
+  box-shadow: 0 3px 6px 0 rgba(255, 255, 255, 0.16);
+  background-color: rgba(255, 255, 255, 0.7);
+  margin-left: 3em;
+  margin-top: 4em;
+  overflow-y: scroll;
+}
+
+.flexButtonRow {
+  margin-top: 1.5em;
+  justify-content: center;
+  margin-bottom: 1.5em;
+}
+
+.filterButton {
+  margin-left: 1em;
+  width: 6em;
+  height: 2.5em;
+  border-radius: 25px;
+  border: none;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+  background-color: #6896d6;
+  font-size: 1.4rem;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+}

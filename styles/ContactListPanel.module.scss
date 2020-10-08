@@ -43,13 +43,18 @@
 
 .filterButton {
   margin: 0.5rem;
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 2rem;
+  height: 2rem;
   border: solid 1px #4357ab;
   background-image: url("/filter.png");
-  background-size: 1rem;
+  background-size: 1.6rem;
   background-position: center;
+  background-color: white;
   border-radius: 50%;
+}
+
+.filterButton:hover {
+  cursor: pointer;
 }
 
 .contactSelect {

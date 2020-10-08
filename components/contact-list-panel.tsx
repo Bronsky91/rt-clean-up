@@ -1,9 +1,13 @@
+import { useState } from "react";
 import styles from "../styles/ContactListPanel.module.scss";
+import ContactFilter from "./contact-filter";
 
-export default function ConstListPanel(props) {
-  const toggleFilterModal = (e) => {
+export default function ContactListPanel(props) {
+  const [showFilters, setShowFilters] = useState(false);
+
+  const toggleFilterWindow = (e) => {
     e.preventDefault();
-    // TODO
+    setShowFilters(!showFilters);
   };
 
   const changePage = (e) => {
@@ -25,7 +29,10 @@ export default function ConstListPanel(props) {
     <div className={styles.contactsPanel}>
       <div className={styles.contactsTopRow}>
         <label className={styles.contactsTitle}>Contacts</label>
-        <button className={styles.filterButton} onClick={toggleFilterModal} />
+        <button className={styles.filterButton} onClick={toggleFilterWindow} />
+        {showFilters ? (
+          <ContactFilter dropdownData={props.dropdownData}></ContactFilter>
+        ) : null}
       </div>
       <input
         className={styles.contactSearch}

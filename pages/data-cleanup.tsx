@@ -1,16 +1,12 @@
 import PageLayout from "../layouts/page-layout";
 import styles from "../styles/DataCleanupPage.module.scss";
 import axios from "axios";
-import { v4 as uuid } from "../node_modules/uuid";
 import LoadingOverlay from "react-loading-overlay";
 import { useEffect, useState } from "react";
 import {
   RedtailContactRec,
   RedtailSettingsData,
   ContactFormData,
-  EmailAddressFormData,
-  StreetAddressFormData,
-  PhoneNumberFormData,
   RedtailContactListRec,
 } from "../interfaces/redtail.interface";
 import { API_URL } from "../constants";
@@ -19,7 +15,7 @@ import Login from "./login";
 import { getContactAndPopulateForm } from "../utils/get-contact-and-populate-form";
 import { applyLocalStorage } from "../utils/apply-local-storage";
 import { prepareContactSubmitData } from "../utils/prepare-contact-submit-data";
-import ConstListPanel from "../components/contactListPanel";
+import ContactListPanel from "../components/contact-list-panel";
 import {
   createInitalFormData,
   createInitialDropDownData,
@@ -173,13 +169,14 @@ export default function DataCleanupPage(props) {
       text="Gathering Contacts from Redtail..."
     >
       <div className={styles.container}>
-        <ConstListPanel
+        <ContactListPanel
           contactSelected={contactSelected}
           selectedContact={selectedContact}
           contactList={contactList}
           pageData={pageData}
           updatePageData={updatePageData}
-        ></ConstListPanel>
+          dropdownData={dropdownData}
+        ></ContactListPanel>
         <LoadingOverlay active={loadingContact} spinner text="Loading Contact">
           <form className={styles.editPanel} autoComplete="off">
             <div className={styles.formRow}>
