@@ -39,6 +39,6 @@ export const prepareContactSubmitData = (
       TaxID: fields.ContactRecord.TaxID,
       TypeID: fields.ContactRecord.ClientType,
       WritingAdvisorID: formData.writingAdvisorID,
-    } as ContactFieldsUpdate,
-  } as RedtailContactUpdate;
+    },
+  };
 };

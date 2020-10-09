@@ -17,6 +17,7 @@ import { applyLocalStorage } from "../utils/apply-local-storage";
 import { prepareContactSubmitData } from "../utils/prepare-contact-submit-data";
 import ContactListPanel from "../components/contact-list-panel";
 import {
+  createInitialContactRefData,
   createInitalFormData,
   createInitialDropDownData,
 } from "../utils/create-initial-form-data";
@@ -85,11 +86,12 @@ export default function DataCleanupPage(props) {
   // If unathenticated, load login component
   if (!isAuth) return <Login />;
 
+  const initialSourceContactRef: Readonly<RedtailContactRec> = createInitialContactRefData();
   const initialFormData: Readonly<ContactFormData> = createInitalFormData();
   const redtailDropDowns: Readonly<RedtailSettingsData> = createInitialDropDownData();
 
   const [sourceContactRef, updateSourceContactRef] = useState(
-    {} as RedtailContactRec
+    initialSourceContactRef
   );
   const [formData, updateFormData] = useState(initialFormData);
   const [selectedContact, updateSelectedContact] = useState({
@@ -129,11 +131,11 @@ export default function DataCleanupPage(props) {
     axios
       .post(
         API_URL + "/rt/contact-submit",
-        { data: prepareContactSubmitData(formData, sourceContactRef) },
+        { contact: prepareContactSubmitData(formData, sourceContactRef) },
         { withCredentials: true }
       )
       .then((res) => {
-        console.log("Submitted Contact!");
+        alert("Submitted Contact!");
       });
   };
 
@@ -143,18 +145,14 @@ export default function DataCleanupPage(props) {
 
     const id = e.target.value;
     updateSelectedContact({ id, page: 1 });
-
     getContactAndPopulateForm(
       updateSourceContactRef,
       updateFormData,
       formData,
       id
-    ).then(() => setLoadingState(false));
-  };
-
-  const saveContact = (e) => {
-    e.preventDefault();
-    // TODO
+    ).then(() => {
+      setLoadingState(false)
+    });
   };
 
   const undoContact = (e) => {
@@ -178,7 +176,7 @@ export default function DataCleanupPage(props) {
           dropdownData={dropdownData}
         ></ContactListPanel>
         <LoadingOverlay active={loadingContact} spinner text="Loading Contact">
-          <form className={styles.editPanel} autoComplete="off">
+          <form className={styles.editPanel} autoComplete="off" onSubmit={handleSubmit}>
             <div className={styles.formRow}>
               <div className={styles.formColumn}>
                 <div className={styles.formField}>
@@ -267,7 +265,7 @@ export default function DataCleanupPage(props) {
                       <select
                         className={styles.formLabelledInput}
                         onChange={handleChange}
-                        name="category"
+                        name="categoryID"
                         value={formData.categoryID}
                       >
                         <option value=""></option>
@@ -283,7 +281,7 @@ export default function DataCleanupPage(props) {
                       <select
                         className={styles.formLabelledInput}
                         onChange={handleChange}
-                        name="status"
+                        name="statusID"
                         value={formData.statusID}
                       >
                         <option value=""></option>
@@ -299,7 +297,7 @@ export default function DataCleanupPage(props) {
                       <select
                         className={styles.formLabelledInput}
                         onChange={handleChange}
-                        name="source"
+                        name="sourceID"
                         value={formData.sourceID}
                       >
                         <option value=""></option>
@@ -327,7 +325,7 @@ export default function DataCleanupPage(props) {
                       <select
                         className={styles.formLabelledInput}
                         onChange={handleChange}
-                        name="servicingAdvisor"
+                        name="servicingAdvisorID"
                         value={formData.servicingAdvisorID}
                       >
                         <option value=""></option>
@@ -345,7 +343,7 @@ export default function DataCleanupPage(props) {
                       <select
                         className={styles.formLabelledInput}
                         onChange={handleChange}
-                        name="writingAdvisor"
+                        name="writingAdvisorID"
                         value={formData.writingAdvisorID}
                       >
                         <option value=""></option>
@@ -375,7 +373,7 @@ export default function DataCleanupPage(props) {
                   </div>
                   {/* -------- */}
                   <div className={styles.formColumn}>
-                    <button className={styles.saveButton} onClick={saveContact}>
+                    <button type="submit" className={styles.saveButton}>
                       SAVE
                     </button>
                     <button className={styles.undoButton} onClick={undoContact}>

@@ -15,7 +15,7 @@ export const getContactAndPopulateForm = (
     { withCredentials: true }
   ).then((res) => {
     const data: RedtailContactRec = res.data;
-    console.log(data);
+    console.log("RedtailContactRec data in getContactAndPopulateForm: " + JSON.stringify(data));
     updateSourceContactRef(data);
 
     updateFormData({
@@ -31,22 +31,22 @@ export const getContactAndPopulateForm = (
       gender: data.ContactRecord.Gender
         ? data.ContactRecord.Gender.toString()
         : "",
-      category: data.ContactRecord.CategoryID
-        ? data.ContactRecord.CategoryID.toString()
-        : "",
-      status: data.ContactRecord.StatusID
-        ? data.ContactRecord.StatusID.toString()
-        : "",
-      source: data.ContactRecord.SourceID
-        ? data.ContactRecord.SourceID.toString()
-        : "",
+      categoryID: data.ContactRecord.CategoryID
+        ? data.ContactRecord.CategoryID
+        : 0,
+      statusID: data.ContactRecord.StatusID
+        ? data.ContactRecord.StatusID
+        : 0,
+      sourceID: data.ContactRecord.SourceID
+        ? data.ContactRecord.SourceID
+        : 0,
       referredBy: data.ContactRecord.ReferredBy,
-      servicingAdvisor: data.ContactRecord.ServicingAdvisorID
-        ? data.ContactRecord.ServicingAdvisorID.toString()
-        : "",
-      writingAdvisor: data.ContactRecord.WritingAdvisorID
-        ? data.ContactRecord.WritingAdvisorID.toString()
-        : "",
+      servicingAdvisorID: data.ContactRecord.ServicingAdvisorID
+        ? data.ContactRecord.ServicingAdvisorID
+        : 0,
+      writingAdvisorID: data.ContactRecord.WritingAdvisorID
+        ? data.ContactRecord.WritingAdvisorID
+        : 0,
       phoneNumbers: data.Phone.map((obj, index) => ({
         key: uuid(),
         phoneNumber: obj.Number,
