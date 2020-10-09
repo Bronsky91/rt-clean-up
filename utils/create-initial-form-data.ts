@@ -1,4 +1,9 @@
-import { ContactFormData, ContactFieldsRec, RedtailContactRec, RedtailSettingsData } from "../interfaces/redtail.interface";
+import {
+  ContactFormData,
+  ContactFieldsRec,
+  RedtailContactRec,
+  RedtailSettingsData,
+} from "../interfaces/redtail.interface";
 import { v4 as uuid } from "../node_modules/uuid";
 
 export const createInitialContactRefData = (): Readonly<RedtailContactRec> =>
@@ -49,10 +54,10 @@ export const createInitialContactRefData = (): Readonly<RedtailContactRec> =>
       Suffix: "",
       TaxID: "",
       WritingAdvisor: "",
-      WritingAdvisorID: 0
+      WritingAdvisorID: 0,
     },
     Internet: null,
-    Phone: null
+    Phone: null,
   });
 
 export const createInitalFormData = (): Readonly<ContactFormData> =>
@@ -71,20 +76,29 @@ export const createInitalFormData = (): Readonly<ContactFormData> =>
     referredBy: "",
     servicingAdvisorID: 0,
     writingAdvisorID: 0,
-    phoneNumbers: [{ key: uuid(), phoneNumber: "", type: "", primary: false }],
+    phoneNumbers: [
+      { key: uuid(), recID: 0, phoneNumber: "", type: "", primaryPhone: false },
+    ],
     emailAddresses: [
-      { key: uuid(), emailAddress: "", type: "", primary: false },
+      {
+        key: uuid(),
+        recID: 0,
+        emailAddress: "",
+        type: "",
+        primaryEmail: false,
+      },
     ],
     streetAddresses: [
       {
         key: uuid(),
+        recID: 0,
         streetAddress: "",
         secondaryAddress: "",
         city: "",
         state: "",
         zip: "",
         type: "",
-        primary: false,
+        primaryStreet: false,
       },
     ],
   });

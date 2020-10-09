@@ -8,6 +8,12 @@ import {
   RedtailSettingsData,
   ContactFormData,
   RedtailContactListRec,
+  PhoneRec,
+  InternetRec,
+  AddressRec,
+  PhoneNumberFormData,
+  EmailAddressFormData,
+  StreetAddressFormData,
 } from "../interfaces/redtail.interface";
 import { API_URL } from "../constants";
 import { useRouter } from "next/router";
@@ -106,6 +112,7 @@ export default function DataCleanupPage(props) {
   });
   const [loadingPage, setLoadingPage] = useState(false);
   const [loadingContact, setLoadingState] = useState(false);
+  const [savingContact, setSavingContact] = useState(false);
 
   // Saves Form State to Local Storage after each change
   useEffect(() => {
@@ -116,6 +123,30 @@ export default function DataCleanupPage(props) {
     );
   }, [formData, selectedContact]);
 
+  const handleArrChange = (
+    index: number,
+    arrName: string,
+    targetRecId: number
+  ) => (e) => {
+    const targetName: string = e.target.name;
+    const newArr = [...formData[arrName]];
+    if (targetName.startsWith("primary")) {
+      const checked: boolean = e.target.checked;
+      newArr[index][targetName] = checked;
+      for (const item of newArr) {
+        if (item.recID !== targetRecId) item[targetName] = !checked;
+      }
+    } else {
+      newArr[index][targetName] = e.target.value;
+    }
+
+    updateFormData({
+      ...formData,
+      [arrName]: newArr,
+    });
+    console.log(formData);
+  };
+
   const handleChange = (e) => {
     e.preventDefault();
     const target = e.target;
@@ -124,19 +155,6 @@ export default function DataCleanupPage(props) {
       // Trimming any whitespace
       [target.name]: target.value.trim(),
     });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    axios
-      .post(
-        API_URL + "/rt/contact-submit",
-        { contact: prepareContactSubmitData(formData, sourceContactRef) },
-        { withCredentials: true }
-      )
-      .then((res) => {
-        alert("Submitted Contact!");
-      });
   };
 
   const contactSelected = (e) => {
@@ -151,13 +169,37 @@ export default function DataCleanupPage(props) {
       formData,
       id
     ).then(() => {
-      setLoadingState(false)
+      setLoadingState(false);
     });
   };
 
   const undoContact = (e) => {
     e.preventDefault();
     // TODO
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSavingContact(true);
+    axios
+      .post(
+        API_URL + "/rt/contact-submit",
+        { contact: prepareContactSubmitData(formData, sourceContactRef) },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        setSavingContact(false);
+        if (res.status == 200) {
+          alert("Submitted Contact!");
+        } else {
+          alert(
+            "Error submitting contact!: HTTP " +
+              res.status.toString() +
+              " status " +
+              res.statusText
+          );
+        }
+      });
   };
 
   return (
@@ -175,220 +217,355 @@ export default function DataCleanupPage(props) {
           updatePageData={updatePageData}
           dropdownData={dropdownData}
         ></ContactListPanel>
-        <LoadingOverlay active={loadingContact} spinner text="Loading Contact">
-          <form className={styles.editPanel} autoComplete="off" onSubmit={handleSubmit}>
-            <div className={styles.formRow}>
-              <div className={styles.formColumn}>
-                <div className={styles.formField}>
-                  <label className={styles.formLabel}>Family Name</label>
-                  <input
-                    className={styles.formLabelledInput}
-                    type="text"
-                    name="familyName"
-                    onChange={handleChange}
-                    value={formData.familyName}
-                  />
+        <LoadingOverlay active={savingContact} spinner text="Saving Contact">
+          <LoadingOverlay
+            active={loadingContact}
+            spinner
+            text="Loading Contact"
+          >
+            <form
+              className={styles.editPanel}
+              autoComplete="off"
+              onSubmit={handleSubmit}
+            >
+              <div className={styles.formRow}>
+                <div className={styles.formColumn}>
+                  <div className={styles.formField}>
+                    <label className={styles.formLabel}>Family Name</label>
+                    <input
+                      className={styles.formLabelledInput}
+                      type="text"
+                      name="familyName"
+                      onChange={handleChange}
+                      value={formData.familyName}
+                    />
+                  </div>
+                  <div className={styles.formField}>
+                    <label className={styles.formLabel}>Salutation</label>
+                    <select
+                      className={styles.formLabelledInput}
+                      onChange={handleChange}
+                      name="salutation"
+                      value={formData.salutation}
+                    >
+                      <option value=""></option>
+                      {dropdownData.salutations.map((obj, index) => (
+                        <option key={index} value={obj.SalutationCode || ""}>
+                          {obj.Code || ""}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className={styles.formField}>
+                    <label className={styles.formLabel}>First Name</label>
+                    <input
+                      className={styles.formLabelledInput}
+                      type="text"
+                      name="firstName"
+                      onChange={handleChange}
+                      value={formData.firstName}
+                    />
+                  </div>
+                  <div className={styles.formField}>
+                    <label className={styles.formLabel}>Middle Name</label>
+                    <input
+                      className={styles.formLabelledInput}
+                      type="text"
+                      name="middleName"
+                      onChange={handleChange}
+                      value={formData.middleName}
+                    />
+                  </div>
+                  <div className={styles.formField}>
+                    <label className={styles.formLabel}>Last Name</label>
+                    <input
+                      className={styles.formLabelledInput}
+                      type="text"
+                      name="lastName"
+                      onChange={handleChange}
+                      value={formData.lastName}
+                    />
+                  </div>
+                  <div className={styles.formField}>
+                    <label className={styles.formLabel}>Nickname</label>
+                    <input
+                      className={styles.formLabelledInput}
+                      type="text"
+                      name="nickname"
+                      onChange={handleChange}
+                      value={formData.nickname}
+                    />
+                  </div>
+                  <div className={styles.formField}>
+                    <label className={styles.formLabel}>Gender</label>
+                    <input
+                      className={styles.formLabelledInput}
+                      type="text"
+                      name="gender"
+                      onChange={handleChange}
+                      value={formData.gender}
+                    />
+                  </div>
                 </div>
-                <div className={styles.formField}>
-                  <label className={styles.formLabel}>Salutation</label>
-                  <select
-                    className={styles.formLabelledInput}
-                    onChange={handleChange}
-                    name="salutation"
-                    value={formData.salutation}
-                  >
-                    <option value=""></option>
-                    {dropdownData.salutations.map((obj, index) => (
-                      <option key={index} value={obj.SalutationCode || ""}>
-                        {obj.Code || ""}
-                      </option>
-                    ))}
-                  </select>
+
+                <div className={styles.formColumn}>
+                  <div className={styles.formRow}>
+                    <div className={styles.formColumn}>
+                      <div className={styles.formField}>
+                        <label className={styles.formLabel}>Category</label>
+                        <select
+                          className={styles.formLabelledInput}
+                          onChange={handleChange}
+                          name="categoryID"
+                          value={formData.categoryID}
+                        >
+                          <option value=""></option>
+                          {dropdownData.categories.map((obj, index) => (
+                            <option key={index} value={obj.MCCLCode || ""}>
+                              {obj.Code || ""}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className={styles.formField}>
+                        <label className={styles.formLabel}>Status</label>
+                        <select
+                          className={styles.formLabelledInput}
+                          onChange={handleChange}
+                          name="statusID"
+                          value={formData.statusID}
+                        >
+                          <option value=""></option>
+                          {dropdownData.statuses.map((obj, index) => (
+                            <option key={index} value={obj.CSLCode || ""}>
+                              {obj.Code || ""}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className={styles.formField}>
+                        <label className={styles.formLabel}>Source</label>
+                        <select
+                          className={styles.formLabelledInput}
+                          onChange={handleChange}
+                          name="sourceID"
+                          value={formData.sourceID}
+                        >
+                          <option value=""></option>
+                          {dropdownData.sources.map((obj, index) => (
+                            <option key={index} value={obj.MCSLCode || ""}>
+                              {obj.Code || ""}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className={styles.formField}>
+                        <label className={styles.formLabel}>Referred By</label>
+                        <input
+                          className={styles.formLabelledInput}
+                          type="text"
+                          name="referredBy"
+                          onChange={handleChange}
+                          value={formData.referredBy}
+                        />
+                      </div>
+                      <div className={styles.formField}>
+                        <label className={styles.formLabel}>
+                          Servicing Advisor
+                        </label>
+                        <select
+                          className={styles.formLabelledInput}
+                          onChange={handleChange}
+                          name="servicingAdvisorID"
+                          value={formData.servicingAdvisorID}
+                        >
+                          <option value=""></option>
+                          {dropdownData.servicingAdvisors.map((obj, index) => (
+                            <option key={index} value={obj.SALCode || ""}>
+                              {obj.Code || ""}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className={styles.formField}>
+                        <label className={styles.formLabel}>
+                          Writing Advisor
+                        </label>
+                        <select
+                          className={styles.formLabelledInput}
+                          onChange={handleChange}
+                          name="writingAdvisorID"
+                          value={formData.writingAdvisorID}
+                        >
+                          <option value=""></option>
+                          {dropdownData.writingAdvisors.map((obj, index) => (
+                            <option key={index} value={obj.WALCode || ""}>
+                              {obj.Code || ""}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                    {/* Place holder fields for DOB and Tax ID at last */}
+                    <div className={styles.formColumn}>
+                      <div className={styles.formField}>
+                        <label className={styles.formLabel}>PlaceHolder</label>
+                        <select
+                          className={styles.formLabelledInput}
+                          onChange={handleChange}
+                        >
+                          <option value=""></option>
+                        </select>
+                      </div>
+                      <div className={styles.formField}>
+                        <label className={styles.formLabel}>PlaceHolder</label>
+                        <select className={styles.formLabelledInput}></select>
+                      </div>
+                    </div>
+                    {/* -------- */}
+                    <div className={styles.formColumn}>
+                      <button type="submit" className={styles.saveButton}>
+                        SAVE
+                      </button>
+                      <button
+                        className={styles.undoButton}
+                        onClick={undoContact}
+                      >
+                        UNDO
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div className={styles.formField}>
-                  <label className={styles.formLabel}>First Name</label>
-                  <input
-                    className={styles.formLabelledInput}
-                    type="text"
-                    name="firstName"
-                    onChange={handleChange}
-                    value={formData.firstName}
-                  />
-                </div>
-                <div className={styles.formField}>
-                  <label className={styles.formLabel}>Middle Name</label>
-                  <input
-                    className={styles.formLabelledInput}
-                    type="text"
-                    name="middleName"
-                    onChange={handleChange}
-                    value={formData.middleName}
-                  />
-                </div>
-                <div className={styles.formField}>
-                  <label className={styles.formLabel}>Last Name</label>
-                  <input
-                    className={styles.formLabelledInput}
-                    type="text"
-                    name="lastName"
-                    onChange={handleChange}
-                    value={formData.lastName}
-                  />
-                </div>
-                <div className={styles.formField}>
-                  <label className={styles.formLabel}>Nickname</label>
-                  <input
-                    className={styles.formLabelledInput}
-                    type="text"
-                    name="nickname"
-                    onChange={handleChange}
-                    value={formData.nickname}
-                  />
-                </div>
-                <div className={styles.formField}>
-                  <label className={styles.formLabel}>Gender</label>
-                  <input
-                    className={styles.formLabelledInput}
-                    type="text"
-                    name="gender"
-                    onChange={handleChange}
-                    value={formData.gender}
-                  />
+              </div>
+              <div className={styles.formRow}>
+                <div className={styles.formRow}>
+                  <div className={styles.formColumn}>
+                    <div className={styles.formRow}>
+                      <div className={styles.formHeader}>
+                        <label className={styles.formLabel}>
+                          Email Address
+                        </label>
+                      </div>
+                      <div className={styles.formHeader}>
+                        <label className={styles.formLabel}>Type</label>
+                      </div>
+                      <div className={styles.formHeader}>
+                        <label className={styles.formLabel}>Primary?</label>
+                      </div>
+                    </div>
+                    <div className={styles.formColumnScroll}>
+                      {formData.emailAddresses.map((obj, index) => (
+                        <div className={styles.formRow} key={obj.key}>
+                          <input
+                            className={styles.formSoloInput}
+                            type="text"
+                            name="emailAddress"
+                            value={obj.emailAddress || ""}
+                            onChange={handleArrChange(
+                              index,
+                              "emailAddresses",
+                              obj.recID
+                            )}
+                          />
+                          <input
+                            className={styles.formSoloInput}
+                            type="text"
+                            name="type"
+                            value={obj.type || ""}
+                            onChange={handleArrChange(
+                              index,
+                              "emailAddresses",
+                              obj.recID
+                            )}
+                          />
+                          <input
+                            type="radio"
+                            name="primaryEmail"
+                            checked={obj.primaryEmail}
+                            onChange={handleArrChange(
+                              index,
+                              "emailAddresses",
+                              obj.recID
+                            )}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className={styles.formColumn}>
+                    <div className={styles.formRow}>
+                      <div className={styles.formHeader}>
+                        <label className={styles.formLabel}>Phone Number</label>
+                      </div>
+                      <div className={styles.formHeader}>
+                        <label className={styles.formLabel}>Type</label>
+                      </div>
+                      <div className={styles.formHeader}>
+                        <label className={styles.formLabel}>Primary?</label>
+                      </div>
+                    </div>
+                    <div className={styles.formColumnScroll}>
+                      {formData.phoneNumbers.map((obj, index) => (
+                        <div className={styles.formRow} key={obj.key}>
+                          <input
+                            className={styles.formSoloInput}
+                            type="text"
+                            name="phoneNumber"
+                            value={obj.phoneNumber || ""}
+                            onChange={handleArrChange(
+                              index,
+                              "phoneNumbers",
+                              obj.recID
+                            )}
+                          />
+                          <input
+                            className={styles.formSoloInput}
+                            type="text"
+                            name="type"
+                            value={obj.type || ""}
+                            onChange={handleArrChange(
+                              index,
+                              "phoneNumbers",
+                              obj.recID
+                            )}
+                          />
+                          <input
+                            type="radio"
+                            name="primaryPhone"
+                            value=""
+                            checked={obj.primaryPhone}
+                            onChange={handleArrChange(
+                              index,
+                              "phoneNumbers",
+                              obj.recID
+                            )}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className={styles.formColumn}>
-                <div className={styles.formRow}>
-                  <div className={styles.formColumn}>
-                    <div className={styles.formField}>
-                      <label className={styles.formLabel}>Category</label>
-                      <select
-                        className={styles.formLabelledInput}
-                        onChange={handleChange}
-                        name="categoryID"
-                        value={formData.categoryID}
-                      >
-                        <option value=""></option>
-                        {dropdownData.categories.map((obj, index) => (
-                          <option key={index} value={obj.MCCLCode || ""}>
-                            {obj.Code || ""}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className={styles.formField}>
-                      <label className={styles.formLabel}>Status</label>
-                      <select
-                        className={styles.formLabelledInput}
-                        onChange={handleChange}
-                        name="statusID"
-                        value={formData.statusID}
-                      >
-                        <option value=""></option>
-                        {dropdownData.statuses.map((obj, index) => (
-                          <option key={index} value={obj.CSLCode || ""}>
-                            {obj.Code || ""}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className={styles.formField}>
-                      <label className={styles.formLabel}>Source</label>
-                      <select
-                        className={styles.formLabelledInput}
-                        onChange={handleChange}
-                        name="sourceID"
-                        value={formData.sourceID}
-                      >
-                        <option value=""></option>
-                        {dropdownData.sources.map((obj, index) => (
-                          <option key={index} value={obj.MCSLCode || ""}>
-                            {obj.Code || ""}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className={styles.formField}>
-                      <label className={styles.formLabel}>Referred By</label>
-                      <input
-                        className={styles.formLabelledInput}
-                        type="text"
-                        name="referredBy"
-                        onChange={handleChange}
-                        value={formData.referredBy}
-                      />
-                    </div>
-                    <div className={styles.formField}>
-                      <label className={styles.formLabel}>
-                        Servicing Advisor
-                      </label>
-                      <select
-                        className={styles.formLabelledInput}
-                        onChange={handleChange}
-                        name="servicingAdvisorID"
-                        value={formData.servicingAdvisorID}
-                      >
-                        <option value=""></option>
-                        {dropdownData.servicingAdvisors.map((obj, index) => (
-                          <option key={index} value={obj.SALCode || ""}>
-                            {obj.Code || ""}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className={styles.formField}>
-                      <label className={styles.formLabel}>
-                        Writing Advisor
-                      </label>
-                      <select
-                        className={styles.formLabelledInput}
-                        onChange={handleChange}
-                        name="writingAdvisorID"
-                        value={formData.writingAdvisorID}
-                      >
-                        <option value=""></option>
-                        {dropdownData.writingAdvisors.map((obj, index) => (
-                          <option key={index} value={obj.WALCode || ""}>
-                            {obj.Code || ""}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                  {/* Place holder fields for DOB and Tax ID at last */}
-                  <div className={styles.formColumn}>
-                    <div className={styles.formField}>
-                      <label className={styles.formLabel}>PlaceHolder</label>
-                      <select
-                        className={styles.formLabelledInput}
-                        onChange={handleChange}
-                      >
-                        <option value=""></option>
-                      </select>
-                    </div>
-                    <div className={styles.formField}>
-                      <label className={styles.formLabel}>PlaceHolder</label>
-                      <select className={styles.formLabelledInput}></select>
-                    </div>
-                  </div>
-                  {/* -------- */}
-                  <div className={styles.formColumn}>
-                    <button type="submit" className={styles.saveButton}>
-                      SAVE
-                    </button>
-                    <button className={styles.undoButton} onClick={undoContact}>
-                      UNDO
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className={styles.formRow}>
               <div className={styles.formRow}>
                 <div className={styles.formColumn}>
                   <div className={styles.formRow}>
                     <div className={styles.formHeader}>
-                      <label className={styles.formLabel}>Email Address</label>
+                      <label className={styles.formLabel}>Street Address</label>
+                    </div>
+                    <div className={styles.formHeader}>
+                      <label className={styles.formLabel}>
+                        Secondary Address
+                      </label>
+                    </div>
+                    <div className={styles.formHeader}>
+                      <label className={styles.formLabel}>City</label>
+                    </div>
+                    <div className={styles.formHeader}>
+                      <label className={styles.formLabel}>State</label>
+                    </div>
+                    <div className={styles.formHeader}>
+                      <label className={styles.formLabel}>Zip</label>
                     </div>
                     <div className={styles.formHeader}>
                       <label className={styles.formLabel}>Type</label>
@@ -398,148 +575,91 @@ export default function DataCleanupPage(props) {
                     </div>
                   </div>
                   <div className={styles.formColumnScroll}>
-                    {formData.emailAddresses.map((obj, index) => (
+                    {formData.streetAddresses.map((obj, index) => (
                       <div className={styles.formRow} key={obj.key}>
                         <input
                           className={styles.formSoloInput}
                           type="text"
-                          value={obj.emailAddress || ""}
-                          onChange={handleChange}
+                          name="streetAddress"
+                          value={obj.streetAddress || ""}
+                          onChange={handleArrChange(
+                            index,
+                            "streetAddresses",
+                            obj.recID
+                          )}
+                        />
+                        <input
+                          className={styles.formSoloInput}
+                          type="text"
+                          name="secondaryAddress"
+                          value={obj.secondaryAddress || ""}
+                          onChange={handleArrChange(
+                            index,
+                            "streetAddresses",
+                            obj.recID
+                          )}
+                        />
+                        <input
+                          className={styles.formSoloInput}
+                          type="text"
+                          name="city"
+                          value={obj.city || ""}
+                          onChange={handleArrChange(
+                            index,
+                            "streetAddresses",
+                            obj.recID
+                          )}
+                        />
+                        <input
+                          className={styles.formSoloInput}
+                          type="text"
+                          name="state"
+                          value={obj.state || ""}
+                          onChange={handleArrChange(
+                            index,
+                            "streetAddresses",
+                            obj.recID
+                          )}
+                        />
+                        <input
+                          className={styles.formSoloInput}
+                          type="text"
+                          name="zip"
+                          value={obj.zip || ""}
+                          onChange={handleArrChange(
+                            index,
+                            "streetAddresses",
+                            obj.recID
+                          )}
                         />
                         <input
                           className={styles.formSoloInput}
                           type="text"
                           value={obj.type || ""}
-                          onChange={handleChange}
+                          onChange={handleArrChange(
+                            index,
+                            "streetAddresses",
+                            obj.recID
+                          )}
                         />
                         <input
                           type="radio"
-                          name="emailAddress"
+                          name="primaryStreet"
                           value=""
-                          defaultChecked={obj.primary || false}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className={styles.formColumn}>
-                  <div className={styles.formRow}>
-                    <div className={styles.formHeader}>
-                      <label className={styles.formLabel}>Phone Number</label>
-                    </div>
-                    <div className={styles.formHeader}>
-                      <label className={styles.formLabel}>Type</label>
-                    </div>
-                    <div className={styles.formHeader}>
-                      <label className={styles.formLabel}>Primary?</label>
-                    </div>
-                  </div>
-                  <div className={styles.formColumnScroll}>
-                    {formData.phoneNumbers.map((obj, index) => (
-                      <div className={styles.formRow} key={obj.key}>
-                        <input
-                          className={styles.formSoloInput}
-                          type="text"
-                          value={obj.phoneNumber || ""}
-                          onChange={handleChange}
-                        />
-                        <input
-                          className={styles.formSoloInput}
-                          type="text"
-                          value={obj.type || ""}
-                          onChange={handleChange}
-                        />
-                        <input
-                          type="radio"
-                          name="phoneNumber"
-                          value=""
-                          defaultChecked={obj.primary || false}
+                          checked={obj.primaryStreet}
+                          onChange={handleArrChange(
+                            index,
+                            "streetAddresses",
+                            obj.recID
+                          )}
                         />
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className={styles.formRow}>
-              <div className={styles.formColumn}>
-                <div className={styles.formRow}>
-                  <div className={styles.formHeader}>
-                    <label className={styles.formLabel}>Street Address</label>
-                  </div>
-                  <div className={styles.formHeader}>
-                    <label className={styles.formLabel}>
-                      Secondary Address
-                    </label>
-                  </div>
-                  <div className={styles.formHeader}>
-                    <label className={styles.formLabel}>City</label>
-                  </div>
-                  <div className={styles.formHeader}>
-                    <label className={styles.formLabel}>State</label>
-                  </div>
-                  <div className={styles.formHeader}>
-                    <label className={styles.formLabel}>Zip</label>
-                  </div>
-                  <div className={styles.formHeader}>
-                    <label className={styles.formLabel}>Type</label>
-                  </div>
-                  <div className={styles.formHeader}>
-                    <label className={styles.formLabel}>Primary?</label>
-                  </div>
-                </div>
-                <div className={styles.formColumnScroll}>
-                  {formData.streetAddresses.map((obj, index) => (
-                    <div className={styles.formRow} key={obj.key}>
-                      <input
-                        className={styles.formSoloInput}
-                        type="text"
-                        value={obj.streetAddress || ""}
-                        onChange={handleChange}
-                      />
-                      <input
-                        className={styles.formSoloInput}
-                        type="text"
-                        value={obj.secondaryAddress || ""}
-                        onChange={handleChange}
-                      />
-                      <input
-                        className={styles.formSoloInput}
-                        type="text"
-                        value={obj.city || ""}
-                        onChange={handleChange}
-                      />
-                      <input
-                        className={styles.formSoloInput}
-                        type="text"
-                        value={obj.state || ""}
-                        onChange={handleChange}
-                      />
-                      <input
-                        className={styles.formSoloInput}
-                        type="text"
-                        value={obj.zip || ""}
-                        onChange={handleChange}
-                      />
-                      <input
-                        className={styles.formSoloInput}
-                        type="text"
-                        value={obj.type || ""}
-                        onChange={handleChange}
-                      />
-                      <input
-                        type="radio"
-                        name="streetAddress"
-                        value=""
-                        defaultChecked={obj.primary || false}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </form>
+            </form>
+          </LoadingOverlay>
         </LoadingOverlay>
       </div>
     </LoadingOverlay>

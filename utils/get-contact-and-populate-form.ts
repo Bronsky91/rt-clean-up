@@ -15,7 +15,7 @@ export const getContactAndPopulateForm = (
     { withCredentials: true }
   ).then((res) => {
     const data: RedtailContactRec = res.data;
-    console.log("RedtailContactRec data in getContactAndPopulateForm: " + JSON.stringify(data));
+
     updateSourceContactRef(data);
 
     updateFormData({
@@ -34,12 +34,8 @@ export const getContactAndPopulateForm = (
       categoryID: data.ContactRecord.CategoryID
         ? data.ContactRecord.CategoryID
         : 0,
-      statusID: data.ContactRecord.StatusID
-        ? data.ContactRecord.StatusID
-        : 0,
-      sourceID: data.ContactRecord.SourceID
-        ? data.ContactRecord.SourceID
-        : 0,
+      statusID: data.ContactRecord.StatusID ? data.ContactRecord.StatusID : 0,
+      sourceID: data.ContactRecord.SourceID ? data.ContactRecord.SourceID : 0,
       referredBy: data.ContactRecord.ReferredBy,
       servicingAdvisorID: data.ContactRecord.ServicingAdvisorID
         ? data.ContactRecord.ServicingAdvisorID
@@ -49,25 +45,28 @@ export const getContactAndPopulateForm = (
         : 0,
       phoneNumbers: data.Phone.map((obj, index) => ({
         key: uuid(),
+        recID: obj.RecID,
         phoneNumber: obj.Number,
         type: obj.TypeID,
-        primary: obj.Primary,
+        primaryPhone: obj.Primary,
       })),
       emailAddresses: data.Internet.map((obj, index) => ({
         key: uuid(),
+        recID: obj.RecID,
         emailAddress: obj.Address,
         type: obj.Type,
-        primary: obj.Primary,
+        primaryEmail: obj.Primary,
       })),
       streetAddresses: data.Address.map((obj, index) => ({
         key: uuid(),
+        recID: obj.RecID,
         streetAddress: obj.Address1,
         secondaryAddress: obj.Address2,
         city: obj.City,
         state: obj.State,
         zip: obj.Zip,
         type: obj.TypeID,
-        primary: obj.Primary,
+        primaryStreet: obj.Primary,
       })),
     });
   });

@@ -1,7 +1,24 @@
 // Used when SENDING data to Redtail
 export interface RedtailContactUpdate {
-  Fields: ContactFieldsUpdate;
-  // TODO: update to include street addresses, email addresses, phone numbers
+  Address?: AddressUpdate[] | null;
+  ContactRecord: ContactFieldsUpdate;
+  Internet?: InternetUpdate[] | null;
+  Phone?: PhoneUpdate[] | null;
+}
+
+export interface AddressUpdate {
+  Address1: string;
+  Address2: string;
+  City: string;
+  ClientID: number;
+  Label: string;
+  Preferred: boolean;
+  Primary: boolean;
+  RecID: number;
+  SharedAddress: boolean;
+  State: string;
+  TypeID: string;
+  Zip: string;
 }
 
 export interface ContactFieldsUpdate {
@@ -34,8 +51,31 @@ export interface ContactFieldsUpdate {
   WritingAdvisorID: number;
 }
 
-// Used when RECEIVING data from Redtail
+export interface InternetUpdate {
+  Address: string;
+  ClientID: number;
+  Label: string;
+  Preferred: boolean;
+  RecID: number;
+  TypeID: string;
+  Primary: boolean;
+}
 
+export interface PhoneUpdate {
+  ClientID: number;
+  DisplayOrder: number;
+  Extension: string;
+  Label: string;
+  Number: string;
+  Preferred: boolean;
+  RecID: number;
+  SharedPhoneNumber: boolean;
+  SpeedDial: string;
+  TypeID: string;
+  Primary: boolean;
+}
+
+// Used when RECEIVING data from Redtail
 export interface RedtailContactListRec {
   Age: number;
   Category: string;
@@ -153,7 +193,7 @@ export interface InternetRec {
   RecAddUser: number;
   RecID: number;
   Type: string;
-  TypeID: number;
+  TypeID: string;
 }
 export interface PhoneRec {
   ClientID: number;
@@ -247,20 +287,23 @@ export interface ContactFormData {
 }
 
 export interface PhoneNumberFormData {
+  recID: number;
   key: string;
   phoneNumber: string;
   type: string;
-  primary: boolean;
+  primaryPhone: boolean;
 }
 
 export interface EmailAddressFormData {
+  recID: number;
   key: string;
   emailAddress: string;
   type: string;
-  primary: boolean;
+  primaryEmail: boolean;
 }
 
 export interface StreetAddressFormData {
+  recID: number;
   key: string;
   streetAddress: string;
   secondaryAddress: string;
@@ -268,5 +311,5 @@ export interface StreetAddressFormData {
   state: string;
   zip: string;
   type: string;
-  primary: boolean;
+  primaryStreet: boolean;
 }
