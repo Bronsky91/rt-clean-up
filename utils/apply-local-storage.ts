@@ -1,9 +1,16 @@
-export const applyLocalStorage = (updateSelectedContact, updateFormData) => {
+export const applyLocalStorage = (
+  updateSelectedContact,
+  updateFormData,
+  updateSourceContactRef
+) => {
   const localStorageFormData = JSON.parse(
     localStorage.getItem("dataCleanUpFormData")
   );
   const localStorageSelectedContactData = JSON.parse(
     localStorage.getItem("dataCleanUpSelectedContactData")
+  );
+  const localStorageSourceContactRef = JSON.parse(
+    localStorage.getItem("dataCleanUpSourceContactRef")
   );
 
   if (localStorageSelectedContactData)
@@ -11,5 +18,8 @@ export const applyLocalStorage = (updateSelectedContact, updateFormData) => {
 
   if (localStorageFormData) updateFormData(localStorageFormData);
 
-  return localStorageFormData
+  if (localStorageSourceContactRef)
+    updateSourceContactRef(localStorageSourceContactRef);
+
+  return localStorageFormData;
 };

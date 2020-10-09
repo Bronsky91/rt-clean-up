@@ -77,7 +77,11 @@ export default function DataCleanupPage(props) {
         });
 
       // Update Form with LocalStorage if it's available
-      applyLocalStorage(updateSelectedContact, updateFormData);
+      applyLocalStorage(
+        updateSelectedContact,
+        updateFormData,
+        updateSourceContactRef
+      );
 
       return () => {
         mounted = false;
@@ -121,7 +125,11 @@ export default function DataCleanupPage(props) {
       "dataCleanUpSelectedContactData",
       JSON.stringify(selectedContact)
     );
-  }, [formData, selectedContact]);
+    localStorage.set(
+      "dataCleanUpSourceContactRef",
+      JSON.stringify(sourceContactRef)
+    );
+  }, [formData, selectedContact, sourceContactRef]);
 
   const handleArrChange = (
     index: number,
@@ -184,7 +192,7 @@ export default function DataCleanupPage(props) {
     axios
       .post(
         API_URL + "/rt/contact-submit",
-        { contact: prepareContactSubmitData(formData, sourceContactRef) },
+        { data: prepareContactSubmitData(formData, sourceContactRef) },
         { withCredentials: true }
       )
       .then((res) => {
