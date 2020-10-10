@@ -125,7 +125,7 @@ export default function DataCleanupPage(props) {
       "dataCleanUpSelectedContactData",
       JSON.stringify(selectedContact)
     );
-    localStorage.set(
+    localStorage.setItem(
       "dataCleanUpSourceContactRef",
       JSON.stringify(sourceContactRef)
     );
