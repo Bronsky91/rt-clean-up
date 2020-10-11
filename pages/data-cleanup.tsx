@@ -21,6 +21,8 @@ import Login from "./login";
 import { getContactAndPopulateForm } from "../utils/get-contact-and-populate-form";
 import { applyLocalStorage } from "../utils/apply-local-storage";
 import { prepareContactSubmitData } from "../utils/prepare-contact-submit-data";
+import { canUndo } from "../utils/can-undo";
+import { undoContactChanges } from "../utils/undo-contact-changes";
 import ContactListPanel from "../components/contact-list-panel";
 import {
   createInitialContactRefData,
@@ -115,8 +117,9 @@ export default function DataCleanupPage(props) {
     total_pages: 1,
   });
   const [loadingPage, setLoadingPage] = useState(false);
-  const [loadingContact, setLoadingState] = useState(false);
+  const [loadingContact, setLoadingContact] = useState(false);
   const [savingContact, setSavingContact] = useState(false);
+  const [undoEnabled, setUndoEnabled] = useState(false);
 
   // Saves Form State to Local Storage after each change
   useEffect(() => {
@@ -152,7 +155,7 @@ export default function DataCleanupPage(props) {
       ...formData,
       [arrName]: newArr,
     });
-    console.log(formData);
+    setUndoEnabled(canUndo(sourceContactRef, formData));
   };
 
   const handleChange = (e) => {
@@ -163,11 +166,12 @@ export default function DataCleanupPage(props) {
       // Trimming any whitespace
       [target.name]: target.value.trim(),
     });
+    setUndoEnabled(canUndo(sourceContactRef, formData));
   };
 
   const contactSelected = (e) => {
     e.preventDefault();
-    setLoadingState(true);
+    setLoadingContact(true);
 
     const id = e.target.value;
     updateSelectedContact({ id, page: 1 });
@@ -177,13 +181,15 @@ export default function DataCleanupPage(props) {
       formData,
       id
     ).then(() => {
-      setLoadingState(false);
+      setLoadingContact(false);
     });
   };
 
   const undoContact = (e) => {
     e.preventDefault();
-    // TODO
+    setLoadingContact(true);
+    undoContactChanges(sourceContactRef, updateFormData, formData);
+    setLoadingContact(false);
   };
 
   const handleSubmit = (e) => {
@@ -438,6 +444,7 @@ export default function DataCleanupPage(props) {
                       <button
                         className={styles.undoButton}
                         onClick={undoContact}
+                        disabled={!undoEnabled}
                       >
                         UNDO
                       </button>
