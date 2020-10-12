@@ -462,7 +462,11 @@ export default function DataCleanupPage(props) {
                     </div>
                     {/* -------- */}
                     <div className={styles.formColumn}>
-                      <button type="submit" className={styles.saveButton}>
+                      <button
+                        type="submit"
+                        className={styles.saveButton}
+                        disabled={!formDirty}
+                      >
                         SAVE
                       </button>
                       <button

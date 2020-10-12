@@ -30,6 +30,9 @@ $field-height: 4rem;
   border: none;
   width: 15rem;
   border-radius: 3rem;
+  &:disabled {
+    background-color: #cccccc;
+  }
 }
 
 .undoButton {
