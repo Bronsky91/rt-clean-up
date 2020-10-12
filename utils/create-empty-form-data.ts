@@ -4,9 +4,9 @@ import {
   RedtailContactRec,
   RedtailSettingsData,
 } from "../interfaces/redtail.interface";
-import { v4 as uuid } from "../node_modules/uuid";
+import { v4 as uuid } from "uuid";
 
-export const createInitialContactRefData = (): Readonly<RedtailContactRec> =>
+export const createEmptyContactRefData = (): Readonly<RedtailContactRec> =>
   Object.freeze({
     Address: null,
     ContactRecord: {
@@ -60,7 +60,7 @@ export const createInitialContactRefData = (): Readonly<RedtailContactRec> =>
     Phone: null,
   });
 
-export const createInitalFormData = (): Readonly<ContactFormData> =>
+export const createEmptyFormData = (): Readonly<ContactFormData> =>
   Object.freeze({
     key: uuid(),
     familyName: "",
@@ -103,7 +103,7 @@ export const createInitalFormData = (): Readonly<ContactFormData> =>
     ],
   });
 
-export const createInitialDropDownData = (): Readonly<RedtailSettingsData> =>
+export const createEmptyDropDownData = (): Readonly<RedtailSettingsData> =>
   Object.freeze({
     statuses: [],
     categories: [],

@@ -46,6 +46,9 @@ $field-height: 4rem;
   border: none;
   width: 7.5rem;
   border-radius: 3rem;
+  &:disabled {
+    background-color: #cccccc;
+  }
 }
 
 .editPanel {

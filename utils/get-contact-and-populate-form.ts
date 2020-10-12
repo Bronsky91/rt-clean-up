@@ -6,6 +6,8 @@ import { v4 as uuid } from "uuid";
 export const getContactAndPopulateForm = (
   updateSourceContactRef,
   updateFormData,
+  updateOriginalFormData,
+  updateFormDirty,
   formData,
   id
 ) => {
@@ -15,10 +17,9 @@ export const getContactAndPopulateForm = (
     { withCredentials: true }
   ).then((res) => {
     const data: RedtailContactRec = res.data;
-
     updateSourceContactRef(data);
 
-    updateFormData({
+    const loadedFormData = {
       key: formData.key,
       familyName: data.ContactRecord.Familyname,
       salutation: data.ContactRecord.Salutation
@@ -68,6 +69,10 @@ export const getContactAndPopulateForm = (
         type: obj.TypeID,
         primaryStreet: obj.Primary,
       })),
-    });
+    };
+
+    updateFormData(loadedFormData);
+    updateOriginalFormData(loadedFormData);
+    updateFormDirty(false);
   });
 };

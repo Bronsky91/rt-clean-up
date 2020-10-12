@@ -21,14 +21,12 @@ import Login from "./login";
 import { getContactAndPopulateForm } from "../utils/get-contact-and-populate-form";
 import { applyLocalStorage } from "../utils/apply-local-storage";
 import { prepareContactSubmitData } from "../utils/prepare-contact-submit-data";
-import { canUndo } from "../utils/can-undo";
-import { undoContactChanges } from "../utils/undo-contact-changes";
 import ContactListPanel from "../components/contact-list-panel";
 import {
-  createInitialContactRefData,
-  createInitalFormData,
-  createInitialDropDownData,
-} from "../utils/create-initial-form-data";
+  createEmptyContactRefData,
+  createEmptyFormData,
+  createEmptyDropDownData,
+} from "../utils/create-empty-form-data";
 export default function DataCleanupPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
@@ -81,8 +79,10 @@ export default function DataCleanupPage(props) {
       // Update Form with LocalStorage if it's available
       applyLocalStorage(
         updateSelectedContact,
+        updateSourceContactRef,
         updateFormData,
-        updateSourceContactRef
+        updateOriginalFormData,
+        updateFormDirty
       );
 
       return () => {
@@ -98,14 +98,16 @@ export default function DataCleanupPage(props) {
   // If unathenticated, load login component
   if (!isAuth) return <Login />;
 
-  const initialSourceContactRef: Readonly<RedtailContactRec> = createInitialContactRefData();
-  const initialFormData: Readonly<ContactFormData> = createInitalFormData();
-  const redtailDropDowns: Readonly<RedtailSettingsData> = createInitialDropDownData();
+  const emptySourceContactRef: Readonly<RedtailContactRec> = createEmptyContactRefData();
+  const emptyFormData: Readonly<ContactFormData> = createEmptyFormData();
+  const redtailDropDowns: Readonly<RedtailSettingsData> = createEmptyDropDownData();
 
   const [sourceContactRef, updateSourceContactRef] = useState(
-    initialSourceContactRef
+    emptySourceContactRef
   );
-  const [formData, updateFormData] = useState(initialFormData);
+  const [formData, updateFormData] = useState(emptyFormData);
+  const [originalFormData, updateOriginalFormData] = useState(emptyFormData);
+  const [formDirty, updateFormDirty] = useState(false);
   const [selectedContact, updateSelectedContact] = useState({
     id: "",
     page: 1,
@@ -119,11 +121,9 @@ export default function DataCleanupPage(props) {
   const [loadingPage, setLoadingPage] = useState(false);
   const [loadingContact, setLoadingContact] = useState(false);
   const [savingContact, setSavingContact] = useState(false);
-  const [undoEnabled, setUndoEnabled] = useState(false);
 
   // Saves Form State to Local Storage after each change
   useEffect(() => {
-    localStorage.setItem("dataCleanUpFormData", JSON.stringify(formData));
     localStorage.setItem(
       "dataCleanUpSelectedContactData",
       JSON.stringify(selectedContact)
@@ -132,7 +132,19 @@ export default function DataCleanupPage(props) {
       "dataCleanUpSourceContactRef",
       JSON.stringify(sourceContactRef)
     );
-  }, [formData, selectedContact, sourceContactRef]);
+    localStorage.setItem("dataCleanUpFormData", JSON.stringify(formData));
+    localStorage.setItem(
+      "dataCleanUpOriginalFormData",
+      JSON.stringify(originalFormData)
+    );
+    localStorage.setItem("dataCleanUpFormDirty", JSON.stringify(formDirty));
+  }, [
+    selectedContact,
+    sourceContactRef,
+    formData,
+    originalFormData,
+    formDirty,
+  ]);
 
   const handleArrChange = (
     index: number,
@@ -151,22 +163,31 @@ export default function DataCleanupPage(props) {
       newArr[index][targetName] = e.target.value;
     }
 
-    updateFormData({
-      ...formData,
-      [arrName]: newArr,
-    });
-    setUndoEnabled(canUndo(sourceContactRef, formData));
+    const updatedFormData = { ...formData, [arrName]: newArr };
+
+    updateFormData(updatedFormData);
+    console.log("original");
+    console.log(originalFormData);
+    console.log("updated");
+    console.log(updatedFormData);
+    updateFormDirty(
+      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
+    );
   };
 
   const handleChange = (e) => {
     e.preventDefault();
     const target = e.target;
-    updateFormData({
-      ...formData,
-      // Trimming any whitespace
-      [target.name]: target.value.trim(),
-    });
-    setUndoEnabled(canUndo(sourceContactRef, formData));
+
+    const updatedFormData = { ...formData, [target.name]: target.value.trim() };
+    updateFormData(updatedFormData);
+    console.log("original");
+    console.log(originalFormData);
+    console.log("updated");
+    console.log(updatedFormData);
+    updateFormDirty(
+      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
+    );
   };
 
   const contactSelected = (e) => {
@@ -178,6 +199,8 @@ export default function DataCleanupPage(props) {
     getContactAndPopulateForm(
       updateSourceContactRef,
       updateFormData,
+      updateOriginalFormData,
+      updateFormDirty,
       formData,
       id
     ).then(() => {
@@ -188,7 +211,8 @@ export default function DataCleanupPage(props) {
   const undoContact = (e) => {
     e.preventDefault();
     setLoadingContact(true);
-    undoContactChanges(sourceContactRef, updateFormData, formData);
+    updateFormData(originalFormData);
+    updateFormDirty(false);
     setLoadingContact(false);
   };
 
@@ -444,7 +468,7 @@ export default function DataCleanupPage(props) {
                       <button
                         className={styles.undoButton}
                         onClick={undoContact}
-                        disabled={!undoEnabled}
+                        disabled={!formDirty}
                       >
                         UNDO
                       </button>
