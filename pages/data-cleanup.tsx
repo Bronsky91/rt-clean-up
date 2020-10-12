@@ -166,10 +166,6 @@ export default function DataCleanupPage(props) {
     const updatedFormData = { ...formData, [arrName]: newArr };
 
     updateFormData(updatedFormData);
-    console.log("original");
-    console.log(originalFormData);
-    console.log("updated");
-    console.log(updatedFormData);
     updateFormDirty(
       JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
     );
@@ -181,10 +177,6 @@ export default function DataCleanupPage(props) {
 
     const updatedFormData = { ...formData, [target.name]: target.value.trim() };
     updateFormData(updatedFormData);
-    console.log("original");
-    console.log(originalFormData);
-    console.log("updated");
-    console.log(updatedFormData);
     updateFormDirty(
       JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
     );
@@ -208,7 +200,7 @@ export default function DataCleanupPage(props) {
     });
   };
 
-  const undoContact = (e) => {
+  const handleUndo = (e) => {
     e.preventDefault();
     setLoadingContact(true);
     updateFormData(originalFormData);
@@ -471,7 +463,7 @@ export default function DataCleanupPage(props) {
                       </button>
                       <button
                         className={styles.undoButton}
-                        onClick={undoContact}
+                        onClick={handleUndo}
                         disabled={!formDirty}
                       >
                         UNDO
