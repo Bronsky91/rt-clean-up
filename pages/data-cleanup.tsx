@@ -27,6 +27,10 @@ import {
   createEmptyFormData,
   createEmptyDropDownData,
 } from "../utils/create-empty-form-data";
+import { setLocalStorage } from "../utils/set-local-storage";
+import { SelectedContact } from "../interfaces/form.interface";
+import TextField from "../components/text-field";
+import DropDownField from "../components/drop-down-field";
 export default function DataCleanupPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
@@ -101,6 +105,10 @@ export default function DataCleanupPage(props) {
   const emptySourceContactRef: Readonly<RedtailContactRec> = createEmptyContactRefData();
   const emptyFormData: Readonly<ContactFormData> = createEmptyFormData();
   const redtailDropDowns: Readonly<RedtailSettingsData> = createEmptyDropDownData();
+  const initialSelectedContact: SelectedContact = {
+    id: "",
+    page: 1,
+  };
 
   const [sourceContactRef, updateSourceContactRef] = useState(
     emptySourceContactRef
@@ -108,10 +116,9 @@ export default function DataCleanupPage(props) {
   const [formData, updateFormData] = useState(emptyFormData);
   const [originalFormData, updateOriginalFormData] = useState(emptyFormData);
   const [formDirty, updateFormDirty] = useState(false);
-  const [selectedContact, updateSelectedContact] = useState({
-    id: "",
-    page: 1,
-  });
+  const [selectedContact, updateSelectedContact] = useState(
+    initialSelectedContact
+  );
   const [contactList, setContactList] = useState([]);
   const [dropdownData, updateDropdownData] = useState(redtailDropDowns);
   const [pageData, updatePageData] = useState({
@@ -124,20 +131,13 @@ export default function DataCleanupPage(props) {
 
   // Saves Form State to Local Storage after each change
   useEffect(() => {
-    localStorage.setItem(
-      "dataCleanUpSelectedContactData",
-      JSON.stringify(selectedContact)
+    setLocalStorage(
+      selectedContact,
+      sourceContactRef,
+      originalFormData,
+      formData,
+      formDirty
     );
-    localStorage.setItem(
-      "dataCleanUpSourceContactRef",
-      JSON.stringify(sourceContactRef)
-    );
-    localStorage.setItem("dataCleanUpFormData", JSON.stringify(formData));
-    localStorage.setItem(
-      "dataCleanUpOriginalFormData",
-      JSON.stringify(originalFormData)
-    );
-    localStorage.setItem("dataCleanUpFormDirty", JSON.stringify(formDirty));
   }, [
     selectedContact,
     sourceContactRef,
@@ -146,6 +146,7 @@ export default function DataCleanupPage(props) {
     formDirty,
   ]);
 
+  // Updates form state for phones, emails, and addresses
   const handleArrChange = (
     index: number,
     arrName: string,
@@ -259,182 +260,123 @@ export default function DataCleanupPage(props) {
             >
               <div className={styles.formRow}>
                 <div className={styles.formColumn}>
-                  <div className={styles.formField}>
-                    <label className={styles.formLabel}>Family Name</label>
-                    <input
-                      className={styles.formLabelledInput}
-                      type="text"
-                      name="familyName"
-                      onChange={handleChange}
-                      value={formData.familyName}
-                    />
-                  </div>
-                  <div className={styles.formField}>
-                    <label className={styles.formLabel}>Salutation</label>
-                    <select
-                      className={styles.formLabelledInput}
-                      onChange={handleChange}
-                      name="salutation"
-                      value={formData.salutation}
-                    >
-                      <option value=""></option>
-                      {dropdownData.salutations.map((obj, index) => (
-                        <option key={index} value={obj.SalutationCode || ""}>
-                          {obj.Code || ""}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className={styles.formField}>
-                    <label className={styles.formLabel}>First Name</label>
-                    <input
-                      className={styles.formLabelledInput}
-                      type="text"
-                      name="firstName"
-                      onChange={handleChange}
-                      value={formData.firstName}
-                    />
-                  </div>
-                  <div className={styles.formField}>
-                    <label className={styles.formLabel}>Middle Name</label>
-                    <input
-                      className={styles.formLabelledInput}
-                      type="text"
-                      name="middleName"
-                      onChange={handleChange}
-                      value={formData.middleName}
-                    />
-                  </div>
-                  <div className={styles.formField}>
-                    <label className={styles.formLabel}>Last Name</label>
-                    <input
-                      className={styles.formLabelledInput}
-                      type="text"
-                      name="lastName"
-                      onChange={handleChange}
-                      value={formData.lastName}
-                    />
-                  </div>
-                  <div className={styles.formField}>
-                    <label className={styles.formLabel}>Nickname</label>
-                    <input
-                      className={styles.formLabelledInput}
-                      type="text"
-                      name="nickname"
-                      onChange={handleChange}
-                      value={formData.nickname}
-                    />
-                  </div>
-                  <div className={styles.formField}>
-                    <label className={styles.formLabel}>Gender</label>
-                    <input
-                      className={styles.formLabelledInput}
-                      type="text"
-                      name="gender"
-                      onChange={handleChange}
-                      value={formData.gender}
-                    />
-                  </div>
+                  <TextField
+                    label="Family Name"
+                    fieldName="familyName"
+                    fieldValue={formData.familyName}
+                    handleChange={handleChange}
+                  ></TextField>
+
+                  <DropDownField
+                    label="Salutation"
+                    fieldName="salutation"
+                    fieldValue={formData.salutation}
+                    dropDownItems={dropdownData.salutations}
+                    optionLabel="Code"
+                    optionValue="SalutationCode"
+                    handleChange={handleChange}
+                  ></DropDownField>
+
+                  <TextField
+                    label="First Name"
+                    fieldName="firstName"
+                    fieldValue={formData.firstName}
+                    handleChange={handleChange}
+                  ></TextField>
+
+                  <TextField
+                    label="Middle Name"
+                    fieldName="middleName"
+                    fieldValue={formData.middleName}
+                    handleChange={handleChange}
+                  ></TextField>
+
+                  <TextField
+                    label="Last Name"
+                    fieldName="lastName"
+                    fieldValue={formData.lastName}
+                    handleChange={handleChange}
+                  ></TextField>
+
+                  <TextField
+                    label="Nickname"
+                    fieldName="nickname"
+                    fieldValue={formData.nickname}
+                    handleChange={handleChange}
+                  ></TextField>
+
+                  <DropDownField
+                    label="Gender"
+                    fieldName="gender"
+                    fieldValue={formData.gender}
+                    dropDownItems={dropdownData.gender}
+                    optionLabel="Gender"
+                    optionValue="Gender"
+                    handleChange={handleChange}
+                  ></DropDownField>
                 </div>
 
                 <div className={styles.formColumn}>
                   <div className={styles.formRow}>
                     <div className={styles.formColumn}>
-                      <div className={styles.formField}>
-                        <label className={styles.formLabel}>Category</label>
-                        <select
-                          className={styles.formLabelledInput}
-                          onChange={handleChange}
-                          name="categoryID"
-                          value={formData.categoryID}
-                        >
-                          <option value=""></option>
-                          {dropdownData.categories.map((obj, index) => (
-                            <option key={index} value={obj.MCCLCode || ""}>
-                              {obj.Code || ""}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className={styles.formField}>
-                        <label className={styles.formLabel}>Status</label>
-                        <select
-                          className={styles.formLabelledInput}
-                          onChange={handleChange}
-                          name="statusID"
-                          value={formData.statusID}
-                        >
-                          <option value=""></option>
-                          {dropdownData.statuses.map((obj, index) => (
-                            <option key={index} value={obj.CSLCode || ""}>
-                              {obj.Code || ""}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className={styles.formField}>
-                        <label className={styles.formLabel}>Source</label>
-                        <select
-                          className={styles.formLabelledInput}
-                          onChange={handleChange}
-                          name="sourceID"
-                          value={formData.sourceID}
-                        >
-                          <option value=""></option>
-                          {dropdownData.sources.map((obj, index) => (
-                            <option key={index} value={obj.MCSLCode || ""}>
-                              {obj.Code || ""}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className={styles.formField}>
-                        <label className={styles.formLabel}>Referred By</label>
-                        <input
-                          className={styles.formLabelledInput}
-                          type="text"
-                          name="referredBy"
-                          onChange={handleChange}
-                          value={formData.referredBy}
-                        />
-                      </div>
-                      <div className={styles.formField}>
-                        <label className={styles.formLabel}>
-                          Servicing Advisor
-                        </label>
-                        <select
-                          className={styles.formLabelledInput}
-                          onChange={handleChange}
-                          name="servicingAdvisorID"
-                          value={formData.servicingAdvisorID}
-                        >
-                          <option value=""></option>
-                          {dropdownData.servicingAdvisors.map((obj, index) => (
-                            <option key={index} value={obj.SALCode || ""}>
-                              {obj.Code || ""}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className={styles.formField}>
-                        <label className={styles.formLabel}>
-                          Writing Advisor
-                        </label>
-                        <select
-                          className={styles.formLabelledInput}
-                          onChange={handleChange}
-                          name="writingAdvisorID"
-                          value={formData.writingAdvisorID}
-                        >
-                          <option value=""></option>
-                          {dropdownData.writingAdvisors.map((obj, index) => (
-                            <option key={index} value={obj.WALCode || ""}>
-                              {obj.Code || ""}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
+                      <DropDownField
+                        label="Category"
+                        fieldName="categoryID"
+                        fieldValue={formData.categoryID}
+                        dropDownItems={dropdownData.categories}
+                        optionLabel="Code"
+                        optionValue="MCCLCode"
+                        handleChange={handleChange}
+                      ></DropDownField>
+
+                      <DropDownField
+                        label="Status"
+                        fieldName="statusID"
+                        fieldValue={formData.statusID}
+                        dropDownItems={dropdownData.statuses}
+                        optionLabel="Code"
+                        optionValue="CSLCode"
+                        handleChange={handleChange}
+                      ></DropDownField>
+
+                      <DropDownField
+                        label="Source"
+                        fieldName="sourceID"
+                        fieldValue={formData.sourceID}
+                        dropDownItems={dropdownData.sources}
+                        optionLabel="Code"
+                        optionValue="MCSLCode"
+                        handleChange={handleChange}
+                      ></DropDownField>
+
+                      <TextField
+                        label="Referred By"
+                        fieldName="referredBy"
+                        fieldValue={formData.referredBy}
+                        handleChange={handleChange}
+                      ></TextField>
+
+                      <DropDownField
+                        label="Servicing Advisor"
+                        fieldName="servicingAdvisorID"
+                        fieldValue={formData.servicingAdvisorID}
+                        dropDownItems={dropdownData.servicingAdvisors}
+                        optionLabel="Code"
+                        optionValue="SALCode"
+                        handleChange={handleChange}
+                      ></DropDownField>
+
+                      <DropDownField
+                        label="Writing Advisor"
+                        fieldName="writingAdvisorID"
+                        fieldValue={formData.writingAdvisorID}
+                        dropDownItems={dropdownData.writingAdvisors}
+                        optionLabel="Code"
+                        optionValue="WALCode"
+                        handleChange={handleChange}
+                      ></DropDownField>
                     </div>
+
                     {/* Place holder fields for DOB and Tax ID at last */}
                     <div className={styles.formColumn}>
                       <div className={styles.formField}>
@@ -459,7 +401,7 @@ export default function DataCleanupPage(props) {
                         </button>
                         <button
                           className={styles.undoButton}
-                          onClick={undoContact}
+                          onClick={handleUndo}
                         >
                           UNDO
                         </button>

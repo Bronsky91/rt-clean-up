@@ -257,6 +257,10 @@ export interface RedtailWritingAdvisor {
   WALCode: number;
 }
 
+export interface RedtailGender {
+  Gender: string;
+}
+
 export interface RedtailSettingsData {
   statuses: RedtailStatus[];
   categories: RedtailCategory[];
@@ -264,6 +268,7 @@ export interface RedtailSettingsData {
   salutations: RedtailSalutation[];
   servicingAdvisors: RedtailServicingAdvisor[];
   writingAdvisors: RedtailWritingAdvisor[];
+  gender: RedtailGender[];
 }
 
 export interface ContactFormData {
