@@ -453,20 +453,17 @@ export default function DataCleanupPage(props) {
                     </div>
                     {/* -------- */}
                     <div className={styles.formColumn}>
-                      <button
-                        type="submit"
-                        className={styles.saveButton}
-                        disabled={!formDirty}
-                      >
-                        SAVE
-                      </button>
-                      <button
-                        className={styles.undoButton}
-                        onClick={handleUndo}
-                        disabled={!formDirty}
-                      >
-                        UNDO
-                      </button>
+                      <div className={styles.saveButtonContainer}>
+                        <button type="submit" className={styles.saveButton}>
+                          SAVE
+                        </button>
+                        <button
+                          className={styles.undoButton}
+                          onClick={undoContact}
+                        >
+                          UNDO
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

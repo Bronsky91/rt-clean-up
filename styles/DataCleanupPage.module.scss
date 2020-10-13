@@ -35,6 +35,10 @@ $field-height: 4rem;
   }
 }
 
+.saveButton:hover {
+  cursor: pointer;
+}
+
 .undoButton {
   margin: 0.5rem auto;
   opacity: 0.95;
@@ -52,6 +56,10 @@ $field-height: 4rem;
   &:disabled {
     background-color: #cccccc;
   }
+}
+
+.undoButton:hover {
+  cursor: pointer;
 }
 
 .editPanel {
@@ -131,4 +139,10 @@ $field-height: 4rem;
   flex-flow: column nowrap;
   overflow: auto;
   height: ($field-height * 3) + 1rem;
+}
+
+.saveButtonContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15em;
 }
