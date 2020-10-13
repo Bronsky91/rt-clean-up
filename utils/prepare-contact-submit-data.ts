@@ -34,7 +34,7 @@ export const prepareContactSubmitData = (
           RecID: item.RecID,
           SharedAddress: item.SharedAddress,
           State: fromForm ? fromForm.state : item.State,
-          TypeID: fromForm ? fromForm.type : item.TypeID,
+          TypeID: fromForm ? fromForm.typeID : item.TypeID,
           Zip: fromForm ? fromForm.zip : item.Zip,
         };
       })
@@ -84,7 +84,7 @@ export const prepareContactSubmitData = (
           Label: item.Label,
           Preferred: item.Preferred,
           RecID: item.RecID,
-          TypeID: fromForm ? fromForm.type : item.TypeID,
+          TypeID: fromForm ? fromForm.typeID : item.TypeID,
           Primary: fromForm ? fromForm.primaryEmail : item.Primary,
         };
         return updatedInternet;
@@ -108,7 +108,7 @@ export const prepareContactSubmitData = (
           RecID: item.RecID,
           SharedPhoneNumber: item.SharedPhoneNumber,
           SpeedDial: item.SpeedDial,
-          TypeID: fromForm ? fromForm.type : item.TypeID,
+          TypeID: fromForm ? fromForm.typeID : item.TypeID,
           Primary: fromForm ? fromForm.primaryPhone : item.Primary,
         };
 

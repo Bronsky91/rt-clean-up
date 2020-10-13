@@ -223,10 +223,9 @@ export default function DataCleanupPage(props) {
           alert("Submitted Contact!");
         } else {
           alert(
-            "Error submitting contact!: HTTP " +
+            "ERROR (HTTP " +
               res.status.toString() +
-              " status " +
-              res.statusText
+              ")\nPlease wait and try again later."
           );
         }
       });
@@ -506,7 +505,7 @@ export default function DataCleanupPage(props) {
                             className={styles.formSoloInput}
                             type="text"
                             name="type"
-                            value={obj.type || ""}
+                            value={obj.typeID || ""}
                             onChange={handleArrChange(
                               index,
                               "emailAddresses",
@@ -557,7 +556,7 @@ export default function DataCleanupPage(props) {
                             className={styles.formSoloInput}
                             type="text"
                             name="type"
-                            value={obj.type || ""}
+                            value={obj.typeID || ""}
                             onChange={handleArrChange(
                               index,
                               "phoneNumbers",
@@ -670,7 +669,7 @@ export default function DataCleanupPage(props) {
                         <input
                           className={styles.formSoloInput}
                           type="text"
-                          value={obj.type || ""}
+                          value={obj.typeID || ""}
                           onChange={handleArrChange(
                             index,
                             "streetAddresses",

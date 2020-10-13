@@ -57,7 +57,7 @@ export interface InternetUpdate {
   Label: string;
   Preferred: boolean;
   RecID: number;
-  TypeID: string;
+  TypeID: number;
   Primary: boolean;
 }
 
@@ -193,7 +193,7 @@ export interface InternetRec {
   RecAddUser: number;
   RecID: number;
   Type: string;
-  TypeID: string;
+  TypeID: number;
 }
 export interface PhoneRec {
   ClientID: number;
@@ -290,7 +290,7 @@ export interface PhoneNumberFormData {
   recID: number;
   key: string;
   phoneNumber: string;
-  type: string;
+  typeID: string;
   primaryPhone: boolean;
 }
 
@@ -298,7 +298,7 @@ export interface EmailAddressFormData {
   recID: number;
   key: string;
   emailAddress: string;
-  type: string;
+  typeID: number;
   primaryEmail: boolean;
 }
 
@@ -310,6 +310,6 @@ export interface StreetAddressFormData {
   city: string;
   state: string;
   zip: string;
-  type: string;
+  typeID: string;
   primaryStreet: boolean;
 }

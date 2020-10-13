@@ -44,21 +44,21 @@ export const getContactAndPopulateForm = (
       writingAdvisorID: data.ContactRecord.WritingAdvisorID
         ? data.ContactRecord.WritingAdvisorID
         : 0,
-      phoneNumbers: data.Phone.map((obj, index) => ({
+      phoneNumbers: data.Phone.map((obj) => ({
         key: uuid(),
         recID: obj.RecID,
         phoneNumber: obj.Number,
-        type: obj.TypeID,
+        typeID: obj.TypeID,
         primaryPhone: obj.Primary,
       })),
-      emailAddresses: data.Internet.map((obj, index) => ({
+      emailAddresses: data.Internet.map((obj) => ({
         key: uuid(),
         recID: obj.RecID,
         emailAddress: obj.Address,
-        type: obj.Type,
+        typeID: obj.TypeID,
         primaryEmail: obj.Primary,
       })),
-      streetAddresses: data.Address.map((obj, index) => ({
+      streetAddresses: data.Address.map((obj) => ({
         key: uuid(),
         recID: obj.RecID,
         streetAddress: obj.Address1,
@@ -66,7 +66,7 @@ export const getContactAndPopulateForm = (
         city: obj.City,
         state: obj.State,
         zip: obj.Zip,
-        type: obj.TypeID,
+        typeID: obj.TypeID,
         primaryStreet: obj.Primary,
       })),
     };

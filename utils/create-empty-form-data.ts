@@ -1,6 +1,5 @@
 import {
   ContactFormData,
-  ContactFieldsRec,
   RedtailContactRec,
   RedtailSettingsData,
 } from "../interfaces/redtail.interface";
@@ -77,14 +76,20 @@ export const createEmptyFormData = (): Readonly<ContactFormData> =>
     servicingAdvisorID: 0,
     writingAdvisorID: 0,
     phoneNumbers: [
-      { key: uuid(), recID: 0, phoneNumber: "", type: "", primaryPhone: false },
+      {
+        key: uuid(),
+        recID: 0,
+        phoneNumber: "",
+        typeID: "",
+        primaryPhone: false,
+      },
     ],
     emailAddresses: [
       {
         key: uuid(),
         recID: 0,
         emailAddress: "",
-        type: "",
+        typeID: 0,
         primaryEmail: false,
       },
     ],
@@ -97,7 +102,7 @@ export const createEmptyFormData = (): Readonly<ContactFormData> =>
         city: "",
         state: "",
         zip: "",
-        type: "",
+        typeID: "",
         primaryStreet: false,
       },
     ],
