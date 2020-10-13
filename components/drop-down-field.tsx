@@ -1,7 +1,6 @@
 import styles from "../styles/DataCleanupPage.module.scss";
 
 export default function DropDownField(props) {
-  console.log(props.dropDownItems);
   return (
     <div className={styles.formField}>
       <label className={styles.formLabel}>{props.label}</label>

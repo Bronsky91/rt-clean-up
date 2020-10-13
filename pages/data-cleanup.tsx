@@ -200,10 +200,7 @@ export default function DataCleanupPage(props) {
 
   const handleUndo = (e) => {
     e.preventDefault();
-    setLoadingContact(true);
     updateFormData(originalFormData);
-    updateFormDirty(false);
-    setLoadingContact(false);
   };
 
   const handleSubmit = (e) => {
