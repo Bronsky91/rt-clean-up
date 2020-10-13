@@ -8,12 +8,6 @@ import {
   RedtailSettingsData,
   ContactFormData,
   RedtailContactListRec,
-  PhoneRec,
-  InternetRec,
-  AddressRec,
-  PhoneNumberFormData,
-  EmailAddressFormData,
-  StreetAddressFormData,
 } from "../interfaces/redtail.interface";
 import { API_URL } from "../constants";
 import { useRouter } from "next/router";
@@ -31,6 +25,9 @@ import { setLocalStorage } from "../utils/set-local-storage";
 import { SelectedContact } from "../interfaces/form.interface";
 import TextField from "../components/text-field";
 import DropDownField from "../components/drop-down-field";
+import EmailFields from "../components/email-field";
+import PhoneFields from "../components/phone-field";
+import AddressFields from "../components/address-field";
 export default function DataCleanupPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
@@ -379,21 +376,21 @@ export default function DataCleanupPage(props) {
 
                     {/* Place holder fields for DOB and Tax ID at last */}
                     <div className={styles.formColumn}>
-                      <div className={styles.formField}>
-                        <label className={styles.formLabel}>PlaceHolder</label>
-                        <select
-                          className={styles.formLabelledInput}
-                          onChange={handleChange}
-                        >
-                          <option value=""></option>
-                        </select>
-                      </div>
-                      <div className={styles.formField}>
-                        <label className={styles.formLabel}>PlaceHolder</label>
-                        <select className={styles.formLabelledInput}></select>
-                      </div>
+                      <TextField
+                        label="Place Holder"
+                        fieldName="referredBy"
+                        fieldValue=""
+                        handleChange={handleChange}
+                      ></TextField>
+                      <TextField
+                        label="Place Holder"
+                        fieldName="referredBy"
+                        fieldValue=""
+                        handleChange={handleChange}
+                      ></TextField>
                     </div>
                     {/* -------- */}
+
                     <div className={styles.formColumn}>
                       <div className={styles.saveButtonContainer}>
                         <button type="submit" className={styles.saveButton}>
@@ -426,44 +423,10 @@ export default function DataCleanupPage(props) {
                         <label className={styles.formLabel}>Primary?</label>
                       </div>
                     </div>
-                    <div className={styles.formColumnScroll}>
-                      {formData.emailAddresses.map((obj, index) => (
-                        <div className={styles.formRow} key={obj.key}>
-                          <input
-                            className={styles.formSoloInput}
-                            type="text"
-                            name="emailAddress"
-                            value={obj.emailAddress || ""}
-                            onChange={handleArrChange(
-                              index,
-                              "emailAddresses",
-                              obj.recID
-                            )}
-                          />
-                          <input
-                            className={styles.formSoloInput}
-                            type="text"
-                            name="type"
-                            value={obj.typeID || ""}
-                            onChange={handleArrChange(
-                              index,
-                              "emailAddresses",
-                              obj.recID
-                            )}
-                          />
-                          <input
-                            type="radio"
-                            name="primaryEmail"
-                            checked={obj.primaryEmail}
-                            onChange={handleArrChange(
-                              index,
-                              "emailAddresses",
-                              obj.recID
-                            )}
-                          />
-                        </div>
-                      ))}
-                    </div>
+                    <EmailFields
+                      emails={formData.emailAddresses}
+                      handleArrChange={handleArrChange}
+                    ></EmailFields>
                   </div>
                   <div className={styles.formColumn}>
                     <div className={styles.formRow}>
@@ -477,45 +440,10 @@ export default function DataCleanupPage(props) {
                         <label className={styles.formLabel}>Primary?</label>
                       </div>
                     </div>
-                    <div className={styles.formColumnScroll}>
-                      {formData.phoneNumbers.map((obj, index) => (
-                        <div className={styles.formRow} key={obj.key}>
-                          <input
-                            className={styles.formSoloInput}
-                            type="text"
-                            name="phoneNumber"
-                            value={obj.phoneNumber || ""}
-                            onChange={handleArrChange(
-                              index,
-                              "phoneNumbers",
-                              obj.recID
-                            )}
-                          />
-                          <input
-                            className={styles.formSoloInput}
-                            type="text"
-                            name="type"
-                            value={obj.typeID || ""}
-                            onChange={handleArrChange(
-                              index,
-                              "phoneNumbers",
-                              obj.recID
-                            )}
-                          />
-                          <input
-                            type="radio"
-                            name="primaryPhone"
-                            value=""
-                            checked={obj.primaryPhone}
-                            onChange={handleArrChange(
-                              index,
-                              "phoneNumbers",
-                              obj.recID
-                            )}
-                          />
-                        </div>
-                      ))}
-                    </div>
+                    <PhoneFields
+                      phoneNumbers={formData.phoneNumbers}
+                      handleArrChange={handleArrChange}
+                    ></PhoneFields>
                   </div>
                 </div>
               </div>
@@ -547,88 +475,10 @@ export default function DataCleanupPage(props) {
                       <label className={styles.formLabel}>Primary?</label>
                     </div>
                   </div>
-                  <div className={styles.formColumnScroll}>
-                    {formData.streetAddresses.map((obj, index) => (
-                      <div className={styles.formRow} key={obj.key}>
-                        <input
-                          className={styles.formSoloInput}
-                          type="text"
-                          name="streetAddress"
-                          value={obj.streetAddress || ""}
-                          onChange={handleArrChange(
-                            index,
-                            "streetAddresses",
-                            obj.recID
-                          )}
-                        />
-                        <input
-                          className={styles.formSoloInput}
-                          type="text"
-                          name="secondaryAddress"
-                          value={obj.secondaryAddress || ""}
-                          onChange={handleArrChange(
-                            index,
-                            "streetAddresses",
-                            obj.recID
-                          )}
-                        />
-                        <input
-                          className={styles.formSoloInput}
-                          type="text"
-                          name="city"
-                          value={obj.city || ""}
-                          onChange={handleArrChange(
-                            index,
-                            "streetAddresses",
-                            obj.recID
-                          )}
-                        />
-                        <input
-                          className={styles.formSoloInput}
-                          type="text"
-                          name="state"
-                          value={obj.state || ""}
-                          onChange={handleArrChange(
-                            index,
-                            "streetAddresses",
-                            obj.recID
-                          )}
-                        />
-                        <input
-                          className={styles.formSoloInput}
-                          type="text"
-                          name="zip"
-                          value={obj.zip || ""}
-                          onChange={handleArrChange(
-                            index,
-                            "streetAddresses",
-                            obj.recID
-                          )}
-                        />
-                        <input
-                          className={styles.formSoloInput}
-                          type="text"
-                          value={obj.typeID || ""}
-                          onChange={handleArrChange(
-                            index,
-                            "streetAddresses",
-                            obj.recID
-                          )}
-                        />
-                        <input
-                          type="radio"
-                          name="primaryStreet"
-                          value=""
-                          checked={obj.primaryStreet}
-                          onChange={handleArrChange(
-                            index,
-                            "streetAddresses",
-                            obj.recID
-                          )}
-                        />
-                      </div>
-                    ))}
-                  </div>
+                  <AddressFields
+                    streetAddresses={formData.streetAddresses}
+                    handleArrChange={handleArrChange}
+                  ></AddressFields>
                 </div>
               </div>
             </form>
