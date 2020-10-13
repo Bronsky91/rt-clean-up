@@ -5,10 +5,10 @@
   background-repeat: no-repeat;
   background-size: cover;
   position: fixed;
-  width: 50em;
+  width: 52em;
   height: 30em;
-  margin-top: 30em;
-  margin-left: 60em;
+  margin-top: 31em;
+  margin-left: 61em;
   z-index: 2;
 }
 
@@ -86,6 +86,10 @@
   padding: 0;
 }
 
+.selectedFilter {
+  text-shadow: 0 3px 6px rgba(67, 87, 171, 0.61);
+}
+
 .filterItem:hover {
   cursor: pointer;
 }
@@ -146,4 +150,8 @@
   font-weight: bold;
   text-align: center;
   color: white;
+}
+
+.filterButton:hover {
+  cursor: pointer;
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "../styles/ContactListPanel.module.scss";
-import ContactFilter from "./contact-filter";
+import ContactFilter from "./filter/contact-filter";
 
 export default function ContactListPanel(props) {
   const [showFilters, setShowFilters] = useState(false);
