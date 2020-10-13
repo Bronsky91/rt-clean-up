@@ -261,6 +261,21 @@ export interface RedtailGender {
   Gender: string;
 }
 
+export interface RedtailAddressTypes {
+  Label: string;
+  TypeID: string;
+}
+
+export interface RedtailInternetTypes {
+  Label: string;
+  TypeID: number;
+}
+
+export interface RedtailPhoneTypes {
+  Label: string;
+  TypeID: string;
+}
+
 export interface RedtailSettingsData {
   statuses: RedtailStatus[];
   categories: RedtailCategory[];
@@ -269,6 +284,9 @@ export interface RedtailSettingsData {
   servicingAdvisors: RedtailServicingAdvisor[];
   writingAdvisors: RedtailWritingAdvisor[];
   gender: RedtailGender[];
+  addressTypes: RedtailAddressTypes[];
+  internetTypes: RedtailInternetTypes[];
+  phoneTypes: RedtailPhoneTypes[];
 }
 
 export interface ContactFormData {

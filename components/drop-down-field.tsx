@@ -11,11 +11,13 @@ export default function DropDownField(props) {
         value={props.fieldValue}
       >
         <option value=""></option>
-        {props.dropDownItems.map((obj, index) => (
-          <option key={index} value={obj[props.optionValue] || ""}>
-            {obj.[props.optionLabel] || ""}
-          </option>
-        ))}
+        {props.dropDownItems
+          ? props.dropDownItems.map((obj, index) => (
+              <option key={index} value={obj[props.optionValue] || ""}>
+                {obj[props.optionLabel] || ""}
+              </option>
+            ))
+          : ""}
       </select>
     </div>
   );

@@ -1,32 +1,65 @@
 import styles from "../styles/DataCleanupPage.module.scss";
+import {
+  EmailAddressFormData,
+  RedtailSettingsData,
+} from "../interfaces/redtail.interface";
 
 export default function EmailFields(props) {
+  const emails: EmailAddressFormData[] = props.emails;
+  const dropdownData: RedtailSettingsData = props.dropdownData;
+
   return (
     <div className={styles.formColumnScroll}>
-      {props.emails.map((obj, index) => (
-        <div className={styles.formRow} key={obj.key}>
-          <input
-            className={styles.formSoloInput}
-            type="text"
-            name="emailAddress"
-            value={obj.emailAddress || ""}
-            onChange={props.handleArrChange(index, "emailAddresses", obj.recID)}
-          />
-          <input
-            className={styles.formSoloInput}
-            type="text"
-            name="type"
-            value={obj.typeID || ""}
-            onChange={props.handleArrChange(index, "emailAddresses", obj.recID)}
-          />
-          <input
-            type="radio"
-            name="primaryEmail"
-            checked={obj.primaryEmail}
-            onChange={props.handleArrChange(index, "emailAddresses", obj.recID)}
-          />
-        </div>
-      ))}
+      {emails
+        ? emails.map((obj, index) => (
+            <div className={styles.formRow} key={obj.key}>
+              <input
+                className={styles.formSoloInput}
+                type="text"
+                name="emailAddress"
+                value={obj.emailAddress || ""}
+                onChange={props.handleArrChange(
+                  index,
+                  "emailAddresses",
+                  obj.recID
+                )}
+              />
+
+              <div>
+                <select
+                  className={styles.formSoloInput}
+                  onChange={props.handleArrChange(
+                    index,
+                    "emailAddresses",
+                    obj.recID
+                  )}
+                  name="typeID"
+                >
+                  {dropdownData && dropdownData.internetTypes ? (
+                    dropdownData.internetTypes.map((obj, index) => (
+                      <option key={index} value={obj.TypeID || ""}>
+                        {obj.Description || ""}
+                      </option>
+                    ))
+                  ) : (
+                    <option value=""></option>
+                  )}
+                </select>
+              </div>
+
+              <input
+                type="radio"
+                name="primaryEmail"
+                checked={obj.primaryEmail}
+                onChange={props.handleArrChange(
+                  index,
+                  "emailAddresses",
+                  obj.recID
+                )}
+              />
+            </div>
+          ))
+        : ""}
     </div>
   );
 }

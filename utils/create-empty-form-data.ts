@@ -117,4 +117,7 @@ export const createEmptyDropDownData = (): Readonly<RedtailSettingsData> =>
     servicingAdvisors: [],
     writingAdvisors: [],
     gender: [],
+    addressTypes: [],
+    internetTypes: [],
+    phoneTypes: [],
   });

@@ -101,7 +101,7 @@ export default function DataCleanupPage(props) {
 
   const emptySourceContactRef: Readonly<RedtailContactRec> = createEmptyContactRefData();
   const emptyFormData: Readonly<ContactFormData> = createEmptyFormData();
-  const redtailDropDowns: Readonly<RedtailSettingsData> = createEmptyDropDownData();
+  const emptyDropDowns: Readonly<RedtailSettingsData> = createEmptyDropDownData();
   const initialSelectedContact: SelectedContact = {
     id: "",
     page: 1,
@@ -117,7 +117,7 @@ export default function DataCleanupPage(props) {
     initialSelectedContact
   );
   const [contactList, setContactList] = useState([]);
-  const [dropdownData, updateDropdownData] = useState(redtailDropDowns);
+  const [dropdownData, updateDropdownData] = useState(emptyDropDowns);
   const [pageData, updatePageData] = useState({
     current_page: 1,
     total_pages: 1,
@@ -423,6 +423,7 @@ export default function DataCleanupPage(props) {
                     <EmailFields
                       emails={formData.emailAddresses}
                       handleArrChange={handleArrChange}
+                      dropdownData={dropdownData}
                     ></EmailFields>
                   </div>
                   <div className={styles.formColumn}>
@@ -440,6 +441,7 @@ export default function DataCleanupPage(props) {
                     <PhoneFields
                       phoneNumbers={formData.phoneNumbers}
                       handleArrChange={handleArrChange}
+                      dropdownData={dropdownData}
                     ></PhoneFields>
                   </div>
                 </div>
@@ -475,6 +477,7 @@ export default function DataCleanupPage(props) {
                   <AddressFields
                     streetAddresses={formData.streetAddresses}
                     handleArrChange={handleArrChange}
+                    dropdownData={dropdownData}
                   ></AddressFields>
                 </div>
               </div>
