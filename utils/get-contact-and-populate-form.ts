@@ -72,7 +72,7 @@ export const getContactAndPopulateForm = (
     };
 
     updateFormData(loadedFormData);
-    updateOriginalFormData(loadedFormData);
+    updateOriginalFormData(Object.create(loadedFormData)); // force pass by val not ref
     updateFormDirty(false);
   });
 };
