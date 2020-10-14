@@ -58,17 +58,61 @@
 }
 
 .contactSelect {
+  padding: 0 2rem;
   width: 20rem;
   color: #8e8e8e;
   font-size: 2.4rem;
-  text-align-last: center;
+  text-align-last: left;
   border: none;
 }
 
 .contactPageRow {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
   margin: 0.2rem;
+  height: 10rem;
 }
 
 .contactPageInput {
+  color: rgba(67, 87, 171, 0.86);
+  font-family: SegoeUI;
+  font-size: 1.7rem;
+  font-weight: bold;
+  line-height: 1.29;
+  letter-spacing: 0.119rem;
+  text-align: center;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid rgba(67, 87, 171, 0.86);
+}
+
+.pageButton {
   width: 2rem;
+  height: 2.2rem;
+  font-family: SegoeUI;
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: #6fa1c6;
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  &:disabled {
+    color: #cccccc;
+  }
+}
+
+.pageNumbers {
+  margin: 0 1rem;
+  font-family: SegoeUI;
+  font-size: 1.7rem;
+  font-weight: bold;
+  line-height: 1.29;
+  letter-spacing: 0.119rem;
+  color: rgba(67, 87, 171, 0.86);
 }

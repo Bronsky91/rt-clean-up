@@ -49,8 +49,9 @@ export default function DataCleanupPage(props) {
             const pageCount: number = Math.ceil(totalCount / 50);
 
             updatePageData({
-              current_page: 1,
-              total_pages: pageCount,
+              currentPage: 1,
+              totalPages: pageCount,
+              totalContacts: totalCount,
             });
 
             const formattedContactList = contacts
@@ -119,8 +120,9 @@ export default function DataCleanupPage(props) {
   const [contactList, setContactList] = useState([]);
   const [dropdownData, updateDropdownData] = useState(emptyDropDowns);
   const [pageData, updatePageData] = useState({
-    current_page: 1,
-    total_pages: 1,
+    currentPage: 1,
+    totalPages: 1,
+    totalContacts: 0,
   });
   const [loadingPage, setLoadingPage] = useState(false);
   const [loadingContact, setLoadingContact] = useState(false);
@@ -237,9 +239,11 @@ export default function DataCleanupPage(props) {
           contactSelected={contactSelected}
           selectedContact={selectedContact}
           contactList={contactList}
+          setContactList={setContactList}
           pageData={pageData}
           updatePageData={updatePageData}
           dropdownData={dropdownData}
+          setLoadingPage={setLoadingPage}
         ></ContactListPanel>
         <LoadingOverlay active={savingContact} spinner text="Saving Contact">
           <LoadingOverlay
