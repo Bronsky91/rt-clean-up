@@ -17,7 +17,7 @@ export const FilterOptions = (props) => {
   return (
     <div className={styles.itemsContainer}>
       {props.dropdownData[props.filter].map((c) => {
-        const filterValue = c[codes[props.filter]];
+        const filterValue: number = c[codes[props.filter]];
         const checked: boolean = !!filterData.selectedIds.find(
           (id) => Number(id) === filterValue
         );
