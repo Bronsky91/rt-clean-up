@@ -90,6 +90,11 @@
   text-shadow: 0 3px 6px rgba(67, 87, 171, 0.61);
 }
 
+.hasItems {
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+  color: #fca000;
+}
+
 .filterItem:hover {
   cursor: pointer;
 }
