@@ -2,6 +2,7 @@ import Axios from "axios";
 import { API_URL } from "../constants";
 import { RedtailContactRec } from "../interfaces/redtail.interface";
 import { v4 as uuid } from "uuid";
+import { fromRedtailDatestring } from "./redtail-datestrings";
 
 export const getContactAndPopulateForm = (
   updateSourceContactRef,
@@ -21,7 +22,6 @@ export const getContactAndPopulateForm = (
 
     const loadedFormData = {
       key: formData.key,
-      familyName: data.ContactRecord.Familyname,
       salutation: data.ContactRecord.Salutation
         ? data.ContactRecord.Salutation.toString()
         : "",
@@ -29,6 +29,9 @@ export const getContactAndPopulateForm = (
       middleName: data.ContactRecord.Middlename,
       lastName: data.ContactRecord.Lastname,
       nickname: data.ContactRecord.Nickname,
+      dateOfBirth: data.ContactRecord.DateOfBirth
+        ? fromRedtailDatestring(data.ContactRecord.DateOfBirth)
+        : null,
       gender: data.ContactRecord.Gender
         ? data.ContactRecord.Gender.toString()
         : "",
@@ -37,7 +40,7 @@ export const getContactAndPopulateForm = (
         : 0,
       statusID: data.ContactRecord.StatusID ? data.ContactRecord.StatusID : 0,
       sourceID: data.ContactRecord.SourceID ? data.ContactRecord.SourceID : 0,
-      referredBy: data.ContactRecord.ReferredBy,
+      taxID: data.ContactRecord.TaxID ? data.ContactRecord.TaxID : "",
       servicingAdvisorID: data.ContactRecord.ServicingAdvisorID
         ? data.ContactRecord.ServicingAdvisorID
         : 0,

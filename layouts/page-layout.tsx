@@ -32,6 +32,10 @@ export default function PageLayout({ children }) {
       <Head>
         <title>Redtail Clean Up Tool</title>
         <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/react-datepicker/2.14.1/react-datepicker.min.css"
+        />
       </Head>
       <header className={styles.header}>
         <div className={styles.logo}>

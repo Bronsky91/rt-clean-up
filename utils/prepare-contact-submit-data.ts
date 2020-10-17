@@ -10,11 +10,15 @@ import {
   EmailAddressFormData,
   PhoneNumberFormData,
 } from "../interfaces/redtail.interface";
+import { toRedtailDatestring } from "./redtail-datestrings";
 
 export const prepareContactSubmitData = (
   formData: ContactFormData,
   fields: RedtailContactRec
 ) => {
+  console.log("DOB:");
+  console.log(formData.dateOfBirth);
+
   const address: AddressUpdate[] = fields.Address
     ? fields.Address.map((item) => {
         const fromForm:
@@ -46,11 +50,11 @@ export const prepareContactSubmitData = (
     ClientID: fields.ContactRecord.ClientID,
     ClientSinceDate: fields.ContactRecord.ClientSinceDate,
     CompanyID: fields.ContactRecord.CompanyID,
-    DateOfBirth: fields.ContactRecord.DateOfBirth,
+    DateOfBirth: toRedtailDatestring(formData.dateOfBirth),
     Designation: fields.ContactRecord.Designation,
     Family: fields.ContactRecord.Family,
     FamilyHeadID: fields.ContactRecord.FamilyHeadID,
-    Familyname: formData.familyName,
+    Familyname: fields.ContactRecord.Familyname,
     Firstname: formData.firstName,
     Gender: formData.gender,
     JobTitle: fields.ContactRecord.JobTitle,
@@ -59,13 +63,13 @@ export const prepareContactSubmitData = (
     Middlename: formData.middleName,
     Name: fields.ContactRecord.Name,
     Nickname: formData.nickname,
-    ReferredBy: formData.referredBy,
+    ReferredBy: fields.ContactRecord.ReferredBy,
     Salutation: formData.salutation,
     ServicingAdvisorID: formData.servicingAdvisorID,
     SourceID: formData.sourceID,
     StatusID: formData.statusID,
     Suffix: fields.ContactRecord.Suffix,
-    TaxID: fields.ContactRecord.TaxID,
+    TaxID: formData.taxID,
     TypeID: fields.ContactRecord.ClientType,
     WritingAdvisorID: formData.writingAdvisorID,
   };

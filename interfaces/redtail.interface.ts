@@ -262,17 +262,17 @@ export interface RedtailGender {
 }
 
 export interface RedtailAddressTypes {
-  Label: string;
+  Description: string;
   TypeID: string;
 }
 
 export interface RedtailInternetTypes {
-  Label: string;
+  Description: string;
   TypeID: number;
 }
 
 export interface RedtailPhoneTypes {
-  Label: string;
+  Description: string;
   TypeID: string;
 }
 
@@ -291,17 +291,17 @@ export interface RedtailSettingsData {
 
 export interface ContactFormData {
   key: string;
-  familyName: string;
   salutation: string;
   firstName: string;
   middleName: string;
   lastName: string;
   nickname: string;
+  dateOfBirth: Date;
   gender: string;
   categoryID: number;
   statusID: number;
   sourceID: number;
-  referredBy: string;
+  taxID: string;
   servicingAdvisorID: number;
   writingAdvisorID: number;
   phoneNumbers: PhoneNumberFormData[];

@@ -27,8 +27,6 @@ MyApp.getInitialProps = async (args) => {
     jwt = Cookies.get("jwt");
   }
 
-
-
   const headers = jwt ? { cookie: jwt } : {};
   const result = await axios.get(API_URL + "/users/auth-check", {
     withCredentials: true,

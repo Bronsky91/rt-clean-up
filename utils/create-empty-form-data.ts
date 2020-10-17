@@ -62,17 +62,17 @@ export const createEmptyContactRefData = (): Readonly<RedtailContactRec> =>
 export const createEmptyFormData = (): Readonly<ContactFormData> =>
   Object.freeze({
     key: uuid(),
-    familyName: "",
     salutation: "",
     firstName: "",
     middleName: "",
     lastName: "",
     nickname: "",
+    dateOfBirth: null,
     gender: "",
     categoryID: 0,
     statusID: 0,
     sourceID: 0,
-    referredBy: "",
+    taxID: "",
     servicingAdvisorID: 0,
     writingAdvisorID: 0,
     phoneNumbers: [

@@ -28,6 +28,7 @@ import DropDownField from "../components/drop-down-field";
 import EmailFields from "../components/email-field";
 import PhoneFields from "../components/phone-field";
 import AddressFields from "../components/address-field";
+import DateField from "../components/date-field";
 export default function DataCleanupPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
@@ -171,6 +172,10 @@ export default function DataCleanupPage(props) {
     );
   };
 
+  const handleDateChange = (date: any, fieldName) => {
+    updateFormData({ ...formData, [fieldName]: date });
+  };
+
   const handleChange = (e) => {
     e.preventDefault();
     const target = e.target;
@@ -258,20 +263,13 @@ export default function DataCleanupPage(props) {
             >
               <div className={styles.formRow}>
                 <div className={styles.formColumn}>
-                  <TextField
-                    label="Family Name"
-                    fieldName="familyName"
-                    fieldValue={formData.familyName}
-                    handleChange={handleChange}
-                  ></TextField>
-
                   <DropDownField
                     label="Salutation"
                     fieldName="salutation"
                     fieldValue={formData.salutation}
                     dropDownItems={dropdownData.salutations}
                     optionLabel="Code"
-                    optionValue="SalutationCode"
+                    optionValue="Code"
                     handleChange={handleChange}
                   ></DropDownField>
 
@@ -312,6 +310,13 @@ export default function DataCleanupPage(props) {
                     optionValue="Gender"
                     handleChange={handleChange}
                   ></DropDownField>
+
+                  <DateField
+                    label="Date of Birth"
+                    fieldName="dateOfBirth"
+                    fieldValue={formData.dateOfBirth}
+                    handleDateChange={handleDateChange}
+                  ></DateField>
                 </div>
 
                 <div className={styles.formColumn}>
@@ -348,9 +353,9 @@ export default function DataCleanupPage(props) {
                       ></DropDownField>
 
                       <TextField
-                        label="Referred By"
-                        fieldName="referredBy"
-                        fieldValue={formData.referredBy}
+                        label="Tax ID"
+                        fieldName="taxID"
+                        fieldValue={formData.taxID}
                         handleChange={handleChange}
                       ></TextField>
 
