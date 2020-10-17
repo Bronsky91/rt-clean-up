@@ -5,7 +5,7 @@ export interface ContactFormData {
   middleName: string;
   lastName: string;
   nickname: string;
-  dateOfBirth: Date;
+  dateOfBirth: string;
   gender: string;
   categoryID: number;
   statusID: number;

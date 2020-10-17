@@ -1,4 +1,3 @@
-import { zonedTimeToUtc } from "date-fns-tz";
 import { fromUnixTime, getUnixTime } from "date-fns";
 
 export const toRedtailDatestring = (date: string): string => {
