@@ -2,14 +2,6 @@ import styles from "../../styles/ContactFilter.module.scss";
 import { FilterData } from "./contact-filter";
 
 export const FilterOptions = (props) => {
-  const codes = {
-    statuses: "CSLCode",
-    sources: "MCSLCode",
-    // categories: "MCCLCode",
-    // servicingAdvisors: "SALCode",
-    // writingAdvisors: "WALCode",
-  };
-
   console.log(props.filter);
   const filterData: FilterData = props.filterData.find(
     (data) => data.filter === props.filter
@@ -18,24 +10,21 @@ export const FilterOptions = (props) => {
   return (
     <div className={styles.itemsContainer}>
       {props.dropdownData[props.filter].map((c) => {
-        const filterValue: number = c[codes[props.filter]];
+        const filterValue: number = c.id;
         const checked: boolean = !!filterData.selectedIds.find(
           (id) => Number(id) === filterValue
         );
 
         return (
-          <div
-            className={styles.itemRow}
-            key={`${c.Code}${c[codes[props.filter]]}`}
-          >
+          <div className={styles.itemRow} key={`${c.id}${props.filter}`}>
             <input
               type="checkbox"
               className={styles.itemCheckbox}
-              value={c[codes[props.filter]]}
+              value={c.id}
               onChange={props.handleOnChange}
               checked={checked}
             ></input>
-            <div className={styles.item}>{c.Code}</div>
+            <div className={styles.item}>{c.name}</div>
           </div>
         );
       })}
