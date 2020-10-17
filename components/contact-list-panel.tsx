@@ -62,6 +62,8 @@ export default function ContactListPanel(props) {
   const handleFilter = (filterData) => {
     console.log(filterData);
     // TODO: Make API call and do similar logic as page
+    // axios.post()
+    // TODO: post body params need to be EX: {category_id: [2,3], source_id: [4]}
   };
 
   const changePage = (updatedPage: number) => {

@@ -320,7 +320,7 @@ export default function DataCleanupPage(props) {
                         label="Category"
                         fieldName="categoryID"
                         fieldValue={formData.categoryID}
-                        dropDownItems={dropdownData.categories}
+                        dropDownItems={dropdownData.category_id}
                         handleChange={handleChange}
                       ></DropDownField>
 
@@ -328,7 +328,7 @@ export default function DataCleanupPage(props) {
                         label="Status"
                         fieldName="statusID"
                         fieldValue={formData.statusID}
-                        dropDownItems={dropdownData.statuses}
+                        dropDownItems={dropdownData.status_id}
                         handleChange={handleChange}
                       ></DropDownField>
 
@@ -336,7 +336,7 @@ export default function DataCleanupPage(props) {
                         label="Source"
                         fieldName="sourceID"
                         fieldValue={formData.sourceID}
-                        dropDownItems={dropdownData.sources}
+                        dropDownItems={dropdownData.source_id}
                         handleChange={handleChange}
                       ></DropDownField>
 

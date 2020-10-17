@@ -109,9 +109,9 @@ export const createEmptyFormData = (): Readonly<ContactFormData> =>
 
 export const createEmptyDropDownData = (): Readonly<RedtailSettingsData> =>
   Object.freeze({
-    statuses: [],
-    categories: [],
-    sources: [],
+    status_id: [],
+    category_id: [],
+    source_id: [],
     salutations: [],
     servicingAdvisors: [],
     writingAdvisors: [],

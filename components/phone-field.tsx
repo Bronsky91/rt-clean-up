@@ -1,7 +1,5 @@
-import {
-  PhoneNumberFormData,
-  RedtailSettingsData,
-} from "../interfaces/redtail.interface";
+import { PhoneNumberFormData } from "../interfaces/redtail-form.interface";
+import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
 
 export default function PhoneFields(props) {

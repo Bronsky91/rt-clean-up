@@ -6,17 +6,17 @@ import styles from "../../styles/ContactFilter.module.scss";
 export default function ContactFilter(props) {
   const initialFilterData: FilterData[] = [
     {
-      filter: "statuses",
+      filter: "status_id",
       selectedIds: [],
     },
     {
-      filter: "sources",
+      filter: "source_id",
       selectedIds: [],
     },
-    // {
-    //   filter: "categories",
-    //   selectedIds: [],
-    // },
+    {
+      filter: "category_id",
+      selectedIds: [],
+    },
     // {
     //   filter: "servicingAdvisors",
     //   selectedIds: [],
@@ -27,7 +27,7 @@ export default function ContactFilter(props) {
     // },
   ];
 
-  const [selectedFilter, updateSelectedFilter] = useState("statuses");
+  const [selectedFilter, updateSelectedFilter] = useState("status_id");
   const [filterData, updateFilterData] = useState(initialFilterData);
 
   const handleApply = (e) => {
@@ -78,34 +78,37 @@ export default function ContactFilter(props) {
 
               <FilterButton
                 label="Status"
-                value="statuses"
+                value="status_id"
                 selectedFilter={selectedFilter}
                 onFilterClicked={onFilterClicked}
                 hasItemsSelected={filterHasItemsSelected(
                   filterData,
-                  "statuses"
+                  "status_id"
                 )}
               ></FilterButton>
 
               <FilterButton
                 label="Source"
-                value="sources"
-                selectedFilter={selectedFilter}
-                onFilterClicked={onFilterClicked}
-                hasItemsSelected={filterHasItemsSelected(filterData, "sources")}
-              ></FilterButton>
-
-              {/* <FilterButton
-                label="Category"
-                value="categories"
+                value="source_id"
                 selectedFilter={selectedFilter}
                 onFilterClicked={onFilterClicked}
                 hasItemsSelected={filterHasItemsSelected(
                   filterData,
-                  "categories"
+                  "source_id"
                 )}
               ></FilterButton>
 
+              <FilterButton
+                label="Category"
+                value="category_id"
+                selectedFilter={selectedFilter}
+                onFilterClicked={onFilterClicked}
+                hasItemsSelected={filterHasItemsSelected(
+                  filterData,
+                  "category_id"
+                )}
+              ></FilterButton>
+              {/*
               <FilterButton
                 label="Servicing Advisor"
                 value="servicingAdvisors"
