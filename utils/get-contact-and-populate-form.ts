@@ -13,10 +13,10 @@ export const getContactAndPopulateForm = (
   id
 ) => {
   const genderMap = {
-    "M": "Male",
-    "F": "Female",
-    "Z": "Unknown"
-  }
+    M: "Male",
+    F: "Female",
+    Z: "Unknown",
+  };
 
   return Axios.post(
     API_URL + "/rt/get-contact",
@@ -35,9 +35,7 @@ export const getContactAndPopulateForm = (
       middleName: data.ContactRecord.Middlename,
       lastName: data.ContactRecord.Lastname,
       nickname: data.ContactRecord.Nickname,
-      dateOfBirth: data.ContactRecord.DateOfBirth
-        ? fromRedtailDatestring(data.ContactRecord.DateOfBirth)
-        : null,
+      dateOfBirth: fromRedtailDatestring(data.ContactRecord.DateOfBirth),
       gender: genderMap[data.ContactRecord.Gender],
       categoryID: data.ContactRecord.CategoryID
         ? data.ContactRecord.CategoryID
