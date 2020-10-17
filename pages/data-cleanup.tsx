@@ -3,12 +3,6 @@ import styles from "../styles/DataCleanupPage.module.scss";
 import axios from "axios";
 import LoadingOverlay from "react-loading-overlay";
 import { useEffect, useState } from "react";
-import {
-  RedtailContactRec,
-  RedtailSettingsData,
-  ContactFormData,
-  RedtailContactListRec,
-} from "../interfaces/redtail.interface";
 import { API_URL } from "../constants";
 import { useRouter } from "next/router";
 import Login from "./login";
@@ -29,6 +23,10 @@ import EmailFields from "../components/email-field";
 import PhoneFields from "../components/phone-field";
 import AddressFields from "../components/address-field";
 import DateField from "../components/date-field";
+import { RedtailContactListRec } from "../interfaces/redtail-contact-list.interface";
+import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
+import { RedtailContactMasterRec } from "../interfaces/redtail-contact.interface";
+import { ContactFormData } from "../interfaces/redtail-form.interface";
 export default function DataCleanupPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
@@ -44,10 +42,10 @@ export default function DataCleanupPage(props) {
         .get(`${API_URL}/rt/get-contacts`, { withCredentials: true })
         .then((res) => {
           if (mounted) {
-            const result = res.data;
-            const contacts: RedtailContactListRec[] = result.contacts.Detail;
-            const totalCount: number = result.contacts.TotalRecords;
-            const pageCount: number = Math.ceil(totalCount / 50);
+            const list: RedtailContactListRec = res.data;
+            const contacts = list.contacts;
+            const totalCount: number = list.meta.total_records;
+            const pageCount: number = list.meta.total_pages;
 
             updatePageData({
               currentPage: 1,
@@ -58,8 +56,8 @@ export default function DataCleanupPage(props) {
             const formattedContactList = contacts
               .map((contact) => {
                 return {
-                  id: contact.ClientID,
-                  lastName: contact.LastName,
+                  id: contact.id,
+                  lastName: contact.last_name,
                 };
               })
               .sort((a, b) => a.id - b.id);
@@ -101,7 +99,7 @@ export default function DataCleanupPage(props) {
   // If unathenticated, load login component
   if (!isAuth) return <Login />;
 
-  const emptySourceContactRef: Readonly<RedtailContactRec> = createEmptyContactRefData();
+  const emptySourceContactRef: Readonly<RedtailContactMasterRec> = createEmptyContactRefData();
   const emptyFormData: Readonly<ContactFormData> = createEmptyFormData();
   const emptyDropDowns: Readonly<RedtailSettingsData> = createEmptyDropDownData();
   const initialSelectedContact: SelectedContact = {
@@ -268,8 +266,6 @@ export default function DataCleanupPage(props) {
                     fieldName="salutation"
                     fieldValue={formData.salutation}
                     dropDownItems={dropdownData.salutations}
-                    optionLabel="Code"
-                    optionValue="Code"
                     handleChange={handleChange}
                   ></DropDownField>
 
@@ -306,8 +302,6 @@ export default function DataCleanupPage(props) {
                     fieldName="gender"
                     fieldValue={formData.gender}
                     dropDownItems={dropdownData.gender}
-                    optionLabel="Gender"
-                    optionValue="Gender"
                     handleChange={handleChange}
                   ></DropDownField>
 
@@ -327,8 +321,6 @@ export default function DataCleanupPage(props) {
                         fieldName="categoryID"
                         fieldValue={formData.categoryID}
                         dropDownItems={dropdownData.categories}
-                        optionLabel="Code"
-                        optionValue="MCCLCode"
                         handleChange={handleChange}
                       ></DropDownField>
 
@@ -337,8 +329,6 @@ export default function DataCleanupPage(props) {
                         fieldName="statusID"
                         fieldValue={formData.statusID}
                         dropDownItems={dropdownData.statuses}
-                        optionLabel="Code"
-                        optionValue="CSLCode"
                         handleChange={handleChange}
                       ></DropDownField>
 
@@ -347,8 +337,6 @@ export default function DataCleanupPage(props) {
                         fieldName="sourceID"
                         fieldValue={formData.sourceID}
                         dropDownItems={dropdownData.sources}
-                        optionLabel="Code"
-                        optionValue="MCSLCode"
                         handleChange={handleChange}
                       ></DropDownField>
 
@@ -364,8 +352,6 @@ export default function DataCleanupPage(props) {
                         fieldName="servicingAdvisorID"
                         fieldValue={formData.servicingAdvisorID}
                         dropDownItems={dropdownData.servicingAdvisors}
-                        optionLabel="Code"
-                        optionValue="SALCode"
                         handleChange={handleChange}
                       ></DropDownField>
 
@@ -374,8 +360,6 @@ export default function DataCleanupPage(props) {
                         fieldName="writingAdvisorID"
                         fieldValue={formData.writingAdvisorID}
                         dropDownItems={dropdownData.writingAdvisors}
-                        optionLabel="Code"
-                        optionValue="WALCode"
                         handleChange={handleChange}
                       ></DropDownField>
                     </div>

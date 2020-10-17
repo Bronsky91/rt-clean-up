@@ -13,8 +13,8 @@ export default function DropDownField(props) {
         <option value=""></option>
         {props.dropDownItems
           ? props.dropDownItems.map((obj, index) => (
-              <option key={index} value={obj[props.optionValue] || ""}>
-                {obj[props.optionLabel] || ""}
+              <option key={index} value={obj.id || ""}>
+                {obj.name || ""}
               </option>
             ))
           : ""}

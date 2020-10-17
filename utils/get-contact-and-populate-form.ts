@@ -1,8 +1,8 @@
 import Axios from "axios";
 import { API_URL } from "../constants";
-import { RedtailContactRec } from "../interfaces/redtail.interface";
 import { v4 as uuid } from "uuid";
 import { fromRedtailDatestring } from "./redtail-datestrings";
+import { RedtailContactMasterRec } from "../interfaces/redtail-contact.interface";
 
 export const getContactAndPopulateForm = (
   updateSourceContactRef,
@@ -12,12 +12,18 @@ export const getContactAndPopulateForm = (
   formData,
   id
 ) => {
+  const genderMap = {
+    "M": "Male",
+    "F": "Female",
+    "Z": "Unknown"
+  }
+
   return Axios.post(
     API_URL + "/rt/get-contact",
     { id },
     { withCredentials: true }
   ).then((res) => {
-    const data: RedtailContactRec = res.data;
+    const data: RedtailContactMasterRec = res.data;
     updateSourceContactRef(data);
 
     const loadedFormData = {
@@ -32,9 +38,7 @@ export const getContactAndPopulateForm = (
       dateOfBirth: data.ContactRecord.DateOfBirth
         ? fromRedtailDatestring(data.ContactRecord.DateOfBirth)
         : null,
-      gender: data.ContactRecord.Gender
-        ? data.ContactRecord.Gender.toString()
-        : "",
+      gender: genderMap[data.ContactRecord.Gender],
       categoryID: data.ContactRecord.CategoryID
         ? data.ContactRecord.CategoryID
         : 0,

@@ -3,13 +3,14 @@ import { FilterData } from "./contact-filter";
 
 export const FilterOptions = (props) => {
   const codes = {
-    categories: "MCCLCode",
     statuses: "CSLCode",
     sources: "MCSLCode",
-    servicingAdvisors: "SALCode",
-    writingAdvisors: "WALCode",
+    // categories: "MCCLCode",
+    // servicingAdvisors: "SALCode",
+    // writingAdvisors: "WALCode",
   };
 
+  console.log(props.filter);
   const filterData: FilterData = props.filterData.find(
     (data) => data.filter === props.filter
   );

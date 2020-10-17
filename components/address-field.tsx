@@ -1,7 +1,5 @@
-import {
-  RedtailSettingsData,
-  StreetAddressFormData,
-} from "../interfaces/redtail.interface";
+import { StreetAddressFormData } from "../interfaces/redtail-form.interface";
+import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
 
 export default function AddressFields(props) {

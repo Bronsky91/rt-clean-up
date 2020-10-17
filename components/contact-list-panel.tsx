@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import styles from "../styles/ContactListPanel.module.scss";
 import ContactFilter from "./filter/contact-filter";
 import axios from "axios";
-import { RedtailContactListRec } from "../interfaces/redtail.interface";
+import { RedtailContactListRec } from "../interfaces/redtail-contact-list.interface";
 
 export default function ContactListPanel(props) {
   const [pageInputText, setPageInputText] = useState("");
@@ -59,20 +59,23 @@ export default function ContactListPanel(props) {
     setPageInputText(props.pageData.currentPage.toString());
   };
 
+  const handleFilter = (filterData) => {
+    console.log(filterData);
+    // TODO: Make API call and do similar logic as page
+  };
+
   const changePage = (updatedPage: number) => {
     props.setLoadingPage(true);
 
     axios
-      .post(
-        `${API_URL}/rt/get-contacts-page`,
-        { page: updatedPage },
-        { withCredentials: true }
-      )
+      .get(`${API_URL}/rt/get-contacts?page=${updatedPage}`, {
+        withCredentials: true,
+      })
       .then((res) => {
-        const result = res.data;
-        const contacts: RedtailContactListRec[] = result.contacts.Detail;
-        const totalCount: number = result.contacts.TotalRecords;
-        const pageCount: number = Math.ceil(totalCount / 50);
+        const list: RedtailContactListRec = res.data;
+        const contacts = list.contacts;
+        const totalCount: number = list.meta.total_records;
+        const pageCount: number = list.meta.total_pages;
 
         props.updatePageData({
           currentPage: updatedPage,
@@ -83,8 +86,8 @@ export default function ContactListPanel(props) {
         const formattedContactList = contacts
           .map((contact) => {
             return {
-              id: contact.ClientID,
-              lastName: contact.LastName,
+              id: contact.id,
+              lastName: contact.last_name,
             };
           })
           .sort((a, b) => a.id - b.id);
@@ -102,7 +105,10 @@ export default function ContactListPanel(props) {
         <label className={styles.contactsTitle}>Contacts</label>
         <button className={styles.filterButton} onClick={toggleFilterWindow} />
         {showFilters ? (
-          <ContactFilter dropdownData={props.dropdownData}></ContactFilter>
+          <ContactFilter
+            dropdownData={props.dropdownData}
+            handleFilter={handleFilter}
+          ></ContactFilter>
         ) : null}
       </div>
       <input

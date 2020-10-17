@@ -1,20 +1,12 @@
-import {
-  RedtailContactRec,
-  RedtailContactUpdate,
-  AddressUpdate,
-  InternetUpdate,
-  PhoneUpdate,
-  ContactFieldsUpdate,
-  ContactFormData,
-  StreetAddressFormData,
-  EmailAddressFormData,
-  PhoneNumberFormData,
-} from "../interfaces/redtail.interface";
+
+import { AddressUpdate, ContactFieldsUpdate, InternetUpdate, PhoneUpdate, RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
+import { RedtailContactMasterRec } from "../interfaces/redtail-contact.interface";
+import { ContactFormData, EmailAddressFormData, PhoneNumberFormData, StreetAddressFormData } from "../interfaces/redtail-form.interface";
 import { toRedtailDatestring } from "./redtail-datestrings";
 
 export const prepareContactSubmitData = (
   formData: ContactFormData,
-  fields: RedtailContactRec
+  fields: RedtailContactMasterRec
 ) => {
   console.log("DOB:");
   console.log(formData.dateOfBirth);

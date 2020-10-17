@@ -2,7 +2,7 @@ import styles from "../styles/DataCleanupPage.module.scss";
 import React from "react";
 import DatePicker from "react-datepicker";
 import getYear from "date-fns/getYear";
-import getMonth from "date-fns/getYear";
+import getMonth from "date-fns/getMonth";
 
 export default function DateField(props) {
   const range = (start, end) => {
@@ -24,45 +24,50 @@ export default function DateField(props) {
     "December",
   ];
 
+  console.log(props.fieldValue);
+
   return (
     <div className={styles.formField}>
       <label className={styles.formLabel}>{props.label}</label>
       <DatePicker
         selected={props.fieldValue}
         onChange={(date) => props.handleDateChange(date, props.fieldName)}
-        renderCustomHeader={({ date, changeYear, changeMonth }) => (
-          <div
-            style={{
-              margin: 10,
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <select
-              value={getYear(date)}
-              onChange={({ target: { value } }) => changeYear(value)}
+        renderCustomHeader={({ date, changeYear, changeMonth }) => {
+          console.log(getMonth(date));
+          return (
+            <div
+              style={{
+                margin: 10,
+                display: "flex",
+                justifyContent: "center",
+              }}
             >
-              {years.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+              <select
+                value={getYear(date)}
+                onChange={({ target: { value } }) => changeYear(value)}
+              >
+                {years.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
 
-            <select
-              value={months[getMonth(date)]}
-              onChange={({ target: { value } }) =>
-                changeMonth(months.indexOf(value))
-              }
-            >
-              {months.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
+              <select
+                value={months[getMonth(date)]}
+                onChange={({ target: { value } }) =>
+                  changeMonth(months.indexOf(value))
+                }
+              >
+                {months.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+          );
+        }}
       />
     </div>
   );

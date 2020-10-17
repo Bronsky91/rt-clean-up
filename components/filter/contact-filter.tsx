@@ -6,10 +6,6 @@ import styles from "../../styles/ContactFilter.module.scss";
 export default function ContactFilter(props) {
   const initialFilterData: FilterData[] = [
     {
-      filter: "categories",
-      selectedIds: [],
-    },
-    {
       filter: "statuses",
       selectedIds: [],
     },
@@ -17,21 +13,25 @@ export default function ContactFilter(props) {
       filter: "sources",
       selectedIds: [],
     },
-    {
-      filter: "servicingAdvisors",
-      selectedIds: [],
-    },
-    {
-      filter: "writingAdvisors",
-      selectedIds: [],
-    },
+    // {
+    //   filter: "categories",
+    //   selectedIds: [],
+    // },
+    // {
+    //   filter: "servicingAdvisors",
+    //   selectedIds: [],
+    // },
+    // {
+    //   filter: "writingAdvisors",
+    //   selectedIds: [],
+    // },
   ];
 
-  const [selectedFilter, updateSelectedFilter] = useState("categories");
+  const [selectedFilter, updateSelectedFilter] = useState("statuses");
   const [filterData, updateFilterData] = useState(initialFilterData);
 
   const handleApply = (e) => {
-    // TODO: Pass in FilterData Obj on apply up to props ?
+    props.handleFilter(filterData);
   };
 
   const handleClear = (e) => {
@@ -75,16 +75,6 @@ export default function ContactFilter(props) {
                 <div className={styles.filterByTitle}>Filter By</div>
                 <div className={styles.titleBar}></div>
               </div>
-              <FilterButton
-                label="Category"
-                value="categories"
-                selectedFilter={selectedFilter}
-                onFilterClicked={onFilterClicked}
-                hasItemsSelected={filterHasItemsSelected(
-                  filterData,
-                  "categories"
-                )}
-              ></FilterButton>
 
               <FilterButton
                 label="Status"
@@ -103,6 +93,17 @@ export default function ContactFilter(props) {
                 selectedFilter={selectedFilter}
                 onFilterClicked={onFilterClicked}
                 hasItemsSelected={filterHasItemsSelected(filterData, "sources")}
+              ></FilterButton>
+
+              {/* <FilterButton
+                label="Category"
+                value="categories"
+                selectedFilter={selectedFilter}
+                onFilterClicked={onFilterClicked}
+                hasItemsSelected={filterHasItemsSelected(
+                  filterData,
+                  "categories"
+                )}
               ></FilterButton>
 
               <FilterButton
@@ -125,7 +126,7 @@ export default function ContactFilter(props) {
                   filterData,
                   "writingAdvisors"
                 )}
-              ></FilterButton>
+              ></FilterButton> */}
             </div>
             <div className={styles.filterItemsColumn}>
               <FilterOptions

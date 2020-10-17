@@ -1,11 +1,10 @@
-import {
-  ContactFormData,
-  RedtailContactRec,
-  RedtailSettingsData,
-} from "../interfaces/redtail.interface";
-import { v4 as uuid } from "uuid";
 
-export const createEmptyContactRefData = (): Readonly<RedtailContactRec> =>
+import { v4 as uuid } from "uuid";
+import { RedtailContactMasterRec } from "../interfaces/redtail-contact.interface";
+import { ContactFormData } from "../interfaces/redtail-form.interface";
+import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
+
+export const createEmptyContactRefData = (): Readonly<RedtailContactMasterRec> =>
   Object.freeze({
     Address: null,
     ContactRecord: {
