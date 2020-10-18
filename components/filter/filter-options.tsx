@@ -1,8 +1,7 @@
 import styles from "../../styles/ContactFilter.module.scss";
-import { FilterData } from "./contact-filter";
+import { FilterData } from "../../interfaces/redtail-contact-list.interface";
 
 export const FilterOptions = (props) => {
-  console.log(props.filter);
   const filterData: FilterData = props.filterData.find(
     (data) => data.filter === props.filter
   );
@@ -10,7 +9,7 @@ export const FilterOptions = (props) => {
   return (
     <div className={styles.itemsContainer}>
       {props.dropdownData[props.filter].map((c) => {
-        const filterValue: number = c.id;
+        const filterValue: number = Number(c.id);
         const checked: boolean = !!filterData.selectedIds.find(
           (id) => Number(id) === filterValue
         );

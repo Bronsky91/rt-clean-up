@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FilterButton } from "./filter-button";
 import { FilterOptions } from "./filter-options";
 import styles from "../../styles/ContactFilter.module.scss";
+import { FilterData } from "../../interfaces/redtail-contact-list.interface";
 
 export default function ContactFilter(props) {
   const initialFilterData: FilterData[] = [
@@ -156,8 +157,3 @@ export default function ContactFilter(props) {
 
 const filterHasItemsSelected = (filterData: FilterData[], filterName) =>
   filterData.find((f) => f.filter === filterName && f.selectedIds.length > 0);
-
-export interface FilterData {
-  filter: string;
-  selectedIds: number[];
-}
