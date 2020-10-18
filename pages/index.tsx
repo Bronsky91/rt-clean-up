@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import RedtailAuthModal from "../components/redtail-auth-modal";
 import PageLayout from "../layouts/page-layout";
 import styles from "../styles/DashboardPage.module.scss";
 import Login from "./login";
@@ -8,6 +9,17 @@ import Login from "./login";
 export default function DashboardPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
+  const isRedtailAuth = props.rtAuth;
+
+  const [modalIsOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
 
   useEffect(() => {
     if (isAuth) return; // do nothing if the user is logged in
@@ -15,6 +27,10 @@ export default function DashboardPage(props) {
   }, [isAuth]);
 
   if (!isAuth) return <Login />;
+
+  const cleanupClickHandler = (e) => {
+    if (!isRedtailAuth) openModal();
+  };
 
   return (
     <div className={styles.dashboardContainer}>
@@ -27,8 +43,8 @@ export default function DashboardPage(props) {
           </div>
         </a>
       </Link> */}
-      <Link href="/data-cleanup">
-        <a>
+      <Link href={isRedtailAuth ? "/data-cleanup" : "/"}>
+        <a onClick={cleanupClickHandler}>
           <div className={styles.buttonContainer}>
             <img src="/clean-up-block.svg"></img>
             <div className={styles.upperText}>DATA CLEANUP</div>
@@ -47,6 +63,10 @@ export default function DashboardPage(props) {
           </div>
         </a>
       </Link>
+      <RedtailAuthModal
+        modalIsOpen={modalIsOpen}
+        closeModal={closeModal}
+      ></RedtailAuthModal>
     </div>
   );
 }

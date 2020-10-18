@@ -28,15 +28,19 @@ import { RedtailContactListRec } from "../interfaces/redtail-contact-list.interf
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import { RedtailContactMasterRec } from "../interfaces/redtail-contact.interface";
 import { ContactFormData } from "../interfaces/redtail-form.interface";
+import DashboardPage from ".";
 export default function DataCleanupPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
+  const isRedtailAuth = props.rtAuth;
+
+  console.log(props);
 
   useEffect(() => {
     // mounted used to avoid issue outlined here: https://www.debuggr.io/react-update-unmounted-component/
     let mounted = true;
 
-    if (isAuth) {
+    if (isAuth && isRedtailAuth) {
       setLoadingPage(true);
       // If authenticated, load contact data
       axios
@@ -94,15 +98,23 @@ export default function DataCleanupPage(props) {
       return () => {
         mounted = false;
       };
+    } else if (!isRedtailAuth) {
+      // If unauthenticated with Redtail, redirect router to dashboard page and clear localStorage
+      localStorage.clear();
+      router.replace(router.pathname, "/", { shallow: true });
     } else {
       // If unauthenticated, redirect router to login page and clear localStorage
+      console.log("not authed");
       localStorage.clear();
       router.replace(router.pathname, "/login", { shallow: true });
     }
-  }, [isAuth]);
+  }, [isAuth, isRedtailAuth]);
 
   // If unathenticated, load login component
   if (!isAuth) return <Login />;
+
+  // If unathenticated with Redtail, load Dashboard component
+  if (!isRedtailAuth) return <DashboardPage {...props} />;
 
   const emptySourceContactRef: Readonly<RedtailContactMasterRec> = createEmptyContactRefData();
   const emptyFormData: Readonly<ContactFormData> = createEmptyFormData();

@@ -10,21 +10,20 @@ import { API_URL } from "../constants";
 export default function PageLayout({ children }) {
   const router = useRouter();
 
+  const isRedtailAuth: boolean = children.props.rtAuth;
+
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [isRedtailAuth, setRedtailAuth] = useState(false);
 
-  Axios.get(API_URL + "/users/rt-auth-check", {
-    withCredentials: true,
-  })
-    .then((res) => setRedtailAuth(res.data.redtailAuth))
-    .catch(() => setRedtailAuth(false));
-
-  function openModal() {
+  const openModal = ()=> {
     setIsOpen(true);
   }
 
   const closeModal = () => {
     setIsOpen(false);
+  };
+
+  const cleanupClickHandler = (e) => {
+    if (!isRedtailAuth) openModal();
   };
 
   return (
@@ -64,13 +63,14 @@ export default function PageLayout({ children }) {
               CONTACTS
             </a>
           </Link> */}
-            <Link href="/data-cleanup">
+            <Link href={isRedtailAuth ? "/data-cleanup" : "/"}>
               <a
                 className={
                   router.pathname === "/data-cleanup"
                     ? styles.active
                     : styles.inactive
                 }
+                onClick={cleanupClickHandler}
               >
                 DATA CLEANUP
               </a>

@@ -17,7 +17,7 @@ export default function MyApp({ Component, pageProps }) {
 }
 
 MyApp.getInitialProps = async (args) => {
-  let pageProps = { isAuth: false };
+  let pageProps = { isAuth: false, rtAuth: false };
   let jwt;
 
   if (args.ctx.req && args.ctx.req.headers.cookie) {
@@ -35,6 +35,7 @@ MyApp.getInitialProps = async (args) => {
   });
 
   pageProps.isAuth = result.status === 200;
+  pageProps.rtAuth = result.data.rtAuth;
 
   return {
     pageProps,

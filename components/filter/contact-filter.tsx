@@ -11,6 +11,14 @@ export default function ContactFilter(props) {
   };
 
   const handleApply = (e) => {
+    const data: FilterData[] = props.filterData;
+    const filterEmpty = data
+      .map((f) => f.selectedIds.length === 0)
+      .every((fEmpty) => fEmpty);
+
+    if (filterEmpty) {
+      return;
+    }
     props.handleFilter(props.filterData);
   };
 
@@ -130,11 +138,7 @@ export default function ContactFilter(props) {
             <button className={styles.filterButton} onClick={handleApply}>
               Apply
             </button>
-            <button
-              className={styles.filterButton}
-              onClick={handleClear}
-              disabled={!props.isFiltered}
-            >
+            <button className={styles.filterButton} onClick={handleClear}>
               Clear All
             </button>
           </div>

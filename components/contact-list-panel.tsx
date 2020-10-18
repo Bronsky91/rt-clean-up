@@ -116,10 +116,7 @@ export default function ContactListPanel(props) {
     );
   };
 
-  const handleFilter = (filterData: FilterData[], filterEmpty: boolean) => {
-    if (filterEmpty) {
-      return;
-    }
+  const handleFilter = (filterData: FilterData[]) => {
     props.setLoadingPage(true);
 
     const mappedParams = filterData.map((f) => {
