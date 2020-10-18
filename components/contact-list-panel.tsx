@@ -9,8 +9,12 @@ import {
   RedtailSearchParam,
   ContactListEntry,
 } from "../interfaces/redtail-contact-list.interface";
+import { createEmptyFilterData } from "../utils/create-empty-form-data";
 
 export default function ContactListPanel(props) {
+  const emptyFilterData: Readonly<FilterData[]> = createEmptyFilterData();
+  const [selectedFilter, updateSelectedFilter] = useState("status_id");
+  const [filterData, updateFilterData] = useState(emptyFilterData);
   const pageInput = useRef(null);
   const [pageInputText, setPageInputText] = useState("");
   const [showFilters, setShowFilters] = useState(false);
@@ -128,8 +132,6 @@ export default function ContactListPanel(props) {
       )
       .then((res) => {
         const list: ContactListEntry[] = res.data;
-        //console.log(list);
-        console.log(list.length);
         setFilteredContacts(list);
         setFilterPageData({
           currentPage: 1,
@@ -212,6 +214,10 @@ export default function ContactListPanel(props) {
             handleFilter={handleFilter}
             handleClear={handleClear}
             isFiltered={isFiltered}
+            updateSelectedFilter={updateSelectedFilter}
+            selectedFilter={selectedFilter}
+            updateFilterData={updateFilterData}
+            filterData={filterData}
           ></ContactFilter>
         ) : null}
       </div>

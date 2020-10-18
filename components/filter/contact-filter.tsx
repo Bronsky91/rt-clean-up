@@ -5,50 +5,26 @@ import styles from "../../styles/ContactFilter.module.scss";
 import { FilterData } from "../../interfaces/redtail-contact-list.interface";
 
 export default function ContactFilter(props) {
-  const initialFilterData: FilterData[] = [
-    {
-      filter: "status_id",
-      selectedIds: [],
-    },
-    {
-      filter: "source_id",
-      selectedIds: [],
-    },
-    {
-      filter: "category_id",
-      selectedIds: [],
-    },
-    // {
-    //   filter: "servicingAdvisors",
-    //   selectedIds: [],
-    // },
-    // {
-    //   filter: "writingAdvisors",
-    //   selectedIds: [],
-    // },
-  ];
-
-  const [selectedFilter, updateSelectedFilter] = useState("status_id");
-  const [filterData, updateFilterData] = useState(initialFilterData);
-
   const handleApply = (e) => {
-    props.handleFilter(filterData);
+    props.handleFilter(props.filterData);
   };
 
   const handleClear = (e) => {
-    updateFilterData(filterData.map((f) => ({ ...f, selectedIds: [] })));
+    props.updateFilterData(
+      props.filterData.map((f) => ({ ...f, selectedIds: [] }))
+    );
     props.handleClear();
   };
 
   const handleOnChange = (e) => {
-    const selectedFilterIndex = filterData.findIndex(
-      (f) => f.filter === selectedFilter
+    const selectedFilterIndex = props.filterData.findIndex(
+      (f) => f.filter === props.selectedFilter
     );
     const newSelectedId: number = e.target.value;
     const idSelected: boolean = e.target.checked;
 
-    updateFilterData(
-      filterData.map((f, index) => {
+    props.updateFilterData(
+      props.filterData.map((f, index) => {
         if (index === selectedFilterIndex) {
           const newSelectedIds = idSelected
             ? [...f.selectedIds, newSelectedId]
@@ -64,7 +40,7 @@ export default function ContactFilter(props) {
   const onFilterClicked = (e) => {
     e.preventDefault();
     const filter = e.target.value;
-    updateSelectedFilter(filter);
+    props.updateSelectedFilter(filter);
   };
 
   return (
@@ -81,10 +57,10 @@ export default function ContactFilter(props) {
               <FilterButton
                 label="Status"
                 value="status_id"
-                selectedFilter={selectedFilter}
+                selectedFilter={props.selectedFilter}
                 onFilterClicked={onFilterClicked}
                 hasItemsSelected={filterHasItemsSelected(
-                  filterData,
+                  props.filterData,
                   "status_id"
                 )}
               ></FilterButton>
@@ -92,10 +68,10 @@ export default function ContactFilter(props) {
               <FilterButton
                 label="Source"
                 value="source_id"
-                selectedFilter={selectedFilter}
+                selectedFilter={props.selectedFilter}
                 onFilterClicked={onFilterClicked}
                 hasItemsSelected={filterHasItemsSelected(
-                  filterData,
+                  props.filterData,
                   "source_id"
                 )}
               ></FilterButton>
@@ -103,10 +79,10 @@ export default function ContactFilter(props) {
               <FilterButton
                 label="Category"
                 value="category_id"
-                selectedFilter={selectedFilter}
+                selectedFilter={props.selectedFilter}
                 onFilterClicked={onFilterClicked}
                 hasItemsSelected={filterHasItemsSelected(
-                  filterData,
+                  props.filterData,
                   "category_id"
                 )}
               ></FilterButton>
@@ -136,9 +112,9 @@ export default function ContactFilter(props) {
             <div className={styles.filterItemsColumn}>
               <FilterOptions
                 dropdownData={props.dropdownData}
-                filter={selectedFilter}
+                filter={props.selectedFilter}
                 handleOnChange={handleOnChange}
-                filterData={filterData}
+                filterData={props.filterData}
               ></FilterOptions>
             </div>
           </div>

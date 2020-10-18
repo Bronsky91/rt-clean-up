@@ -1,10 +1,12 @@
-
 import { v4 as uuid } from "uuid";
+import { FilterData } from "../interfaces/redtail-contact-list.interface";
 import { RedtailContactMasterRec } from "../interfaces/redtail-contact.interface";
 import { ContactFormData } from "../interfaces/redtail-form.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 
-export const createEmptyContactRefData = (): Readonly<RedtailContactMasterRec> =>
+export const createEmptyContactRefData = (): Readonly<
+  RedtailContactMasterRec
+> =>
   Object.freeze({
     Address: null,
     ContactRecord: {
@@ -74,15 +76,9 @@ export const createEmptyFormData = (): Readonly<ContactFormData> =>
     taxID: "",
     servicingAdvisorID: 0,
     writingAdvisorID: 0,
-    phoneNumbers: [
-      createEmptyContactField['phoneNumbers'](),
-    ],
-    emailAddresses: [
-      createEmptyContactField['emailAddresses'](),
-    ],
-    streetAddresses: [
-      createEmptyContactField['streetAddresses'](),,
-    ],
+    phoneNumbers: [createEmptyContactField["phoneNumbers"]()],
+    emailAddresses: [createEmptyContactField["emailAddresses"]()],
+    streetAddresses: [createEmptyContactField["streetAddresses"](), ,],
   });
 
 export const createEmptyDropDownData = (): Readonly<RedtailSettingsData> =>
@@ -99,15 +95,14 @@ export const createEmptyDropDownData = (): Readonly<RedtailSettingsData> =>
     phoneTypes: [],
   });
 
-
 export const createEmptyContactField = {
   emailAddresses: () => ({
-      key: uuid(),
-      recID: 0,
-      emailAddress: "",
-      typeID: 1,
-      primaryEmail: false,
-    }),
+    key: uuid(),
+    recID: 0,
+    emailAddress: "",
+    typeID: 1,
+    primaryEmail: false,
+  }),
   streetAddresses: () => ({
     key: uuid(),
     recID: 0,
@@ -125,5 +120,29 @@ export const createEmptyContactField = {
     phoneNumber: "",
     typeID: "HM",
     primaryPhone: false,
-  })
-}
+  }),
+};
+
+export const createEmptyFilterData = (): Readonly<FilterData[]> =>
+  Array.from([
+    {
+      filter: "status_id",
+      selectedIds: [],
+    },
+    {
+      filter: "source_id",
+      selectedIds: [],
+    },
+    {
+      filter: "category_id",
+      selectedIds: [],
+    },
+    // {
+    //   filter: "servicingAdvisors",
+    //   selectedIds: [],
+    // },
+    // {
+    //   filter: "writingAdvisors",
+    //   selectedIds: [],
+    // },
+  ]);
