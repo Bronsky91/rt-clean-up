@@ -37,6 +37,7 @@ export default function ContactFilter(props) {
 
   const handleClear = (e) => {
     updateFilterData(filterData.map((f) => ({ ...f, selectedIds: [] })));
+    props.handleClear();
   };
 
   const handleOnChange = (e) => {
@@ -145,7 +146,11 @@ export default function ContactFilter(props) {
             <button className={styles.filterButton} onClick={handleApply}>
               Apply
             </button>
-            <button className={styles.filterButton} onClick={handleClear}>
+            <button
+              className={styles.filterButton}
+              onClick={handleClear}
+              disabled={!props.isFiltered}
+            >
               Clear All
             </button>
           </div>

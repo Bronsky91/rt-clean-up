@@ -138,8 +138,22 @@ export default function ContactListPanel(props) {
           endIndex: contactsPerPage - 1,
         });
         setIsFiltered(true);
+        setShowFilters(false);
         props.setLoadingPage(false);
       });
+  };
+
+  const handleClear = () => {
+    setFilterPageData({
+      currentPage: 1,
+      totalPages: 1,
+      startIndex: 0,
+      endIndex: contactsPerPage - 1,
+    });
+    setFilteredContacts([]);
+    setIsFiltered(false);
+    setShowFilters(false);
+    changePage(1);
   };
 
   const changePage = (updatedPage: number) => {
@@ -196,6 +210,8 @@ export default function ContactListPanel(props) {
           <ContactFilter
             dropdownData={props.dropdownData}
             handleFilter={handleFilter}
+            handleClear={handleClear}
+            isFiltered={isFiltered}
           ></ContactFilter>
         ) : null}
       </div>
