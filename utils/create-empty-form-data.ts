@@ -75,35 +75,13 @@ export const createEmptyFormData = (): Readonly<ContactFormData> =>
     servicingAdvisorID: 0,
     writingAdvisorID: 0,
     phoneNumbers: [
-      {
-        key: uuid(),
-        recID: 0,
-        phoneNumber: "",
-        typeID: "",
-        primaryPhone: false,
-      },
+      createEmptyContactField['phoneNumbers'](),
     ],
     emailAddresses: [
-      {
-        key: uuid(),
-        recID: 0,
-        emailAddress: "",
-        typeID: 0,
-        primaryEmail: false,
-      },
+      createEmptyContactField['emailAddresses'](),
     ],
     streetAddresses: [
-      {
-        key: uuid(),
-        recID: 0,
-        streetAddress: "",
-        secondaryAddress: "",
-        city: "",
-        state: "",
-        zip: "",
-        typeID: "",
-        primaryStreet: false,
-      },
+      createEmptyContactField['streetAddresses'](),,
     ],
   });
 
@@ -120,3 +98,32 @@ export const createEmptyDropDownData = (): Readonly<RedtailSettingsData> =>
     internetTypes: [],
     phoneTypes: [],
   });
+
+
+export const createEmptyContactField = {
+  emailAddresses: () => ({
+      key: uuid(),
+      recID: 0,
+      emailAddress: "",
+      typeID: 1,
+      primaryEmail: false,
+    }),
+  streetAddresses: () => ({
+    key: uuid(),
+    recID: 0,
+    streetAddress: "",
+    secondaryAddress: "",
+    city: "",
+    state: "",
+    zip: "",
+    typeID: "H",
+    primaryStreet: false,
+  }),
+  phoneNumbers: () => ({
+    key: uuid(),
+    recID: 0,
+    phoneNumber: "",
+    typeID: "HM",
+    primaryPhone: false,
+  })
+}

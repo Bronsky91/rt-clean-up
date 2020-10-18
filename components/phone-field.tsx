@@ -13,7 +13,7 @@ export default function PhoneFields(props) {
             <div className={styles.formRow} key={obj.key}>
               <input
                 className={styles.formSoloInput}
-                type="text"
+                type="tel"
                 name="phoneNumber"
                 value={obj.phoneNumber || ""}
                 onChange={props.handleArrChange(

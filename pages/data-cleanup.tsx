@@ -14,6 +14,7 @@ import {
   createEmptyContactRefData,
   createEmptyFormData,
   createEmptyDropDownData,
+  createEmptyContactField,
 } from "../utils/create-empty-form-data";
 import { setLocalStorage } from "../utils/set-local-storage";
 import { SelectedContact } from "../interfaces/form.interface";
@@ -144,12 +145,27 @@ export default function DataCleanupPage(props) {
     formDirty,
   ]);
 
+  const addContactField = (fieldName: string) => (e) => {
+    e.preventDefault();
+
+    const updatedFormData = {
+      ...formData,
+      [fieldName]: [
+        ...formData[fieldName],
+        createEmptyContactField[fieldName](),
+      ],
+    };
+    console.log(updatedFormData);
+    updateFormData(updatedFormData);
+  };
+
   // Updates form state for phones, emails, and addresses
   const handleArrChange = (
     index: number,
     arrName: string,
     targetRecId: number
   ) => (e) => {
+    console.log("email change");
     const targetName: string = e.target.name;
     const newArr = [...formData[arrName]];
     if (targetName.startsWith("primary")) {
@@ -418,6 +434,9 @@ export default function DataCleanupPage(props) {
                       handleArrChange={handleArrChange}
                       dropdownData={dropdownData}
                     ></EmailFields>
+                    <button onClick={addContactField("emailAddresses")}>
+                      Add
+                    </button>
                   </div>
                   <div className={styles.formColumn}>
                     <div className={styles.formRow}>
@@ -436,6 +455,9 @@ export default function DataCleanupPage(props) {
                       handleArrChange={handleArrChange}
                       dropdownData={dropdownData}
                     ></PhoneFields>
+                    <button onClick={addContactField("phoneNumbers")}>
+                      Add
+                    </button>
                   </div>
                 </div>
               </div>
@@ -472,6 +494,9 @@ export default function DataCleanupPage(props) {
                     handleArrChange={handleArrChange}
                     dropdownData={dropdownData}
                   ></AddressFields>
+                  <button onClick={addContactField("streetAddresses")}>
+                    Add
+                  </button>
                 </div>
               </div>
             </form>

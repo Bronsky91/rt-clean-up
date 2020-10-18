@@ -1,6 +1,6 @@
 
 import { AddressUpdate, ContactFieldsUpdate, InternetUpdate, PhoneUpdate, RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
-import { RedtailContactMasterRec } from "../interfaces/redtail-contact.interface";
+import { AddressRec, InternetRec, PhoneRec, RedtailContactMasterRec } from "../interfaces/redtail-contact.interface";
 import { ContactFormData, EmailAddressFormData, PhoneNumberFormData, StreetAddressFormData } from "../interfaces/redtail-form.interface";
 import { toRedtailDatestring } from "./redtail-datestrings";
 
@@ -8,33 +8,6 @@ export const prepareContactSubmitData = (
   formData: ContactFormData,
   fields: RedtailContactMasterRec
 ) => {
-  console.log("DOB:");
-  console.log(formData.dateOfBirth);
-
-  const address: AddressUpdate[] = fields.Address
-    ? fields.Address.map((item) => {
-        const fromForm:
-          | StreetAddressFormData
-          | undefined = formData.streetAddresses.find(
-          (i) => i.recID === item.RecID
-        );
-
-        return {
-          Address1: fromForm ? fromForm.streetAddress : item.Address1,
-          Address2: fromForm ? fromForm.secondaryAddress : item.Address2,
-          City: fromForm ? fromForm.city : item.City,
-          ClientID: item.ClientID,
-          Label: item.Label,
-          Preferred: item.Preferred,
-          Primary: fromForm ? fromForm.primaryStreet : item.Primary,
-          RecID: item.RecID,
-          SharedAddress: item.SharedAddress,
-          State: fromForm ? fromForm.state : item.State,
-          TypeID: fromForm ? fromForm.typeID : item.TypeID,
-          Zip: fromForm ? fromForm.zip : item.Zip,
-        };
-      })
-    : null;
 
   const contactRecord: ContactFieldsUpdate = {
     AnniversaryDate: fields.ContactRecord.AnniversaryDate,
@@ -66,51 +39,72 @@ export const prepareContactSubmitData = (
     WritingAdvisorID: formData.writingAdvisorID,
   };
 
-  const internet: InternetUpdate[] = fields.Internet
-    ? fields.Internet.map((item) => {
-        const fromForm:
-          | EmailAddressFormData
-          | undefined = formData.emailAddresses.find(
-          (i) => i.recID === item.RecID
-        );
+  const internet: InternetUpdate[] = formData.emailAddresses.map((item) => {
 
-        const updatedInternet: InternetUpdate = {
-          Address: fromForm ? fromForm.emailAddress : item.Address,
-          ClientID: item.ClientID,
-          Label: item.Label,
-          Preferred: item.Preferred,
-          RecID: item.RecID,
-          TypeID: fromForm ? fromForm.typeID : item.TypeID,
-          Primary: fromForm ? fromForm.primaryEmail : item.Primary,
+    const fromSource:
+      | InternetRec
+      | undefined = fields.Internet.find(
+      (i) => i.RecID === item.recID
+    );
+
+    const updatedInternet: InternetUpdate = {
+      Address: item.emailAddress,
+      ClientID: contactRecord.ClientID,
+      Label: fromSource? fromSource.Label : '',
+      Preferred: fromSource? fromSource.Preferred : false,
+      RecID: item.recID,
+      TypeID: item.typeID,
+      Primary: item.primaryEmail,
+    };
+    return updatedInternet;
+  })
+
+  const phone: PhoneUpdate[] = formData.phoneNumbers.map((item) => {
+
+    const fromSource:
+    | PhoneRec
+    | undefined = fields.Phone.find(
+      (i) => i.RecID === item.recID
+    );
+    const updatedPhone: PhoneUpdate = {
+      ClientID: contactRecord.ClientID,
+      DisplayOrder: fromSource? fromSource.DisplayOrder : 0,
+      Extension: fromSource? fromSource.Extension : "",
+      Label: fromSource? fromSource.Label : "",
+      Number: item.phoneNumber,
+      Preferred: fromSource? fromSource.Preferred : false,
+      RecID: item.recID,
+      SharedPhoneNumber: fromSource? fromSource.SharedPhoneNumber : false,
+      SpeedDial: fromSource? fromSource.SpeedDial : "",
+      TypeID: item.typeID,
+      Primary:  item.primaryPhone,
+    };
+
+    return updatedPhone;
+  })
+
+    const address: AddressUpdate[] = formData.streetAddresses.map((item) => {
+      const fromSource:
+      | AddressRec
+      | undefined = fields.Address.find(
+        (i) => i.RecID === item.recID
+      );
+
+        return {
+          Address1: item.streetAddress,
+          Address2: item.secondaryAddress,
+          City:  item.city,
+          ClientID: contactRecord.ClientID,
+          Label: fromSource? fromSource.Label : "",
+          Preferred: fromSource? fromSource.Preferred : false,
+          Primary: item.primaryStreet,
+          RecID: item.recID,
+          SharedAddress: fromSource? fromSource.SharedAddress : false,
+          State: item.state,
+          TypeID: item.typeID,
+          Zip: item.zip,
         };
-        return updatedInternet;
       })
-    : null;
-
-  const phone: PhoneUpdate[] = fields.Internet
-    ? fields.Phone.map((item) => {
-        const fromForm:
-          | PhoneNumberFormData
-          | undefined = formData.phoneNumbers.find(
-          (i) => i.recID === item.RecID
-        );
-        const updatedPhone: PhoneUpdate = {
-          ClientID: item.ClientID,
-          DisplayOrder: item.DisplayOrder,
-          Extension: item.Extension,
-          Label: item.Label,
-          Number: fromForm ? fromForm.phoneNumber : item.Number,
-          Preferred: item.Preferred,
-          RecID: item.RecID,
-          SharedPhoneNumber: item.SharedPhoneNumber,
-          SpeedDial: item.SpeedDial,
-          TypeID: fromForm ? fromForm.typeID : item.TypeID,
-          Primary: fromForm ? fromForm.primaryPhone : item.Primary,
-        };
-
-        return updatedPhone;
-      })
-    : null;
 
   const contact: RedtailContactUpdate = {
     Address: address,

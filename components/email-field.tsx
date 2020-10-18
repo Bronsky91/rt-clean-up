@@ -1,8 +1,6 @@
+import { EmailAddressFormData } from "../interfaces/redtail-form.interface";
+import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
-import {
-  EmailAddressFormData,
-  RedtailSettingsData,
-} from "../interfaces/redtail.interface";
 
 export default function EmailFields(props) {
   const emails: EmailAddressFormData[] = props.emails;
@@ -57,6 +55,7 @@ export default function EmailFields(props) {
                   obj.recID
                 )}
               />
+              <button>Trash</button>
             </div>
           ))
         : ""}
