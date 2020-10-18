@@ -34,7 +34,6 @@ export default function DateField(props) {
         selected={dateValue}
         onChange={(date) => props.handleDateChange(date, props.fieldName)}
         renderCustomHeader={({ date, changeYear, changeMonth }) => {
-          console.log(getMonth(date));
           return (
             <div
               style={{

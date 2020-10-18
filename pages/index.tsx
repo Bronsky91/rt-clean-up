@@ -9,9 +9,9 @@ import Login from "./login";
 export default function DashboardPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
-  const isRedtailAuth = props.rtAuth;
 
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [isRedtailAuth, setRedtailAuth] = useState(props.rtAuth);
 
   const openModal = () => {
     setIsOpen(true);
@@ -19,6 +19,8 @@ export default function DashboardPage(props) {
 
   const closeModal = () => {
     setIsOpen(false);
+
+    router.reload();
   };
 
   useEffect(() => {

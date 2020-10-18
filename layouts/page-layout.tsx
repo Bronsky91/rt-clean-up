@@ -10,16 +10,23 @@ import { API_URL } from "../constants";
 export default function PageLayout({ children }) {
   const router = useRouter();
 
-  const isRedtailAuth: boolean = children.props.rtAuth;
-
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [isRedtailAuth, setRedtailAuth] = useState(children.props.rtAuth);
 
-  const openModal = ()=> {
+  const openModal = () => {
     setIsOpen(true);
-  }
+  };
 
   const closeModal = () => {
     setIsOpen(false);
+
+    Axios.get(API_URL + "/users/rt-auth-check", {
+      withCredentials: true,
+    })
+      .then((res) => {
+        setRedtailAuth(res.data.rtAuth);
+      })
+      .catch(() => setRedtailAuth(false));
   };
 
   const cleanupClickHandler = (e) => {

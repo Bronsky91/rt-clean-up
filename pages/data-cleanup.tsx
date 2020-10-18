@@ -34,8 +34,6 @@ export default function DataCleanupPage(props) {
   const isAuth = props.isAuth;
   const isRedtailAuth = props.rtAuth;
 
-  console.log(props);
-
   useEffect(() => {
     // mounted used to avoid issue outlined here: https://www.debuggr.io/react-update-unmounted-component/
     let mounted = true;
@@ -104,7 +102,6 @@ export default function DataCleanupPage(props) {
       router.replace(router.pathname, "/", { shallow: true });
     } else {
       // If unauthenticated, redirect router to login page and clear localStorage
-      console.log("not authed");
       localStorage.clear();
       router.replace(router.pathname, "/login", { shallow: true });
     }
@@ -201,7 +198,6 @@ export default function DataCleanupPage(props) {
     arrName: string,
     targetRecId: number
   ) => (e) => {
-    console.log("email change");
     const targetName: string = e.target.name;
     const newArr = [...formData[arrName]];
     if (targetName.startsWith("primary")) {

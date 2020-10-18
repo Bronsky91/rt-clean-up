@@ -244,11 +244,11 @@ export default function ContactListPanel(props) {
           ></ContactFilter>
         ) : null}
       </div>
-      <input
+      {/* <input
         className={styles.contactSearch}
         type="text"
         placeholder="Search Last Name.."
-      />
+      /> */}
       <select
         className={styles.contactSelect}
         onChange={props.contactSelected}
