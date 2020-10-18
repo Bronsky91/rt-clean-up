@@ -240,6 +240,22 @@ export default function DataCleanupPage(props) {
     });
   };
 
+  const reloadContact = () => {
+    setLoadingContact(true);
+
+    const id = sourceContactRef.ContactRecord.ClientID.toString();
+    getContactAndPopulateForm(
+      updateSourceContactRef,
+      updateFormData,
+      updateOriginalFormData,
+      updateFormDirty,
+      formData,
+      id
+    ).then(() => {
+      setLoadingContact(false);
+    });
+  };
+
   const handleUndo = (e) => {
     e.preventDefault();
     updateFormData(originalFormData);
@@ -254,10 +270,12 @@ export default function DataCleanupPage(props) {
         { data: prepareContactSubmitData(formData, sourceContactRef) },
         { withCredentials: true }
       )
-      .then((res) => {
+      .then(async (res) => {
         setSavingContact(false);
         if (res.status == 200) {
-          alert("Submitted Contact!");
+          // Reload contact page from Redtail as a data validation measure
+          reloadContact();
+          alert("Contact Saved!");
         } else {
           alert(
             "ERROR (HTTP " +
