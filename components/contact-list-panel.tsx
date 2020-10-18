@@ -1,5 +1,5 @@
 import { API_URL } from "../constants";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "../styles/ContactListPanel.module.scss";
 import ContactFilter from "./filter/contact-filter";
 import axios from "axios";
@@ -19,8 +19,8 @@ export default function ContactListPanel(props) {
   const [pageInputText, setPageInputText] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const contactsPerPage = 50;
-  const [isFiltered, setIsFiltered] = useState(false);
   const [filteredContacts, setFilteredContacts] = useState([]);
+  const [isFiltered, setIsFiltered] = useState(false);
   const [filterPageData, setFilterPageData] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -147,6 +147,10 @@ export default function ContactListPanel(props) {
         });
         setIsFiltered(true);
         setShowFilters(false);
+        // After loading filtered page, select first contact
+        if (list && list[0]) {
+          props.selectContact(list[0].id.toString());
+        }
         props.setLoadingPage(false);
       });
   };
@@ -161,19 +165,30 @@ export default function ContactListPanel(props) {
     setFilteredContacts([]);
     setIsFiltered(false);
     setShowFilters(false);
-    changePage(1);
   };
+
+  // Change page back to 1 after isFilter is set to false
+  useEffect(() => {
+    if (!isFiltered) {
+      changePage(1);
+    }
+  }, [isFiltered]);
 
   const changePage = (updatedPage: number) => {
     props.setLoadingPage(true);
 
     if (isFiltered) {
+      const startIndex = contactsPerPage * updatedPage - contactsPerPage;
       setFilterPageData({
         ...filterPageData,
         currentPage: updatedPage,
-        startIndex: contactsPerPage * updatedPage - contactsPerPage,
+        startIndex: startIndex,
         endIndex: contactsPerPage * updatedPage - 1,
       });
+      // After loading page, select first contact
+      if (filteredContacts && filteredContacts[startIndex]) {
+        props.selectContact(filteredContacts[startIndex].id.toString());
+      }
       props.setLoadingPage(false);
     } else {
       axios
@@ -204,6 +219,10 @@ export default function ContactListPanel(props) {
           props.setContactList(formattedContactList);
           pageInput.current.value = updatedPage.toString();
           setPageInputText(updatedPage.toString());
+          // If contacts returned, select first one
+          if (formattedContactList && formattedContactList.length >= 1) {
+            props.selectContact(formattedContactList[0].id.toString());
+          }
           props.setLoadingPage(false);
         });
     }

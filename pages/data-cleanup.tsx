@@ -64,6 +64,11 @@ export default function DataCleanupPage(props) {
               .sort((a, b) => a.id - b.id);
 
             setContactList(formattedContactList);
+
+            // If contacts returned, select first one
+            if (formattedContactList && formattedContactList.length >= 1) {
+              selectContact(formattedContactList[0].id.toString());
+            }
           }
 
           axios
@@ -72,7 +77,6 @@ export default function DataCleanupPage(props) {
               if (mounted) {
                 const dropdownData: RedtailSettingsData = res.data;
                 updateDropdownData(dropdownData);
-
                 setLoadingPage(false);
               }
             });
@@ -105,7 +109,6 @@ export default function DataCleanupPage(props) {
   const emptyDropDowns: Readonly<RedtailSettingsData> = createEmptyDropDownData();
   const initialSelectedContact: SelectedContact = {
     id: "",
-    page: 1,
   };
 
   const [sourceContactRef, updateSourceContactRef] = useState(
@@ -227,7 +230,7 @@ export default function DataCleanupPage(props) {
     setLoadingContact(true);
 
     const id = e.target.value;
-    updateSelectedContact({ id, page: 1 });
+    updateSelectedContact({ id });
     getContactAndPopulateForm(
       updateSourceContactRef,
       updateFormData,
@@ -240,10 +243,9 @@ export default function DataCleanupPage(props) {
     });
   };
 
-  const reloadContact = () => {
+  const selectContact = (id: string) => {
     setLoadingContact(true);
-
-    const id = sourceContactRef.ContactRecord.ClientID.toString();
+    updateSelectedContact({ id });
     getContactAndPopulateForm(
       updateSourceContactRef,
       updateFormData,
@@ -274,7 +276,7 @@ export default function DataCleanupPage(props) {
         setSavingContact(false);
         if (res.status == 200) {
           // Reload contact page from Redtail as a data validation measure
-          reloadContact();
+          selectContact(sourceContactRef.ContactRecord.ClientID.toString());
           alert("Contact Saved!");
         } else {
           alert(
@@ -302,6 +304,7 @@ export default function DataCleanupPage(props) {
           updatePageData={updatePageData}
           dropdownData={dropdownData}
           setLoadingPage={setLoadingPage}
+          selectContact={selectContact}
         ></ContactListPanel>
         <LoadingOverlay active={savingContact} spinner text="Saving Contact">
           <LoadingOverlay
