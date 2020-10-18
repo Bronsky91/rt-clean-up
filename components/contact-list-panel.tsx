@@ -4,10 +4,10 @@ import styles from "../styles/ContactListPanel.module.scss";
 import ContactFilter from "./filter/contact-filter";
 import axios from "axios";
 import {
+  ContactList,
   FilterData,
   RedtailContactListRec,
   RedtailSearchParam,
-  ContactListEntry,
 } from "../interfaces/redtail-contact-list.interface";
 import { createEmptyFilterData } from "../utils/create-empty-form-data";
 
@@ -116,7 +116,10 @@ export default function ContactListPanel(props) {
     );
   };
 
-  const handleFilter = (filterData: FilterData[]) => {
+  const handleFilter = (filterData: FilterData[], filterEmpty: boolean) => {
+    if (filterEmpty) {
+      return;
+    }
     props.setLoadingPage(true);
 
     const mappedParams = filterData.map((f) => {
@@ -131,7 +134,7 @@ export default function ContactListPanel(props) {
         { withCredentials: true }
       )
       .then((res) => {
-        const list: ContactListEntry[] = res.data;
+        const list: ContactList[] = res.data;
         setFilteredContacts(list);
         setFilterPageData({
           currentPage: 1,

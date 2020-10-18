@@ -55,7 +55,11 @@ export default function EmailFields(props) {
                   obj.recID
                 )}
               />
-              <button>Trash</button>
+              <button
+                onClick={props.removeContactField("emailAddresses", index)}
+              >
+                Trash
+              </button>
             </div>
           ))
         : ""}

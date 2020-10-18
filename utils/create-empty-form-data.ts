@@ -76,9 +76,20 @@ export const createEmptyFormData = (): Readonly<ContactFormData> =>
     taxID: "",
     servicingAdvisorID: 0,
     writingAdvisorID: 0,
-    phoneNumbers: [createEmptyContactField["phoneNumbers"]()],
-    emailAddresses: [createEmptyContactField["emailAddresses"]()],
-    streetAddresses: [createEmptyContactField["streetAddresses"](), ,],
+    phoneNumbers: [
+      createEmptyContactField['phoneNumbers'](),
+    ],
+    emailAddresses: [
+      createEmptyContactField['emailAddresses'](),
+    ],
+    streetAddresses: [
+      createEmptyContactField['streetAddresses'](),,
+    ],
+    contactFieldsToDelete: {
+      emailAddresses: [],
+      streetAddresses: [],
+      phoneNumbers: []
+    }
   });
 
 export const createEmptyDropDownData = (): Readonly<RedtailSettingsData> =>

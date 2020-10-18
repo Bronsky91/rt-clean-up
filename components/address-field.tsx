@@ -97,6 +97,11 @@ export default function AddressFields(props) {
                   obj.recID
                 )}
               />
+              <button
+                onClick={props.removeContactField("streetAddresses", index)}
+              >
+                Trash
+              </button>
             </div>
           ))
         : ""}

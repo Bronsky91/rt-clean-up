@@ -145,6 +145,27 @@ export default function DataCleanupPage(props) {
     formDirty,
   ]);
 
+  const removeContactField = (fieldName: string, index: number) => (e) => {
+    e.preventDefault();
+
+    const newContactFieldArray = formData[fieldName];
+    const removedContactField = newContactFieldArray.splice(index, 1);
+
+    const updatedFormData = {
+      ...formData,
+      [fieldName]: [...newContactFieldArray],
+      contactFieldsToDelete: {
+        ...formData.contactFieldsToDelete,
+        [fieldName]: [
+          ...formData.contactFieldsToDelete[fieldName],
+          removedContactField[0].recID,
+        ],
+      },
+    };
+
+    updateFormData(updatedFormData);
+  };
+
   const addContactField = (fieldName: string) => (e) => {
     e.preventDefault();
 
@@ -155,7 +176,7 @@ export default function DataCleanupPage(props) {
         createEmptyContactField[fieldName](),
       ],
     };
-    console.log(updatedFormData);
+
     updateFormData(updatedFormData);
   };
 
@@ -433,6 +454,7 @@ export default function DataCleanupPage(props) {
                       emails={formData.emailAddresses}
                       handleArrChange={handleArrChange}
                       dropdownData={dropdownData}
+                      removeContactField={removeContactField}
                     ></EmailFields>
                     <button onClick={addContactField("emailAddresses")}>
                       Add
@@ -454,6 +476,7 @@ export default function DataCleanupPage(props) {
                       phoneNumbers={formData.phoneNumbers}
                       handleArrChange={handleArrChange}
                       dropdownData={dropdownData}
+                      removeContactField={removeContactField}
                     ></PhoneFields>
                     <button onClick={addContactField("phoneNumbers")}>
                       Add
@@ -493,6 +516,7 @@ export default function DataCleanupPage(props) {
                     streetAddresses={formData.streetAddresses}
                     handleArrChange={handleArrChange}
                     dropdownData={dropdownData}
+                    removeContactField={removeContactField}
                   ></AddressFields>
                   <button onClick={addContactField("streetAddresses")}>
                     Add

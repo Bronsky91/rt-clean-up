@@ -90,27 +90,30 @@ export const prepareContactSubmitData = (
         (i) => i.RecID === item.recID
       );
 
-        return {
-          Address1: item.streetAddress,
-          Address2: item.secondaryAddress,
-          City:  item.city,
-          ClientID: contactRecord.ClientID,
-          Label: fromSource? fromSource.Label : "",
-          Preferred: fromSource? fromSource.Preferred : false,
-          Primary: item.primaryStreet,
-          RecID: item.recID,
-          SharedAddress: fromSource? fromSource.SharedAddress : false,
-          State: item.state,
-          TypeID: item.typeID,
-          Zip: item.zip,
-        };
-      })
+      return {
+        Address1: item.streetAddress,
+        Address2: item.secondaryAddress,
+        City:  item.city,
+        ClientID: contactRecord.ClientID,
+        Label: fromSource? fromSource.Label : "",
+        Preferred: fromSource? fromSource.Preferred : false,
+        Primary: item.primaryStreet,
+        RecID: item.recID,
+        SharedAddress: fromSource? fromSource.SharedAddress : false,
+        State: item.state,
+        TypeID: item.typeID,
+        Zip: item.zip,
+      };
+    })
+
+  const contactFieldsToDelete = formData.contactFieldsToDelete
 
   const contact: RedtailContactUpdate = {
     Address: address,
     ContactRecord: contactRecord,
     Internet: internet,
     Phone: phone,
+    contactFieldsToDelete
   };
 
   return {

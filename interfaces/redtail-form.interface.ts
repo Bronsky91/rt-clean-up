@@ -16,6 +16,11 @@ export interface ContactFormData {
   phoneNumbers: PhoneNumberFormData[];
   emailAddresses: EmailAddressFormData[];
   streetAddresses: StreetAddressFormData[];
+  contactFieldsToDelete: {
+    emailAddresses: number[],
+    streetAddresses: number[],
+    phoneNumbers: number[]
+  }
 }
 
 export interface PhoneNumberFormData {

@@ -54,6 +54,9 @@ export default function PhoneFields(props) {
                   obj.recID
                 )}
               />
+              <button onClick={props.removeContactField("phoneNumbers", index)}>
+                Trash
+              </button>
             </div>
           ))
         : ""}

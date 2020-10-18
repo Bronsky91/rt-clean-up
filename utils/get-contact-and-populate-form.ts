@@ -49,20 +49,22 @@ export const getContactAndPopulateForm = (
       writingAdvisorID: data.ContactRecord.WritingAdvisorID
         ? data.ContactRecord.WritingAdvisorID
         : 0,
-      phoneNumbers: data.Phone.map((obj) => ({
+      phoneNumbers: data.Phone.map((obj) => ( {
         key: uuid(),
         recID: obj.RecID,
         phoneNumber: obj.Number,
         typeID: obj.TypeID,
         primaryPhone: obj.Primary,
       })),
-      emailAddresses: data.Internet.map((obj) => ({
-        key: uuid(),
-        recID: obj.RecID,
-        emailAddress: obj.Address,
-        typeID: obj.TypeID,
-        primaryEmail: obj.Primary,
-      })),
+      emailAddresses: data.Internet
+        .filter(obj => emailTypes.includes(obj.TypeID))
+        .map((obj) => ({
+          key: uuid(),
+          recID: obj.RecID,
+          emailAddress: obj.Address,
+          typeID: obj.TypeID,
+          primaryEmail: obj.Primary,
+        })),
       streetAddresses: data.Address.map((obj) => ({
         key: uuid(),
         recID: obj.RecID,
@@ -74,6 +76,11 @@ export const getContactAndPopulateForm = (
         typeID: obj.TypeID,
         primaryStreet: obj.Primary,
       })),
+        contactFieldsToDelete: {
+        emailAddresses: [],
+        streetAddresses: [],
+        phoneNumbers: []
+      }
     };
 
     updateFormData(loadedFormData);
@@ -81,3 +88,5 @@ export const getContactAndPopulateForm = (
     updateFormDirty(false);
   });
 };
+
+const emailTypes = [1, 3, 4]
