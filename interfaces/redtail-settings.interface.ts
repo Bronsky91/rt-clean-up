@@ -1,4 +1,3 @@
-
 export interface RedtailList {
   id: number;
   name: string;
