@@ -4,7 +4,7 @@ import styles from "../styles/ContactListPanel.module.scss";
 import ContactFilter from "./filter/contact-filter";
 import axios from "axios";
 import {
-  ContactList,
+  ContactListEntry,
   FilterData,
   RedtailContactListRec,
   RedtailSearchParam,
@@ -134,7 +134,7 @@ export default function ContactListPanel(props) {
         { withCredentials: true }
       )
       .then((res) => {
-        const list: ContactList[] = res.data;
+        const list: ContactListEntry[] = res.data;
         setFilteredContacts(list);
         setFilterPageData({
           currentPage: 1,
@@ -224,6 +224,7 @@ export default function ContactListPanel(props) {
             selectedFilter={selectedFilter}
             updateFilterData={updateFilterData}
             filterData={filterData}
+            setShowFilters={setShowFilters}
           ></ContactFilter>
         ) : null}
       </div>

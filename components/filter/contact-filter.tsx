@@ -3,8 +3,13 @@ import { FilterButton } from "./filter-button";
 import { FilterOptions } from "./filter-options";
 import styles from "../../styles/ContactFilter.module.scss";
 import { FilterData } from "../../interfaces/redtail-contact-list.interface";
+import ClickAwayListener from "react-click-away-listener";
 
 export default function ContactFilter(props) {
+  const handleClickAway = () => {
+    props.setShowFilters(false);
+  };
+
   const handleApply = (e) => {
     props.handleFilter(props.filterData);
   };
@@ -44,7 +49,10 @@ export default function ContactFilter(props) {
   };
 
   return (
-    <div className={styles.container}>
+    <ClickAwayListener
+      className={styles.container}
+      onClickAway={handleClickAway}
+    >
       <div className={styles.layer}>
         <div className={styles.flexColumnContainer}>
           <div className={styles.flexTopRow}>
@@ -132,7 +140,7 @@ export default function ContactFilter(props) {
           </div>
         </div>
       </div>
-    </div>
+    </ClickAwayListener>
   );
 }
 

@@ -5011,6 +5011,11 @@ raw-body@2.3.2:
     iconv-lite "0.4.19"
     unpipe "1.0.0"
 
+react-click-away-listener@^1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/react-click-away-listener/-/react-click-away-listener-1.4.3.tgz#a323c9f37784e133b31b2a242367be5675267186"
+  integrity sha512-c7d6mfZuHu/rIdnEHnovX/QsScQXlqtdAynSnZUyyH+6kPOAyB40k2c5br56c/qp4KBkHD0JQV4C7rVuAmroMw==
+
 react-datepicker@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/react-datepicker/-/react-datepicker-3.3.0.tgz#38dec531fd7c8e0de6860a55dfbc3a8ff803d43c"
