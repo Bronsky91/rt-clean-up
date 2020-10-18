@@ -138,7 +138,10 @@ export default function ContactListPanel(props) {
         setFilteredContacts(list);
         setFilterPageData({
           currentPage: 1,
-          totalPages: Math.ceil(list.length / contactsPerPage),
+          totalPages:
+            Math.ceil(list.length / contactsPerPage) < 1
+              ? 1
+              : Math.ceil(list.length / contactsPerPage),
           startIndex: 0,
           endIndex: contactsPerPage - 1,
         });
