@@ -1,12 +1,10 @@
 import { SelectedContact } from "../interfaces/form.interface";
-import {
-  ContactFormData,
-  RedtailContactRec,
-} from "../interfaces/redtail.interface";
+import { RedtailContactMasterRec } from "../interfaces/redtail-contact.interface";
+import { ContactFormData } from "../interfaces/redtail-form.interface";
 
 export const setLocalStorage = (
   selectedContact: SelectedContact,
-  sourceContactRef: Readonly<RedtailContactRec>,
+  sourceContactRef: Readonly<RedtailContactMasterRec>,
   originalFormData: Readonly<ContactFormData>,
   formData: Readonly<ContactFormData>,
   formDirty: boolean

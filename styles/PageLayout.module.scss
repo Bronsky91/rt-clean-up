@@ -44,7 +44,7 @@ $headerHeight: 10rem;
   flex-flow: row nowrap;
   align-items: stretch;
   width: 100%;
-  height: calc(100vh - $headerHeight);
+  height: calc(100vh - 10rem);
   background-image: url("/linkpoint-bg.png");
   background-size: cover;
 }
@@ -60,7 +60,7 @@ $headerHeight: 10rem;
   justify-content: space-between;
   min-width: 30rem;
   width: 30rem;
-  height: calc(100vh - $headerHeight);
+  height: calc(100vh - 10rem);
   background-color: rgba(31, 113, 168, 0.56);
   padding-top: 7.5rem;
   a {
