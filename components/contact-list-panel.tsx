@@ -19,8 +19,6 @@ export default function ContactListPanel(props) {
   const [pageInputText, setPageInputText] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const contactsPerPage = 50;
-  const [filteredContacts, setFilteredContacts] = useState([]);
-  const [isFiltered, setIsFiltered] = useState(false);
   const [filterPageData, setFilterPageData] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -45,26 +43,30 @@ export default function ContactListPanel(props) {
         parseInt(target.value) > 0 &&
         parseInt(target.value) <=
           Number(
-            isFiltered ? filterPageData.totalPages : props.pageData.totalPages
+            props.isFiltered
+              ? filterPageData.totalPages
+              : props.pageData.totalPages
           )
           ? parseInt(target.value)
-          : isFiltered
+          : props.isFiltered
           ? filterPageData.currentPage
           : props.pageData.currentPage;
 
       if (
         updatedPage !==
         Number(
-          isFiltered ? filterPageData.currentPage : props.pageData.currentPage
+          props.isFiltered
+            ? filterPageData.currentPage
+            : props.pageData.currentPage
         )
       ) {
         changePage(updatedPage);
       } else {
-        target.value = isFiltered
+        target.value = props.isFiltered
           ? filterPageData.currentPage
           : props.pageData.currentPage;
         setPageInputText(
-          isFiltered
+          props.isFiltered
             ? filterPageData.currentPage.toString()
             : props.pageData.currentPage.toString()
         );
@@ -75,14 +77,16 @@ export default function ContactListPanel(props) {
   const handlePagePrev = (e) => {
     e.preventDefault();
 
-    const updatedPage: number = isFiltered
+    const updatedPage: number = props.isFiltered
       ? filterPageData.currentPage - 1
       : props.pageData.currentPage - 1;
     if (
       updatedPage > 0 &&
       updatedPage <=
         Number(
-          isFiltered ? filterPageData.totalPages : props.pageData.totalPages
+          props.isFiltered
+            ? filterPageData.totalPages
+            : props.pageData.totalPages
         )
     ) {
       changePage(updatedPage);
@@ -91,14 +95,16 @@ export default function ContactListPanel(props) {
 
   const handlePageNext = (e) => {
     e.preventDefault();
-    const updatedPage: number = isFiltered
+    const updatedPage: number = props.isFiltered
       ? filterPageData.currentPage + 1
       : props.pageData.currentPage + 1;
     if (
       updatedPage > 0 &&
       updatedPage <=
         Number(
-          isFiltered ? filterPageData.totalPages : props.pageData.totalPages
+          props.isFiltered
+            ? filterPageData.totalPages
+            : props.pageData.totalPages
         )
     ) {
       changePage(updatedPage);
@@ -106,11 +112,11 @@ export default function ContactListPanel(props) {
   };
 
   const handlePageInputLostFocus = (e) => {
-    e.target.value = isFiltered
+    e.target.value = props.isFiltered
       ? filterPageData.currentPage
       : props.pageData.currentPage;
     setPageInputText(
-      isFiltered
+      props.isFiltered
         ? filterPageData.currentPage.toString()
         : props.pageData.currentPage.toString()
     );
@@ -132,7 +138,7 @@ export default function ContactListPanel(props) {
       )
       .then((res) => {
         const list: ContactListEntry[] = res.data;
-        setFilteredContacts(list);
+        props.setFilteredContactList(list);
         setFilterPageData({
           currentPage: 1,
           totalPages:
@@ -142,7 +148,7 @@ export default function ContactListPanel(props) {
           startIndex: 0,
           endIndex: contactsPerPage - 1,
         });
-        setIsFiltered(true);
+        props.setIsFiltered(true);
         setShowFilters(false);
         // After loading filtered page, select first contact
         if (list && list[0]) {
@@ -159,22 +165,22 @@ export default function ContactListPanel(props) {
       startIndex: 0,
       endIndex: contactsPerPage - 1,
     });
-    setFilteredContacts([]);
-    setIsFiltered(false);
+    props.setFilteredContactList([]);
+    props.setIsFiltered(false);
     setShowFilters(false);
   };
 
   // Change page back to 1 after isFilter is set to false
   useEffect(() => {
-    if (!isFiltered) {
+    if (!props.isFiltered) {
       changePage(1);
     }
-  }, [isFiltered]);
+  }, [props.isFiltered]);
 
   const changePage = (updatedPage: number) => {
     props.setLoadingPage(true);
 
-    if (isFiltered) {
+    if (props.isFiltered) {
       const startIndex = contactsPerPage * updatedPage - contactsPerPage;
       setFilterPageData({
         ...filterPageData,
@@ -183,8 +189,10 @@ export default function ContactListPanel(props) {
         endIndex: contactsPerPage * updatedPage - 1,
       });
       // After loading page, select first contact
-      if (filteredContacts && filteredContacts[startIndex]) {
-        props.selectContact(filteredContacts[startIndex].id.toString());
+      if (props.filteredContactList && props.filteredContactList[startIndex]) {
+        props.selectContact(
+          props.filteredContactList[startIndex].id.toString()
+        );
       }
       props.setLoadingPage(false);
     } else {
@@ -235,7 +243,7 @@ export default function ContactListPanel(props) {
             dropdownData={props.dropdownData}
             handleFilter={handleFilter}
             handleClear={handleClear}
-            isFiltered={isFiltered}
+            isFiltered={props.isFiltered}
             updateSelectedFilter={updateSelectedFilter}
             selectedFilter={selectedFilter}
             updateFilterData={updateFilterData}
@@ -258,13 +266,13 @@ export default function ContactListPanel(props) {
           props.selectedContact.id === "" ? undefined : props.selectedContact.id
         }
       >
-        {isFiltered
-          ? filteredContacts
-            ? filteredContacts
+        {props.isFiltered
+          ? props.filteredContactList
+            ? props.filteredContactList
                 .slice(filterPageData.startIndex, filterPageData.endIndex)
                 .map((contact, index) => (
                   <option key={index} value={contact.id}>
-                    {contact.id}, {contact.last_name}
+                    {contact.id}, {contact.lastName}
                   </option>
                 ))
             : ""
@@ -281,7 +289,7 @@ export default function ContactListPanel(props) {
           className={styles.pageButton}
           onClick={handlePagePrev}
           disabled={
-            isFiltered
+            props.isFiltered
               ? filterPageData.currentPage <= 1
               : props.pageData.currentPage <= 1
           }
@@ -294,7 +302,7 @@ export default function ContactListPanel(props) {
             type="text"
             ref={pageInput}
             defaultValue={
-              isFiltered
+              props.isFiltered
                 ? filterPageData.currentPage
                 : props.pageData.currentPage
             }
@@ -303,7 +311,7 @@ export default function ContactListPanel(props) {
             style={{ width: (pageInputText.length + 2).toString() + "rem" }}
           />{" "}
           of{" "}
-          {isFiltered
+          {props.isFiltered
             ? filterPageData.totalPages.toString() + " "
             : props.pageData.totalPages.toString() + " "}
         </span>
@@ -311,7 +319,7 @@ export default function ContactListPanel(props) {
           className={styles.pageButton}
           onClick={handlePageNext}
           disabled={
-            isFiltered
+            props.isFiltered
               ? filterPageData.currentPage >= filterPageData.totalPages
               : props.pageData.currentPage >= props.pageData.totalPages
           }

@@ -130,6 +130,8 @@ export default function DataCleanupPage(props) {
     initialSelectedContact
   );
   const [contactList, setContactList] = useState([]);
+  const [filteredContactList, setFilteredContactList] = useState([]);
+  const [isFiltered, setIsFiltered] = useState(false);
   const [dropdownData, updateDropdownData] = useState(emptyDropDowns);
   const [pageData, updatePageData] = useState({
     currentPage: 1,
@@ -283,8 +285,27 @@ export default function DataCleanupPage(props) {
       .then(async (res) => {
         setSavingContact(false);
         if (res.status == 200) {
+          // Update contact list entry to ensure last name is current
+          if (isFiltered) {
+            setFilteredContactList(
+              filteredContactList.map((contact) =>
+                contact.id === sourceContactRef.ContactRecord.ClientID
+                  ? { ...contact, lastName: formData.lastName }
+                  : contact
+              )
+            );
+          } else {
+            setContactList(
+              contactList.map((contact) =>
+                contact.id === sourceContactRef.ContactRecord.ClientID
+                  ? { ...contact, lastName: formData.lastName }
+                  : contact
+              )
+            );
+          }
           // Reload contact page from Redtail as a data validation measure
           selectContact(sourceContactRef.ContactRecord.ClientID.toString());
+
           alert("Contact Saved!");
         } else {
           alert(
@@ -308,6 +329,10 @@ export default function DataCleanupPage(props) {
           selectedContact={selectedContact}
           contactList={contactList}
           setContactList={setContactList}
+          filteredContactList={filteredContactList}
+          setFilteredContactList={setFilteredContactList}
+          isFiltered={isFiltered}
+          setIsFiltered={setIsFiltered}
           pageData={pageData}
           updatePageData={updatePageData}
           dropdownData={dropdownData}
