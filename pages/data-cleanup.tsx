@@ -137,7 +137,7 @@ export default function DataCleanupPage(props) {
     currentPage: 1,
     totalPages: 1,
     startIndex: 0,
-    endIndex: contactsPerPage - 1,
+    endIndex: contactsPerPage,
   });
   const [pageData, updatePageData] = useState({
     currentPage: 1,
@@ -305,14 +305,6 @@ export default function DataCleanupPage(props) {
   };
 
   const changePage = (updatedPage: number, selectContactIndex: number = 0) => {
-    console.log(
-      "CHANGING PAGE: " +
-        updatedPage +
-        ", " +
-        selectContactIndex +
-        ", " +
-        isFiltered
-    );
     setLoadingPage(true);
 
     pageInput.current.value = updatedPage.toString();
@@ -324,18 +316,10 @@ export default function DataCleanupPage(props) {
         ...filterPageData,
         currentPage: updatedPage,
         startIndex: startIndex,
-        endIndex: contactsPerPage * updatedPage - 1,
+        endIndex: contactsPerPage * updatedPage,
       });
       // After loading page, select contact
       if (filteredContactList && filteredContactList[startIndex]) {
-        console.log(
-          "PAGE CHANGE CONTACT SELECT: " +
-            startIndex +
-            ", " +
-            selectContactIndex +
-            ", " +
-            filteredContactList[startIndex + selectContactIndex].id.toString()
-        );
         selectContact(
           filteredContactList[startIndex + selectContactIndex].id.toString()
         );
@@ -443,10 +427,10 @@ export default function DataCleanupPage(props) {
     if (isFiltered) {
       // filteredContactList contains ALL contacts spread across all pages,
       // so we can use index to calculate page and change if necessary before selecting new contact
-      const newPage: number = Math.ceil(
-        (contactIndex - 1) / (contactsPerPage - 1)
-      );
-      console.log("CHANGE PAGE PREV? " + (contactIndex - 1) + ", " + newPage);
+      const newPage: number =
+        Math.ceil(contactIndex / contactsPerPage) < 1
+          ? 1
+          : Math.ceil(contactIndex / contactsPerPage);
       if (newPage < filterPageData.currentPage) {
         changePage(newPage, contactsPerPage - 1);
       } else if (newPage == filterPageData.currentPage) {
@@ -478,10 +462,7 @@ export default function DataCleanupPage(props) {
     if (isFiltered) {
       // filteredContactList contains ALL contacts spread across all pages,
       // so we can use index to calculate page and change if necessary before selecting new contact
-      const newPage: number = Math.ceil(
-        (contactIndex + 2) / (contactsPerPage - 1)
-      );
-      console.log("CHANGE PAGE NEXT? " + (contactIndex + 2) + ", " + newPage);
+      const newPage: number = Math.ceil((contactIndex + 2) / contactsPerPage);
       if (newPage > filterPageData.currentPage) {
         changePage(newPage, 0);
       } else if (newPage == filterPageData.currentPage) {

@@ -137,7 +137,7 @@ export default function ContactListPanel(props) {
               ? 1
               : Math.ceil(list.length / props.contactsPerPage),
           startIndex: 0,
-          endIndex: props.contactsPerPage - 1,
+          endIndex: props.contactsPerPage,
         });
         props.setIsFiltered(true);
         setShowFilters(false);
@@ -157,7 +157,7 @@ export default function ContactListPanel(props) {
       currentPage: 1,
       totalPages: 1,
       startIndex: 0,
-      endIndex: props.contactsPerPage - 1,
+      endIndex: props.contactsPerPage,
     });
     props.setFilteredContactList([]);
     props.setIsFiltered(false);
