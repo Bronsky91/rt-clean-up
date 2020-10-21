@@ -62,6 +62,40 @@ $field-height: 4rem;
   cursor: pointer;
 }
 
+.contactPrevButton {
+  width: 7.2rem;
+  height: 7.2rem;
+  background-image: url("/arrowcircle-left.png");
+  background-size: cover;
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  &:disabled {
+    color: #cccccc;
+    background-image: url("/arrowcircle-left-disabled.png");
+  }
+}
+
+.contactNextButton {
+  width: 7.2rem;
+  height: 7.2rem;
+  background-image: url("/arrowcircle-right.png");
+  background-size: cover;
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  &:disabled {
+    color: #cccccc;
+    background-image: url("/arrowcircle-right-disabled.png");
+  }
+}
+
 .editPanel {
   display: flex;
   flex-flow: column nowrap;

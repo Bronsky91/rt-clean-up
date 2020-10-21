@@ -15,10 +15,6 @@ export default function ContactFilter(props) {
     const filterEmpty = data
       .map((f) => f.selectedIds.length === 0)
       .every((fEmpty) => fEmpty);
-
-    if (filterEmpty) {
-      return;
-    }
     props.handleFilter(props.filterData);
   };
 

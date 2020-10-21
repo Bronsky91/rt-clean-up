@@ -2,7 +2,7 @@ import PageLayout from "../layouts/page-layout";
 import styles from "../styles/DataCleanupPage.module.scss";
 import axios from "axios";
 import LoadingOverlay from "react-loading-overlay";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { API_URL } from "../constants";
 import { useRouter } from "next/router";
 import Login from "./login";
@@ -126,21 +126,32 @@ export default function DataCleanupPage(props) {
   const [formData, updateFormData] = useState(emptyFormData);
   const [originalFormData, updateOriginalFormData] = useState(emptyFormData);
   const [formDirty, updateFormDirty] = useState(false);
+  const contactsPerPage = 50;
   const [selectedContact, updateSelectedContact] = useState(
     initialSelectedContact
   );
   const [contactList, setContactList] = useState([]);
   const [filteredContactList, setFilteredContactList] = useState([]);
   const [isFiltered, setIsFiltered] = useState(false);
-  const [dropdownData, updateDropdownData] = useState(emptyDropDowns);
+  const [filterPageData, setFilterPageData] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    startIndex: 0,
+    endIndex: contactsPerPage - 1,
+  });
   const [pageData, updatePageData] = useState({
     currentPage: 1,
     totalPages: 1,
     totalContacts: 0,
   });
+  const pageInput = useRef(null);
+  const [pageInputText, setPageInputText] = useState("");
+  const [dropdownData, updateDropdownData] = useState(emptyDropDowns);
   const [loadingPage, setLoadingPage] = useState(false);
   const [loadingContact, setLoadingContact] = useState(false);
   const [savingContact, setSavingContact] = useState(false);
+  const [contactPrevDisabled, setContactPrevDisabled] = useState(false);
+  const [contactNextDisabled, setContactNextDisabled] = useState(false);
 
   // Saves Form State to Local Storage after each change
   useEffect(() => {
@@ -158,6 +169,31 @@ export default function DataCleanupPage(props) {
     originalFormData,
     formDirty,
   ]);
+
+  // When contact changes, re-calculate prev & next contact button disabled state
+  useEffect(() => {
+    const contactIndex: number = isFiltered
+      ? filteredContactList
+          .map((contact) => contact.id)
+          .indexOf(sourceContactRef.ContactRecord.ClientID)
+      : contactList
+          .map((contact) => contact.id)
+          .indexOf(sourceContactRef.ContactRecord.ClientID);
+
+    setContactPrevDisabled(
+      isFiltered
+        ? contactIndex <= 0
+        : contactIndex <= 0 && pageData.currentPage == 1
+    );
+
+    setContactNextDisabled(
+      isFiltered
+        ? contactIndex === -1 || contactIndex === filteredContactList.length - 1
+        : contactIndex === -1 ||
+            contactIndex + (pageData.currentPage - 1) * contactsPerPage ===
+              pageData.totalContacts - 1
+    );
+  }, [sourceContactRef]);
 
   const removeContactField = (fieldName: string, index: number) => (e) => {
     e.preventDefault();
@@ -268,6 +304,81 @@ export default function DataCleanupPage(props) {
     });
   };
 
+  const changePage = (updatedPage: number, selectContactIndex: number = 0) => {
+    console.log(
+      "CHANGING PAGE: " +
+        updatedPage +
+        ", " +
+        selectContactIndex +
+        ", " +
+        isFiltered
+    );
+    setLoadingPage(true);
+
+    pageInput.current.value = updatedPage.toString();
+    setPageInputText(updatedPage.toString());
+
+    if (isFiltered) {
+      const startIndex = contactsPerPage * updatedPage - contactsPerPage;
+      setFilterPageData({
+        ...filterPageData,
+        currentPage: updatedPage,
+        startIndex: startIndex,
+        endIndex: contactsPerPage * updatedPage - 1,
+      });
+      // After loading page, select contact
+      if (filteredContactList && filteredContactList[startIndex]) {
+        console.log(
+          "PAGE CHANGE CONTACT SELECT: " +
+            startIndex +
+            ", " +
+            selectContactIndex +
+            ", " +
+            filteredContactList[startIndex + selectContactIndex].id.toString()
+        );
+        selectContact(
+          filteredContactList[startIndex + selectContactIndex].id.toString()
+        );
+      }
+      setLoadingPage(false);
+    } else {
+      axios
+        .get(`${API_URL}/rt/get-contacts?page=${updatedPage}`, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          const list: RedtailContactListRec = res.data;
+          const contacts = list.contacts;
+          const totalCount: number = list.meta.total_records;
+          const pageCount: number = list.meta.total_pages;
+
+          updatePageData({
+            currentPage: updatedPage,
+            totalPages: pageCount,
+            totalContacts: totalCount,
+          });
+
+          const formattedContactList = contacts
+            .map((contact) => {
+              return {
+                id: contact.id,
+                lastName: contact.last_name,
+              };
+            })
+            .sort((a, b) => a.id - b.id);
+
+          setContactList(formattedContactList);
+          // Select contact after they are returned
+          if (formattedContactList && formattedContactList.length >= 1) {
+            selectContact(
+              formattedContactList[selectContactIndex].id.toString()
+            );
+          }
+          setLoadingPage(false);
+        });
+    }
+  };
+
   const handleUndo = (e) => {
     e.preventDefault();
     updateFormData(originalFormData);
@@ -317,6 +428,79 @@ export default function DataCleanupPage(props) {
       });
   };
 
+  const handleContactPrevClick = (e) => {
+    e.preventDefault();
+
+    const contactIndex: number = isFiltered
+      ? filteredContactList
+          .map((contact) => contact.id)
+          .indexOf(sourceContactRef.ContactRecord.ClientID)
+      : contactList
+          .map((contact) => contact.id)
+          .indexOf(sourceContactRef.ContactRecord.ClientID);
+    if (contactIndex === -1) return; // -1 indicates current contact's ID was not found in contact list
+
+    if (isFiltered) {
+      // filteredContactList contains ALL contacts spread across all pages,
+      // so we can use index to calculate page and change if necessary before selecting new contact
+      const newPage: number = Math.ceil(
+        (contactIndex - 1) / (contactsPerPage - 1)
+      );
+      console.log("CHANGE PAGE PREV? " + (contactIndex - 1) + ", " + newPage);
+      if (newPage < filterPageData.currentPage) {
+        changePage(newPage, contactsPerPage - 1);
+      } else if (newPage == filterPageData.currentPage) {
+        selectContact(filteredContactList[contactIndex - 1].id);
+      }
+    } else {
+      // contactList only contains contacts for the current page,
+      // so we have to determine if we need to change the page a little differently
+      if (contactIndex == 0 && pageData.currentPage > 1) {
+        changePage(pageData.currentPage - 1, contactsPerPage - 1);
+      } else if (contactIndex > 0) {
+        selectContact(contactList[contactIndex - 1].id);
+      }
+    }
+  };
+
+  const handleContactNextClick = (e) => {
+    e.preventDefault();
+
+    const contactIndex: number = isFiltered
+      ? filteredContactList
+          .map((contact) => contact.id)
+          .indexOf(sourceContactRef.ContactRecord.ClientID)
+      : contactList
+          .map((contact) => contact.id)
+          .indexOf(sourceContactRef.ContactRecord.ClientID);
+    if (contactIndex === -1) return; // -1 indicates current contact's ID was not found in contact list
+
+    if (isFiltered) {
+      // filteredContactList contains ALL contacts spread across all pages,
+      // so we can use index to calculate page and change if necessary before selecting new contact
+      const newPage: number = Math.ceil(
+        (contactIndex + 2) / (contactsPerPage - 1)
+      );
+      console.log("CHANGE PAGE NEXT? " + (contactIndex + 2) + ", " + newPage);
+      if (newPage > filterPageData.currentPage) {
+        changePage(newPage, 0);
+      } else if (newPage == filterPageData.currentPage) {
+        selectContact(filteredContactList[contactIndex + 1].id);
+      }
+    } else {
+      // contactList only contains contacts for the current page,
+      // so we have to determine if we need to change the page a little differently
+      if (
+        contactIndex == contactsPerPage - 1 &&
+        pageData.currentPage < pageData.totalPages
+      ) {
+        changePage(pageData.currentPage + 1, 0);
+      } else if (contactIndex < contactsPerPage - 1) {
+        selectContact(contactList[contactIndex + 1].id);
+      }
+    }
+  };
+
   return (
     <LoadingOverlay
       active={loadingPage}
@@ -325,6 +509,7 @@ export default function DataCleanupPage(props) {
     >
       <div className={styles.container}>
         <ContactListPanel
+          contactsPerPage={contactsPerPage}
           contactSelected={contactSelected}
           selectedContact={selectedContact}
           contactList={contactList}
@@ -333,8 +518,14 @@ export default function DataCleanupPage(props) {
           setFilteredContactList={setFilteredContactList}
           isFiltered={isFiltered}
           setIsFiltered={setIsFiltered}
+          filterPageData={filterPageData}
+          setFilterPageData={setFilterPageData}
           pageData={pageData}
           updatePageData={updatePageData}
+          changePage={changePage}
+          pageInput={pageInput}
+          pageInputText={pageInputText}
+          setPageInputText={setPageInputText}
           dropdownData={dropdownData}
           setLoadingPage={setLoadingPage}
           selectContact={selectContact}
@@ -483,6 +674,18 @@ export default function DataCleanupPage(props) {
                         >
                           UNDO
                         </button>
+                        <div className={styles.formRow}>
+                          <button
+                            className={styles.contactPrevButton}
+                            onClick={handleContactPrevClick}
+                            disabled={contactPrevDisabled}
+                          />
+                          <button
+                            className={styles.contactNextButton}
+                            onClick={handleContactNextClick}
+                            disabled={contactNextDisabled}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
