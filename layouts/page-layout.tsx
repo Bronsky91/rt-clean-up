@@ -50,15 +50,25 @@ export default function PageLayout({ children }) {
         <div className={styles.h1}>RedTail Clean Up Tool</div>
       </header>
       <div className={styles.wrapper}>
-        <nav className={styles.nav}>
-          <div className={styles.topNav}>
+        <nav
+          className={
+            router.pathname === "/data-cleanup"
+              ? styles.shrunkNav
+              : styles.expandedNav
+          }
+        >
+          <div className={styles.navLinks}>
             <Link href="/">
               <a
                 className={
                   router.pathname === "/" ? styles.active : styles.inactive
                 }
               >
-                DASHBOARD
+                {router.pathname === "/data-cleanup" ? (
+                  <img src="/dashboard-icon.png" />
+                ) : (
+                  "DASHBOARD"
+                )}
               </a>
             </Link>
             {/* <Link href="/contacts">
@@ -79,7 +89,11 @@ export default function PageLayout({ children }) {
                 }
                 onClick={cleanupClickHandler}
               >
-                DATA CLEANUP
+                {router.pathname === "/data-cleanup" ? (
+                  <img src="/data-cleanup-icon.png" />
+                ) : (
+                  "DATA CLEANUP"
+                )}
               </a>
             </Link>
             {/* <Link href="/import-data">
@@ -99,9 +113,13 @@ export default function PageLayout({ children }) {
               className={styles.redtailConnectImg}
               src={isRedtailAuth ? "redtail-logo-fill.png" : "redtail-logo.png"}
             ></img>
-            <div className={styles.redtailConnectText}>
-              {isRedtailAuth ? "Connected" : "Connect"}
-            </div>
+            {router.pathname === "/data-cleanup" ? (
+              ""
+            ) : (
+              <div className={styles.redtailConnectText}>
+                {isRedtailAuth ? "Connected" : "Connect"}
+              </div>
+            )}
           </div>
         </nav>
         <main className={styles.main}>{children}</main>

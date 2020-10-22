@@ -49,17 +49,37 @@ $headerHeight: 10rem;
   background-size: cover;
 }
 
-.topNav {
+.navLinks {
   display: flex;
   flex-flow: column nowrap;
 }
 
-.nav {
+.expandedNav {
+  transition: all 0.5s ease;
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
   min-width: 30rem;
   width: 30rem;
+  height: calc(100vh - 10rem);
+  background-color: rgba(31, 113, 168, 0.56);
+  padding-top: 7.5rem;
+  a {
+    align-self: center;
+    font-size: 3rem;
+    font-weight: 600;
+    line-height: 7rem;
+    color: white;
+  }
+}
+
+.shrunkNav {
+  transition: all 0.5s ease;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  min-width: 10rem;
+  width: 10rem;
   height: calc(100vh - 10rem);
   background-color: rgba(31, 113, 168, 0.56);
   padding-top: 7.5rem;
