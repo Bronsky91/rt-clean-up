@@ -20,7 +20,7 @@ export default function PageLayout({ children }) {
   const closeModal = () => {
     setIsOpen(false);
 
-    Axios.get(API_URL + "/users/rt-auth-check", {
+    Axios.get(`${API_URL}/users/rt-auth-check`, {
       withCredentials: true,
     })
       .then((res) => {

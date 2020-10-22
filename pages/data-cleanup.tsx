@@ -74,7 +74,7 @@ export default function DataCleanupPage(props) {
           }
 
           axios
-            .get(API_URL + "/rt/dropdowns", { withCredentials: true })
+            .get(`${API_URL}/rt/dropdowns`, { withCredentials: true })
             .then((res) => {
               if (mounted) {
                 const dropdownData: RedtailSettingsData = res.data;
@@ -373,7 +373,7 @@ export default function DataCleanupPage(props) {
     setSavingContact(true);
     axios
       .post(
-        API_URL + "/rt/contact-submit",
+        `${API_URL}/rt/contact-submit`,
         { data: prepareContactSubmitData(formData, sourceContactRef) },
         { withCredentials: true }
       )

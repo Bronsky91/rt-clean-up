@@ -19,7 +19,7 @@ export const getContactAndPopulateForm = (
   };
 
   return Axios.post(
-    API_URL + "/rt/get-contact",
+    `${API_URL}/rt/get-contact`,
     { id },
     { withCredentials: true }
   ).then((res) => {

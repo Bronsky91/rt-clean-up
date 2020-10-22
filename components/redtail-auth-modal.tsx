@@ -26,9 +26,9 @@ export default function RedtailAuthModal(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     Axios.post(
-      API_URL + "/users/redtail-auth",
+      `${API_URL}/users/redtail-auth`,
       { data: formData },
       { withCredentials: true }
     )

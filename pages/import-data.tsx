@@ -57,8 +57,7 @@ export default function ImportDataPage(props) {
   };
 
   const fileUpload = (file: File) => {
-    const url = API_URL + "/rt/backup-upload";
-
+    const url = `${API_URL}/rt/backup-upload`;
     const formData = new FormData();
     formData.append("backup", file);
     const config = {
@@ -79,7 +78,7 @@ export default function ImportDataPage(props) {
   const pollProcess = async () => {
     // Our check function
     const checkBackupProcessed = async () => {
-      const result = await axios.get(API_URL + `/rt/check-backup-upload`, {
+      const result = await axios.get(`${API_URL}/rt/check-backup-upload`, {
         withCredentials: true,
       });
       if (result.status === 200) {

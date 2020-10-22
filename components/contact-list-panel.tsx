@@ -122,7 +122,7 @@ export default function ContactListPanel(props) {
     const searchParams: RedtailSearchParam = Object.assign({}, ...mappedParams);
     axios
       .post(
-        API_URL + "/rt/search-contacts",
+        `${API_URL}/rt/search-contacts`,
         { data: { params: searchParams } },
         { withCredentials: true }
       )
