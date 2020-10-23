@@ -30,6 +30,7 @@ export default function DateField(props) {
     <div className={styles.formField}>
       <label className={styles.formLabel}>{props.label}</label>
       <DatePicker
+        className={styles.formLabelledInput}
         dateFormat="MM/dd/yyyy"
         selected={dateValue}
         onChange={(date) => props.handleDateChange(date, props.fieldName)}
