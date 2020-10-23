@@ -113,8 +113,11 @@ $field-height: 4rem;
 }
 
 .addButton {
+  flex: 1 1 2.5rem;
   width: 2.5rem;
+  max-width: 2.5rem;
   height: 2.5rem;
+  max-height: 2.5rem;
   background-image: url("/entry-add.png");
   background-size: cover;
   background-color: Transparent;
@@ -218,7 +221,8 @@ $field-height: 4rem;
   display: flex;
   flex-flow: column nowrap;
   overflow: auto;
-  height: ($field-height * 3) + 1rem;
+  height: auto;
+  max-height: ($field-height * 3) + 1rem;
 }
 
 .saveButtonContainer {

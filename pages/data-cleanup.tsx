@@ -700,9 +700,12 @@ export default function DataCleanupPage(props) {
                       dropdownData={dropdownData}
                       removeContactField={removeContactField}
                     ></EmailFields>
-                    <button onClick={addContactField("emailAddresses")}>
-                      Add
-                    </button>
+                    <div className={styles.formRowEven}>
+                      <button
+                        className={styles.addButton}
+                        onClick={addContactField("emailAddresses")}
+                      />
+                    </div>
                   </div>
                   <div className={styles.formColumn}>
                     <div className={styles.formRow}>
@@ -722,9 +725,12 @@ export default function DataCleanupPage(props) {
                       dropdownData={dropdownData}
                       removeContactField={removeContactField}
                     ></PhoneFields>
-                    <button onClick={addContactField("phoneNumbers")}>
-                      Add
-                    </button>
+                    <div className={styles.formRowEven}>
+                      <button
+                        className={styles.addButton}
+                        onClick={addContactField("phoneNumbers")}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -762,9 +768,12 @@ export default function DataCleanupPage(props) {
                     dropdownData={dropdownData}
                     removeContactField={removeContactField}
                   ></AddressFields>
-                  <button onClick={addContactField("streetAddresses")}>
-                    Add
-                  </button>
+                  <div className={styles.formRowEven}>
+                    <button
+                      className={styles.addButton}
+                      onClick={addContactField("streetAddresses")}
+                    />
+                  </div>
                 </div>
               </div>
             </form>
