@@ -87,13 +87,7 @@ export default function PageLayout({ children }) {
                 onClick={cleanupClickHandler}
               >
                 {router.pathname !== "/" ? (
-                  <img
-                    src={
-                      router.pathname === "/data-cleanup"
-                        ? "/data-cleanup-icon-active.png"
-                        : "/data-cleanup-icon.png"
-                    }
-                  />
+                  <img src="/data-cleanup-icon.png" />
                 ) : (
                   "DATA CLEANUP"
                 )}
