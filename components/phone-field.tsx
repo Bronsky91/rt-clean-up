@@ -43,20 +43,24 @@ export default function PhoneFields(props) {
                   )}
                 </select>
               </div>
-              <input
-                type="radio"
-                name="primaryPhone"
-                value=""
-                checked={obj.primaryPhone}
-                onChange={props.handleArrChange(
-                  index,
-                  "phoneNumbers",
-                  obj.recID
-                )}
-              />
-              <button onClick={props.removeContactField("phoneNumbers", index)}>
-                Trash
-              </button>
+              <div className={styles.formRowEven}>
+                <input
+                  className={styles.formRadio}
+                  type="radio"
+                  name="primaryPhone"
+                  value=""
+                  checked={obj.primaryPhone}
+                  onChange={props.handleArrChange(
+                    index,
+                    "phoneNumbers",
+                    obj.recID
+                  )}
+                />
+                <button
+                  className={styles.deleteButton}
+                  onClick={props.removeContactField("phoneNumbers", index)}
+                />
+              </div>
             </div>
           ))
         : ""}

@@ -45,21 +45,23 @@ export default function EmailFields(props) {
                 </select>
               </div>
 
-              <input
-                type="radio"
-                name="primaryEmail"
-                checked={obj.primaryEmail}
-                onChange={props.handleArrChange(
-                  index,
-                  "emailAddresses",
-                  obj.recID
-                )}
-              />
-              <button
-                onClick={props.removeContactField("emailAddresses", index)}
-              >
-                Trash
-              </button>
+              <div className={styles.formRowEven}>
+                <input
+                  className={styles.formRadio}
+                  type="radio"
+                  name="primaryEmail"
+                  checked={obj.primaryEmail}
+                  onChange={props.handleArrChange(
+                    index,
+                    "emailAddresses",
+                    obj.recID
+                  )}
+                />
+                <button
+                  className={styles.deleteButton}
+                  onClick={props.removeContactField("emailAddresses", index)}
+                />
+              </div>
             </div>
           ))
         : ""}

@@ -96,6 +96,35 @@ $field-height: 4rem;
   }
 }
 
+.deleteButton {
+  flex: 1 1 2.5rem;
+  width: 2.5rem;
+  max-width: 2.5rem;
+  height: 2.5rem;
+  max-height: 2.5rem;
+  background-image: url("/entry-delete.png");
+  background-size: cover;
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}
+
+.addButton {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-image: url("/entry-add.png");
+  background-size: cover;
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}
+
 .editPanel {
   display: flex;
   flex-flow: column nowrap;
@@ -157,6 +186,14 @@ $field-height: 4rem;
   width: 13rem;
 }
 
+.formRadio {
+  flex: 1 1 2.5rem;
+  width: 2.5rem;
+  max-width: 2.5rem;
+  height: 2.5rem;
+  max-height: 2.5rem;
+}
+
 .formColumn {
   display: flex;
   flex-flow: column nowrap;
@@ -166,6 +203,15 @@ $field-height: 4rem;
 .formRow {
   display: flex;
   flex-flow: row nowrap;
+}
+
+.formRowEven {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  align-content: center;
+  justify-content: space-evenly;
+  width: 100%;
 }
 
 .formColumnScroll {

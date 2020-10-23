@@ -86,22 +86,24 @@ export default function AddressFields(props) {
                   )}
                 </select>
               </div>
-              <input
-                type="radio"
-                name="primaryStreet"
-                value=""
-                checked={obj.primaryStreet}
-                onChange={props.handleArrChange(
-                  index,
-                  "streetAddresses",
-                  obj.recID
-                )}
-              />
-              <button
-                onClick={props.removeContactField("streetAddresses", index)}
-              >
-                Trash
-              </button>
+              <div className={styles.formRowEven}>
+                <input
+                  className={styles.formRadio}
+                  type="radio"
+                  name="primaryStreet"
+                  value=""
+                  checked={obj.primaryStreet}
+                  onChange={props.handleArrChange(
+                    index,
+                    "streetAddresses",
+                    obj.recID
+                  )}
+                />
+                <button
+                  className={styles.deleteButton}
+                  onClick={props.removeContactField("streetAddresses", index)}
+                />
+              </div>
             </div>
           ))
         : ""}
