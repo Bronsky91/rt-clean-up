@@ -1,4 +1,7 @@
 $field-height: 4rem;
+$radio-size: 2.2rem;
+$add-icon-size: 3.5rem;
+$delete-icon-size: 2.2rem;
 
 .container {
   display: flex;
@@ -97,11 +100,11 @@ $field-height: 4rem;
 }
 
 .deleteButton {
-  flex: 1 1 2.5rem;
-  width: 2.5rem;
-  max-width: 2.5rem;
-  height: 2.5rem;
-  max-height: 2.5rem;
+  flex: 1 1 $delete-icon-size;
+  width: $delete-icon-size;
+  max-width: $delete-icon-size;
+  height: $delete-icon-size;
+  max-height: $delete-icon-size;
   background-image: url("/entry-delete.png");
   background-size: cover;
   background-color: Transparent;
@@ -113,11 +116,11 @@ $field-height: 4rem;
 }
 
 .addButton {
-  flex: 1 1 2.5rem;
-  width: 2.5rem;
-  max-width: 2.5rem;
-  height: 2.5rem;
-  max-height: 2.5rem;
+  flex: 1 1 $add-icon-size;
+  width: $add-icon-size;
+  max-width: $add-icon-size;
+  height: $add-icon-size;
+  max-height: $add-icon-size;
   background-image: url("/entry-add.png");
   background-size: cover;
   background-color: Transparent;
@@ -190,11 +193,11 @@ $field-height: 4rem;
 }
 
 .formRadio {
-  flex: 1 1 2.5rem;
-  width: 2.5rem;
-  max-width: 2.5rem;
-  height: 2.5rem;
-  max-height: 2.5rem;
+  flex: 1 1 $radio-size;
+  width: $radio-size;
+  max-width: $radio-size;
+  height: $radio-size;
+  max-height: $radio-size;
 }
 
 .formColumn {
