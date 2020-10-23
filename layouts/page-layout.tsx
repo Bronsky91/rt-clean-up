@@ -63,7 +63,7 @@ export default function PageLayout({ children }) {
                   router.pathname === "/" ? styles.active : styles.inactive
                 }
               >
-                {router.pathname === "/data-cleanup" ? (
+                {router.pathname !== "/" ? (
                   <img src="/dashboard-icon.png" />
                 ) : (
                   "DASHBOARD"
@@ -82,14 +82,18 @@ export default function PageLayout({ children }) {
             <Link href={isRedtailAuth ? "/data-cleanup" : "/"}>
               <a
                 className={
-                  router.pathname === "/data-cleanup"
-                    ? styles.active
-                    : styles.inactive
+                  router.pathname !== "/" ? styles.active : styles.inactive
                 }
                 onClick={cleanupClickHandler}
               >
-                {router.pathname === "/data-cleanup" ? (
-                  <img src="/data-cleanup-icon.png" />
+                {router.pathname !== "/" ? (
+                  <img
+                    src={
+                      router.pathname === "/data-cleanup"
+                        ? "/data-cleanup-icon-active.png"
+                        : "/data-cleanup-icon.png"
+                    }
+                  />
                 ) : (
                   "DATA CLEANUP"
                 )}

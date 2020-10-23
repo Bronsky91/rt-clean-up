@@ -93,11 +93,11 @@ $headerHeight: 10rem;
 }
 
 .inactive {
-  text-shadow: none;
+  filter: drop-shadow(none);
 }
 
 .active {
-  text-shadow: 0 3px 6px;
+  filter: drop-shadow(0px 3px 6px white);
 }
 
 .main {
