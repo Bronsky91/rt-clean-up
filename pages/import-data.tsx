@@ -4,7 +4,6 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import Loader from "react-loader-spinner";
 import { useState } from "react";
-import { process.env.NEXT_PUBLIC_API_URL } from "../constants";
 import { useRouter } from "next/router";
 import Login from "./login";
 
@@ -78,9 +77,12 @@ export default function ImportDataPage(props) {
   const pollProcess = async () => {
     // Our check function
     const checkBackupProcessed = async () => {
-      const result = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/rt/check-backup-upload`, {
-        withCredentials: true,
-      });
+      const result = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/rt/check-backup-upload`,
+        {
+          withCredentials: true,
+        }
+      );
       if (result.status === 200) {
         setUploadComplete(true);
         setProcessing(false);

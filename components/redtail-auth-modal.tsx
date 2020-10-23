@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import Modal from "react-modal";
 import styles from "../styles/RedtailAuth.module.scss";
-import { process.env.NEXT_PUBLIC_API_URL } from "../constants";
 
 export default function RedtailAuthModal(props) {
   const router = useRouter();

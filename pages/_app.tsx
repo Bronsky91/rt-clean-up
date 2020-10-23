@@ -2,7 +2,6 @@ import React from "react";
 import axios from "axios";
 import "../styles/globals.scss";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-import { process.env.NEXT_PUBLIC_API_URL } from "../constants";
 import cookie from "cookie";
 import Cookies from "js-cookie";
 
@@ -28,11 +27,14 @@ MyApp.getInitialProps = async (args) => {
   }
 
   const headers = jwt ? { cookie: jwt } : {};
-  const result = await axios.get(process.env.NEXT_PUBLIC_API_URL + "/users/auth-check", {
-    withCredentials: true,
-    validateStatus: (status) => status < 500,
-    headers,
-  });
+  const result = await axios.get(
+    process.env.NEXT_PUBLIC_API_URL + "/users/auth-check",
+    {
+      withCredentials: true,
+      validateStatus: (status) => status < 500,
+      headers,
+    }
+  );
 
   pageProps.isAuth = result.status === 200;
   pageProps.rtAuth = result.data.rtAuth;

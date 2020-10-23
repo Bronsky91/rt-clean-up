@@ -1,5 +1,4 @@
 import Axios from "axios";
-import { process.env.NEXT_PUBLIC_API_URL } from "../constants";
 import { v4 as uuid } from "uuid";
 import { fromRedtailDatestring } from "./redtail-datestrings";
 import { RedtailContactMasterRec } from "../interfaces/redtail-contact.interface";

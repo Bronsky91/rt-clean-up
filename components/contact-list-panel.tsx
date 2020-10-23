@@ -1,4 +1,3 @@
-import { process.env.NEXT_PUBLIC_API_URL } from "../constants";
 import { useEffect, useState } from "react";
 import styles from "../styles/ContactListPanel.module.scss";
 import ContactFilter from "./filter/contact-filter";

@@ -5,7 +5,6 @@ import styles from "../styles/PageLayout.module.scss";
 import { useState } from "react";
 import RedtailAuthModal from "../components/redtail-auth-modal";
 import Axios from "axios";
-import { process.env.NEXT_PUBLIC_API_URL } from "../constants";
 
 export default function PageLayout({ children }) {
   const router = useRouter();

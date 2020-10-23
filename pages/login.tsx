@@ -1,6 +1,5 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.scss";
-import { process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL } from "../constants";
 import PageLayout from "../layouts/page-layout";
 import Modal from "react-modal";
 
