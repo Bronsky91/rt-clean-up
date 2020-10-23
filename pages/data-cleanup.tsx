@@ -3,7 +3,7 @@ import styles from "../styles/DataCleanupPage.module.scss";
 import axios from "axios";
 import LoadingOverlay from "react-loading-overlay";
 import { useEffect, useRef, useState } from "react";
-import { API_URL } from "../constants";
+import { process.env.NEXT_PUBLIC_API_URL } from "../constants";
 import { useRouter } from "next/router";
 import Login from "./login";
 import { getContactAndPopulateForm } from "../utils/get-contact-and-populate-form";
@@ -42,7 +42,7 @@ export default function DataCleanupPage(props) {
       setLoadingPage(true);
       // If authenticated, load contact data
       axios
-        .get(`${API_URL}/rt/get-contacts`, { withCredentials: true })
+        .get(`${process.env.NEXT_PUBLIC_API_URL}/rt/get-contacts`, { withCredentials: true })
         .then((res) => {
           if (mounted) {
             const list: RedtailContactListRec = res.data;
@@ -74,7 +74,7 @@ export default function DataCleanupPage(props) {
           }
 
           axios
-            .get(`${API_URL}/rt/dropdowns`, { withCredentials: true })
+            .get(`${process.env.NEXT_PUBLIC_API_URL}/rt/dropdowns`, { withCredentials: true })
             .then((res) => {
               if (mounted) {
                 const dropdownData: RedtailSettingsData = res.data;
@@ -327,7 +327,7 @@ export default function DataCleanupPage(props) {
       setLoadingPage(false);
     } else {
       axios
-        .get(`${API_URL}/rt/get-contacts?page=${updatedPage}`, {
+        .get(`${process.env.NEXT_PUBLIC_API_URL}/rt/get-contacts?page=${updatedPage}`, {
           withCredentials: true,
         })
         .then((res) => {
@@ -373,7 +373,7 @@ export default function DataCleanupPage(props) {
     setSavingContact(true);
     axios
       .post(
-        `${API_URL}/rt/contact-submit`,
+        `${process.env.NEXT_PUBLIC_API_URL}/rt/contact-submit`,
         { data: prepareContactSubmitData(formData, sourceContactRef) },
         { withCredentials: true }
       )

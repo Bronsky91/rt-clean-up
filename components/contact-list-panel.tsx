@@ -1,4 +1,4 @@
-import { API_URL } from "../constants";
+import { process.env.NEXT_PUBLIC_API_URL } from "../constants";
 import { useEffect, useState } from "react";
 import styles from "../styles/ContactListPanel.module.scss";
 import ContactFilter from "./filter/contact-filter";
@@ -122,7 +122,7 @@ export default function ContactListPanel(props) {
     const searchParams: RedtailSearchParam = Object.assign({}, ...mappedParams);
     axios
       .post(
-        `${API_URL}/rt/search-contacts`,
+        `${process.env.NEXT_PUBLIC_API_URL}/rt/search-contacts`,
         { data: { params: searchParams } },
         { withCredentials: true }
       )

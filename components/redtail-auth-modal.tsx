@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import Modal from "react-modal";
 import styles from "../styles/RedtailAuth.module.scss";
-import { API_URL } from "../constants";
+import { process.env.NEXT_PUBLIC_API_URL } from "../constants";
 
 export default function RedtailAuthModal(props) {
   const router = useRouter();
@@ -28,7 +28,7 @@ export default function RedtailAuthModal(props) {
     e.preventDefault();
 
     Axios.post(
-      `${API_URL}/users/redtail-auth`,
+      `${process.env.NEXT_PUBLIC_API_URL}/users/redtail-auth`,
       { data: formData },
       { withCredentials: true }
     )

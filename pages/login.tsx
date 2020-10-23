@@ -1,6 +1,6 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.scss";
-import { GOOGLE_AUTH_URL } from "../constants";
+import { process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL } from "../constants";
 import PageLayout from "../layouts/page-layout";
 import Modal from "react-modal";
 
@@ -32,7 +32,7 @@ export default function Login() {
       >
         <h2 className={styles.loginTitle}>Redtail Clean Up Tool</h2>
         <div className={styles.loginButton}>
-          <a href={GOOGLE_AUTH_URL}>
+          <a href={process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL}>
             <img src="/btn_google_signin_dark_normal_web@2x.png"></img>
           </a>
         </div>

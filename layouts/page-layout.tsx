@@ -5,7 +5,7 @@ import styles from "../styles/PageLayout.module.scss";
 import { useState } from "react";
 import RedtailAuthModal from "../components/redtail-auth-modal";
 import Axios from "axios";
-import { API_URL } from "../constants";
+import { process.env.NEXT_PUBLIC_API_URL } from "../constants";
 
 export default function PageLayout({ children }) {
   const router = useRouter();
@@ -20,7 +20,7 @@ export default function PageLayout({ children }) {
   const closeModal = () => {
     setIsOpen(false);
 
-    Axios.get(`${API_URL}/users/rt-auth-check`, {
+    Axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/rt-auth-check`, {
       withCredentials: true,
     })
       .then((res) => {

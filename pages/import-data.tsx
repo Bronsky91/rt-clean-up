@@ -4,7 +4,7 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import Loader from "react-loader-spinner";
 import { useState } from "react";
-import { API_URL } from "../constants";
+import { process.env.NEXT_PUBLIC_API_URL } from "../constants";
 import { useRouter } from "next/router";
 import Login from "./login";
 
@@ -57,7 +57,7 @@ export default function ImportDataPage(props) {
   };
 
   const fileUpload = (file: File) => {
-    const url = `${API_URL}/rt/backup-upload`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/rt/backup-upload`;
     const formData = new FormData();
     formData.append("backup", file);
     const config = {
@@ -78,7 +78,7 @@ export default function ImportDataPage(props) {
   const pollProcess = async () => {
     // Our check function
     const checkBackupProcessed = async () => {
-      const result = await axios.get(`${API_URL}/rt/check-backup-upload`, {
+      const result = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/rt/check-backup-upload`, {
         withCredentials: true,
       });
       if (result.status === 200) {

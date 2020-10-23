@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { API_URL } from "../constants";
+import { process.env.NEXT_PUBLIC_API_URL } from "../constants";
 import { v4 as uuid } from "uuid";
 import { fromRedtailDatestring } from "./redtail-datestrings";
 import { RedtailContactMasterRec } from "../interfaces/redtail-contact.interface";
@@ -19,7 +19,7 @@ export const getContactAndPopulateForm = (
   };
 
   return Axios.post(
-    `${API_URL}/rt/get-contact`,
+    `${process.env.NEXT_PUBLIC_API_URL}/rt/get-contact`,
     { id },
     { withCredentials: true }
   ).then((res) => {
