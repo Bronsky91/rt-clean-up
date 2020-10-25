@@ -11,7 +11,7 @@ export default function AddressFields(props) {
         ? addresses.map((obj, index) => (
             <div className={styles.formRow} key={obj.key}>
               <input
-                className={styles.formSoloInput}
+                className={styles.formSoloInputLong}
                 type="text"
                 name="streetAddress"
                 value={obj.streetAddress || ""}
@@ -22,7 +22,7 @@ export default function AddressFields(props) {
                 )}
               />
               <input
-                className={styles.formSoloInput}
+                className={styles.formSoloInputLong}
                 type="text"
                 name="secondaryAddress"
                 value={obj.secondaryAddress || ""}
@@ -44,7 +44,7 @@ export default function AddressFields(props) {
                 )}
               />
               <input
-                className={styles.formSoloInput}
+                className={styles.formSoloInputShort}
                 type="text"
                 name="state"
                 value={obj.state || ""}

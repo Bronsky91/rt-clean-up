@@ -2,6 +2,9 @@ $field-height: 4rem;
 $radio-size: 2.2rem;
 $add-icon-size: 3.5rem;
 $delete-icon-size: 2.2rem;
+$solo-field-width: 13rem;
+$short-field-divider: 2;
+$long-field-multiplyer: 1.75;
 
 .container {
   display: flex;
@@ -179,6 +182,12 @@ $delete-icon-size: 2.2rem;
   margin: 0.2rem;
 }
 
+.formLabelledInput {
+  width: 20rem;
+  height: $field-height;
+  position: relative;
+}
+
 .formLabel {
   color: white;
   width: 12rem;
@@ -190,23 +199,92 @@ $delete-icon-size: 2.2rem;
   line-height: 250%;
 }
 
-.formLabelledInput {
-  width: 20rem;
+.formHeaderLabel {
+  color: white;
   height: $field-height;
-  position: relative;
+  display: inline-block;
+  text-align: left;
+  padding-left: 0.5rem;
+  font-size: 1.4rem;
+  line-height: 250%;
+  width: $solo-field-width;
+  min-width: $solo-field-width;
+  max-width: $solo-field-width;
+}
+
+.formHeaderLabelShort {
+  color: white;
+  height: $field-height;
+  display: inline-block;
+  text-align: left;
+  padding-left: 0.5rem;
+  font-size: 1.4rem;
+  line-height: 250%;
+  width: $solo-field-width / $short-field-divider;
+  min-width: $solo-field-width / $short-field-divider;
+  max-width: $solo-field-width / $short-field-divider;
+}
+
+.formHeaderLabelLong {
+  color: white;
+  height: $field-height;
+  display: inline-block;
+  text-align: left;
+  padding-left: 0.5rem;
+  font-size: 1.4rem;
+  line-height: 250%;
+  width: $solo-field-width * $long-field-multiplyer;
+  min-width: $solo-field-width * $long-field-multiplyer;
+  max-width: $solo-field-width * $long-field-multiplyer;
 }
 
 .formHeader {
   background-color: #4357ab;
   margin: 0.2rem;
   height: $field-height;
-  width: 13rem;
+  width: $solo-field-width;
+}
+
+.formHeaderShort {
+  background-color: #4357ab;
+  margin: 0.2rem;
+  height: $field-height;
+  width: $solo-field-width / $short-field-divider;
+  min-width: $solo-field-width / $short-field-divider;
+  max-width: $solo-field-width / $short-field-divider;
+}
+
+.formHeaderLong {
+  background-color: #4357ab;
+  margin: 0.2rem;
+  height: $field-height;
+  width: $solo-field-width * $long-field-multiplyer;
+  min-width: $solo-field-width * $long-field-multiplyer;
+  max-width: $solo-field-width * $long-field-multiplyer;
 }
 
 .formSoloInput {
   margin: 0.2rem;
   height: $field-height;
-  width: 13rem;
+  width: $solo-field-width;
+  min-width: $solo-field-width;
+  max-width: $solo-field-width;
+}
+
+.formSoloInputShort {
+  margin: 0.2rem;
+  height: $field-height;
+  width: $solo-field-width / $short-field-divider;
+  min-width: $solo-field-width / $short-field-divider;
+  max-width: $solo-field-width / $short-field-divider;
+}
+
+.formSoloInputLong {
+  margin: 0.2rem;
+  height: $field-height;
+  width: $solo-field-width * $long-field-multiplyer;
+  min-width: $solo-field-width * $long-field-multiplyer;
+  max-width: $solo-field-width * $long-field-multiplyer;
 }
 
 .formRadio {

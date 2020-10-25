@@ -24,7 +24,7 @@ export default function PhoneFields(props) {
               />
               <div>
                 <select
-                  className={styles.formSoloInput}
+                  className={styles.formSoloInputShort}
                   onChange={props.handleArrChange(
                     index,
                     "phoneNumbers",

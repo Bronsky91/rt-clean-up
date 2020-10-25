@@ -12,7 +12,7 @@ export default function EmailFields(props) {
         ? emails.map((obj, index) => (
             <div className={styles.formRow} key={obj.key}>
               <input
-                className={styles.formSoloInput}
+                className={styles.formSoloInputLong}
                 type="text"
                 name="emailAddress"
                 value={obj.emailAddress || ""}
@@ -25,7 +25,7 @@ export default function EmailFields(props) {
 
               <div>
                 <select
-                  className={styles.formSoloInput}
+                  className={styles.formSoloInputShort}
                   onChange={props.handleArrChange(
                     index,
                     "emailAddresses",

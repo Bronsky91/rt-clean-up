@@ -583,84 +583,81 @@ export default function DataCleanupPage(props) {
                 </div>
 
                 <div className={styles.formColumn}>
-                  <div className={styles.formRow}>
-                    <div className={styles.formColumn}>
-                      <DropDownField
-                        label="Category"
-                        fieldName="categoryID"
-                        fieldValue={formData.categoryID}
-                        dropDownItems={dropdownData.category_id}
-                        handleChange={handleChange}
-                      ></DropDownField>
+                  <DropDownField
+                    label="Category"
+                    fieldName="categoryID"
+                    fieldValue={formData.categoryID}
+                    dropDownItems={dropdownData.category_id}
+                    handleChange={handleChange}
+                  ></DropDownField>
 
-                      <DropDownField
-                        label="Status"
-                        fieldName="statusID"
-                        fieldValue={formData.statusID}
-                        dropDownItems={dropdownData.status_id}
-                        handleChange={handleChange}
-                      ></DropDownField>
+                  <DropDownField
+                    label="Status"
+                    fieldName="statusID"
+                    fieldValue={formData.statusID}
+                    dropDownItems={dropdownData.status_id}
+                    handleChange={handleChange}
+                  ></DropDownField>
 
-                      <DropDownField
-                        label="Source"
-                        fieldName="sourceID"
-                        fieldValue={formData.sourceID}
-                        dropDownItems={dropdownData.source_id}
-                        handleChange={handleChange}
-                      ></DropDownField>
+                  <DropDownField
+                    label="Source"
+                    fieldName="sourceID"
+                    fieldValue={formData.sourceID}
+                    dropDownItems={dropdownData.source_id}
+                    handleChange={handleChange}
+                  ></DropDownField>
 
-                      <TextField
-                        label="Tax ID"
-                        fieldName="taxID"
-                        fieldValue={formData.taxID}
-                        handleChange={handleChange}
-                      ></TextField>
+                  <TextField
+                    label="Tax ID"
+                    fieldName="taxID"
+                    fieldValue={formData.taxID}
+                    handleChange={handleChange}
+                  ></TextField>
 
-                      <DropDownField
-                        label="Servicing Advisor"
-                        fieldName="servicingAdvisorID"
-                        fieldValue={formData.servicingAdvisorID}
-                        dropDownItems={dropdownData.servicingAdvisors}
-                        handleChange={handleChange}
-                      ></DropDownField>
+                  <DropDownField
+                    label="Servicing Advisor"
+                    fieldName="servicingAdvisorID"
+                    fieldValue={formData.servicingAdvisorID}
+                    dropDownItems={dropdownData.servicingAdvisors}
+                    handleChange={handleChange}
+                  ></DropDownField>
 
-                      <DropDownField
-                        label="Writing Advisor"
-                        fieldName="writingAdvisorID"
-                        fieldValue={formData.writingAdvisorID}
-                        dropDownItems={dropdownData.writingAdvisors}
-                        handleChange={handleChange}
-                      ></DropDownField>
-                    </div>
+                  <DropDownField
+                    label="Writing Advisor"
+                    fieldName="writingAdvisorID"
+                    fieldValue={formData.writingAdvisorID}
+                    dropDownItems={dropdownData.writingAdvisors}
+                    handleChange={handleChange}
+                  ></DropDownField>
+                </div>
+                <div className={styles.formRow}>
+                  <div
+                    className={`${styles.formColumn} ${styles.buttonColumn}`}
+                  >
+                    <div className={styles.buttonRow}>
+                      <button
+                        className={styles.contactPrevButton}
+                        onClick={handleContactPrevClick}
+                        disabled={contactPrevDisabled}
+                      />
 
-                    <div
-                      className={`${styles.formColumn} ${styles.buttonColumn}`}
-                    >
-                      <div className={styles.buttonRow}>
+                      <div className={styles.saveButtonContainer}>
+                        <button type="submit" className={styles.saveButton}>
+                          SAVE
+                        </button>
                         <button
-                          className={styles.contactPrevButton}
-                          onClick={handleContactPrevClick}
-                          disabled={contactPrevDisabled}
-                        />
-
-                        <div className={styles.saveButtonContainer}>
-                          <button type="submit" className={styles.saveButton}>
-                            SAVE
-                          </button>
-                          <button
-                            className={styles.undoButton}
-                            onClick={handleUndo}
-                          >
-                            UNDO
-                          </button>
-                        </div>
-
-                        <button
-                          className={styles.contactNextButton}
-                          onClick={handleContactNextClick}
-                          disabled={contactNextDisabled}
-                        />
+                          className={styles.undoButton}
+                          onClick={handleUndo}
+                        >
+                          UNDO
+                        </button>
                       </div>
+
+                      <button
+                        className={styles.contactNextButton}
+                        onClick={handleContactNextClick}
+                        disabled={contactNextDisabled}
+                      />
                     </div>
                   </div>
                 </div>
@@ -669,16 +666,20 @@ export default function DataCleanupPage(props) {
                 <div className={styles.formRow}>
                   <div className={styles.formColumn}>
                     <div className={styles.formRow}>
-                      <div className={styles.formHeader}>
-                        <label className={styles.formLabel}>
+                      <div className={styles.formHeaderLong}>
+                        <label className={styles.formHeaderLabelLong}>
                           Email Address
                         </label>
                       </div>
-                      <div className={styles.formHeader}>
-                        <label className={styles.formLabel}>Type</label>
+                      <div className={styles.formHeaderShort}>
+                        <label className={styles.formHeaderLabelShort}>
+                          Type
+                        </label>
                       </div>
                       <div className={styles.formHeader}>
-                        <label className={styles.formLabel}>Primary?</label>
+                        <label className={styles.formHeaderLabel}>
+                          Primary?
+                        </label>
                       </div>
                     </div>
                     <EmailFields
@@ -699,8 +700,10 @@ export default function DataCleanupPage(props) {
                       <div className={styles.formHeader}>
                         <label className={styles.formLabel}>Phone Number</label>
                       </div>
-                      <div className={styles.formHeader}>
-                        <label className={styles.formLabel}>Type</label>
+                      <div className={styles.formHeaderShort}>
+                        <label className={styles.formHeaderLabelShort}>
+                          Type
+                        </label>
                       </div>
                       <div className={styles.formHeader}>
                         <label className={styles.formLabel}>Primary?</label>
@@ -725,28 +728,32 @@ export default function DataCleanupPage(props) {
               <div className={styles.formRow}>
                 <div className={styles.formColumn}>
                   <div className={styles.formRow}>
-                    <div className={styles.formHeader}>
-                      <label className={styles.formLabel}>Street Address</label>
+                    <div className={styles.formHeaderLong}>
+                      <label className={styles.formHeaderLabelLong}>
+                        Street Address
+                      </label>
                     </div>
-                    <div className={styles.formHeader}>
-                      <label className={styles.formLabel}>
+                    <div className={styles.formHeaderLong}>
+                      <label className={styles.formHeaderLabelLong}>
                         Secondary Address
                       </label>
                     </div>
                     <div className={styles.formHeader}>
-                      <label className={styles.formLabel}>City</label>
+                      <label className={styles.formHeaderLabel}>City</label>
+                    </div>
+                    <div className={styles.formHeaderShort}>
+                      <label className={styles.formHeaderLabelShort}>
+                        State
+                      </label>
                     </div>
                     <div className={styles.formHeader}>
-                      <label className={styles.formLabel}>State</label>
+                      <label className={styles.formHeaderLabel}>Zip</label>
                     </div>
                     <div className={styles.formHeader}>
-                      <label className={styles.formLabel}>Zip</label>
+                      <label className={styles.formHeaderLabel}>Type</label>
                     </div>
                     <div className={styles.formHeader}>
-                      <label className={styles.formLabel}>Type</label>
-                    </div>
-                    <div className={styles.formHeader}>
-                      <label className={styles.formLabel}>Primary?</label>
+                      <label className={styles.formHeaderLabel}>Primary?</label>
                     </div>
                   </div>
                   <AddressFields
