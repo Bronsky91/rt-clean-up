@@ -633,46 +633,33 @@ export default function DataCleanupPage(props) {
                       ></DropDownField>
                     </div>
 
-                    {/* Place holder fields for DOB and Tax ID at last */}
-                    <div className={styles.formColumn}>
-                      <TextField
-                        label="Place Holder"
-                        fieldName="referredBy"
-                        fieldValue=""
-                        handleChange={handleChange}
-                      ></TextField>
-                      <TextField
-                        label="Place Holder"
-                        fieldName="referredBy"
-                        fieldValue=""
-                        handleChange={handleChange}
-                      ></TextField>
-                    </div>
-                    {/* -------- */}
-
-                    <div className={styles.formColumn}>
-                      <div className={styles.saveButtonContainer}>
-                        <button type="submit" className={styles.saveButton}>
-                          SAVE
-                        </button>
+                    <div
+                      className={`${styles.formColumn} ${styles.buttonColumn}`}
+                    >
+                      <div className={styles.buttonRow}>
                         <button
-                          className={styles.undoButton}
-                          onClick={handleUndo}
-                        >
-                          UNDO
-                        </button>
-                        <div className={styles.formRow}>
+                          className={styles.contactPrevButton}
+                          onClick={handleContactPrevClick}
+                          disabled={contactPrevDisabled}
+                        />
+
+                        <div className={styles.saveButtonContainer}>
+                          <button type="submit" className={styles.saveButton}>
+                            SAVE
+                          </button>
                           <button
-                            className={styles.contactPrevButton}
-                            onClick={handleContactPrevClick}
-                            disabled={contactPrevDisabled}
-                          />
-                          <button
-                            className={styles.contactNextButton}
-                            onClick={handleContactNextClick}
-                            disabled={contactNextDisabled}
-                          />
+                            className={styles.undoButton}
+                            onClick={handleUndo}
+                          >
+                            UNDO
+                          </button>
                         </div>
+
+                        <button
+                          className={styles.contactNextButton}
+                          onClick={handleContactNextClick}
+                          disabled={contactNextDisabled}
+                        />
                       </div>
                     </div>
                   </div>

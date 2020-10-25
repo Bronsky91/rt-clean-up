@@ -70,15 +70,6 @@ export default function PageLayout({ children }) {
                 )}
               </a>
             </Link>
-            {/* <Link href="/contacts">
-            <a
-              className={
-                router.pathname == "/contacts" ? styles.active : styles.inactive
-              }
-            >
-              CONTACTS
-            </a>
-          </Link> */}
             <Link href={isRedtailAuth ? "/data-cleanup" : "/"}>
               <a
                 className={
@@ -86,6 +77,7 @@ export default function PageLayout({ children }) {
                 }
                 onClick={cleanupClickHandler}
               >
+                {/* TODO: Fix to accomodate for more than one page */}
                 {router.pathname !== "/" ? (
                   <img src="/data-cleanup-icon.png" />
                 ) : (

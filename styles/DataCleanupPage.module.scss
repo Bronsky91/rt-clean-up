@@ -19,8 +19,23 @@ $delete-icon-size: 2.2rem;
   color: #3f4f7a;
 }
 
+.buttonRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.buttonColumn {
+  margin-left: 20em !important;
+  justify-content: center;
+}
+
+.saveButtonContainer {
+  display: flex;
+  flex-direction: column;
+}
+
 .saveButton {
-  margin: 0.5rem auto;
+  margin: 2rem auto;
   opacity: 0.95;
   box-shadow: 0 0.3rem 0.6rem 0 rgba(0, 0, 0, 0.16);
   background-color: #6896d6;
@@ -66,6 +81,7 @@ $delete-icon-size: 2.2rem;
 }
 
 .contactPrevButton {
+  margin-top: 5rem;
   width: 7.2rem;
   height: 7.2rem;
   background-image: url("/arrowcircle-left.png");
@@ -83,6 +99,7 @@ $delete-icon-size: 2.2rem;
 }
 
 .contactNextButton {
+  margin-top: 5rem;
   width: 7.2rem;
   height: 7.2rem;
   background-image: url("/arrowcircle-right.png");
@@ -226,10 +243,4 @@ $delete-icon-size: 2.2rem;
   overflow: auto;
   height: auto;
   max-height: ($field-height * 3) + 1rem;
-}
-
-.saveButtonContainer {
-  display: flex;
-  flex-direction: column;
-  margin-top: 15em;
 }

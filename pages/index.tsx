@@ -56,7 +56,7 @@ export default function DashboardPage(props) {
       </Link>
 
       {/* No Excel page/function yet */}
-      <Link href="/import-data">
+      <Link href="#">
         <a>
           <div className={styles.buttonContainer}>
             <img src="/excel-block.svg"></img>
