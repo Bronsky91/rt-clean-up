@@ -17,10 +17,10 @@ export interface ContactFormData {
   emailAddresses: EmailAddressFormData[];
   streetAddresses: StreetAddressFormData[];
   contactFieldsToDelete: {
-    emailAddresses: number[],
-    streetAddresses: number[],
-    phoneNumbers: number[]
-  }
+    emailAddresses: number[];
+    streetAddresses: number[];
+    phoneNumbers: number[];
+  };
 }
 
 export interface PhoneNumberFormData {
@@ -49,4 +49,9 @@ export interface StreetAddressFormData {
   zip: string;
   typeID: string;
   primaryStreet: boolean;
+}
+
+export interface StateAbbr {
+  short: string;
+  long: string;
 }
