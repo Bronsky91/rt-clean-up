@@ -65,13 +65,9 @@ export const prepareContactSubmitData = (
 
     const updatedEmail: EmailUpdate = {
       id: item.ID,
-      emailable_id: fromSource ? fromSource.emailable_id : 0,
       address: item.emailAddress,
       email_type: item.typeID,
-      custom_type_title: fromSource.custom_type_title,
-      description: fromSource.description,
       is_primary: item.primaryEmail,
-      is_preferred: fromSource.is_preferred,
     };
     return updatedEmail;
   });
@@ -82,15 +78,9 @@ export const prepareContactSubmitData = (
     );
     const updatedPhone: PhoneUpdate = {
       id: item.ID,
-      country_code: fromSource.country_code,
       number: item.phoneNumber,
-      extension: fromSource.extension,
       phone_type: item.typeID,
-      speed_dial: fromSource.speed_dial,
-      is_preferred: fromSource.is_preferred,
       is_primary: item.primaryPhone,
-      custom_type_title: fromSource.custom_type_title,
-      description: fromSource.description,
     };
 
     return updatedPhone;
@@ -104,7 +94,6 @@ export const prepareContactSubmitData = (
       id: item.ID,
       address: item.address,
       url_type: item.typeID,
-      custom_type_title: fromSource.custom_type_title,
     };
 
     return updatedUrl;

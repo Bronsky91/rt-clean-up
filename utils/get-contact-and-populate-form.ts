@@ -88,9 +88,6 @@ export const getContactAndPopulateForm = (
       },
     };
 
-    console.log("loadedFormData");
-    console.log(loadedFormData);
-
     updateFormData(loadedFormData);
     updateOriginalFormData(JSON.parse(JSON.stringify(loadedFormData))); // force pass by val not ref
     updateFormDirty(false);
