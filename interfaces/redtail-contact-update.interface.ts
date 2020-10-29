@@ -15,15 +15,19 @@ export interface RedtailContactUpdate {
 
 export interface ContactRecordUpdate {
   id: number;
-  type: string;
-  source_id: number;
-  status_id: number;
-  category_id: number;
+  salutation_id: number;
   first_name: string;
   middle_name: string;
   last_name: string;
-  tax_id: string;
+  nickname: string;
+  gender_id: number;
   dob: string;
+  category_id: number;
+  status_id: number;
+  source_id: number;
+  tax_id: string | null;
+  servicing_advisor_id: number;
+  writing_advisor_id: number;
 }
 
 export interface AddressUpdate {

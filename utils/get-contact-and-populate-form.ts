@@ -23,7 +23,7 @@ export const getContactAndPopulateForm = (
     { id },
     { withCredentials: true }
   ).then((res) => {
-    const data: RedtailContactRec = res.data;
+    const data: RedtailContactRec = res.data.contact;
     updateSourceContactRef(data);
 
     const loadedFormData: ContactFormData = {
@@ -41,37 +41,45 @@ export const getContactAndPopulateForm = (
       taxID: data.tax_id,
       servicingAdvisorID: data.servicing_advisor_id,
       writingAdvisorID: data.writing_advisor_id,
-      phones: data.phones.map((obj: PhoneRec) => ({
-        key: uuid(),
-        ID: obj.id,
-        phoneNumber: obj.number,
-        typeID: obj.phone_type,
-        primaryPhone: obj.is_primary,
-      })),
-      emails: data.emails.map((obj: EmailRec) => ({
-        key: uuid(),
-        ID: obj.id,
-        emailAddress: obj.address,
-        typeID: obj.email_type,
-        primaryEmail: obj.is_primary,
-      })),
-      addresses: data.addresses.map((obj: AddressRec) => ({
-        key: uuid(),
-        ID: obj.id,
-        streetAddress: obj.street_address,
-        secondaryAddress: obj.secondary_address,
-        city: obj.city,
-        state: obj.state,
-        zip: obj.zip,
-        typeID: obj.address_type,
-        primaryStreet: obj.is_primary,
-      })),
-      urls: data.urls.map((obj: UrlRec) => ({
-        key: uuid(),
-        ID: obj.id,
-        website: obj.address,
-        typeID: obj.url_type,
-      })),
+      phones: data.phones
+        ? data.phones.map((obj: PhoneRec) => ({
+            key: uuid(),
+            ID: obj.id,
+            phoneNumber: obj.number,
+            typeID: obj.phone_type,
+            primaryPhone: obj.is_primary,
+          }))
+        : null,
+      emails: data.emails
+        ? data.emails.map((obj: EmailRec) => ({
+            key: uuid(),
+            ID: obj.id,
+            emailAddress: obj.address,
+            typeID: obj.email_type,
+            primaryEmail: obj.is_primary,
+          }))
+        : null,
+      addresses: data.addresses
+        ? data.addresses.map((obj: AddressRec) => ({
+            key: uuid(),
+            ID: obj.id,
+            streetAddress: obj.street_address,
+            secondaryAddress: obj.secondary_address,
+            city: obj.city,
+            state: obj.state,
+            zip: obj.zip,
+            typeID: obj.address_type,
+            primaryStreet: obj.is_primary,
+          }))
+        : null,
+      urls: data.urls
+        ? data.urls.map((obj: UrlRec) => ({
+            key: uuid(),
+            ID: obj.id,
+            address: obj.address,
+            typeID: obj.url_type,
+          }))
+        : null,
       contactFieldsToDelete: {
         addresses: [],
         emails: [],
@@ -79,6 +87,9 @@ export const getContactAndPopulateForm = (
         urls: [],
       },
     };
+
+    console.log("loadedFormData");
+    console.log(loadedFormData);
 
     updateFormData(loadedFormData);
     updateOriginalFormData(JSON.parse(JSON.stringify(loadedFormData))); // force pass by val not ref

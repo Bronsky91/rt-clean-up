@@ -22,44 +22,19 @@ export const prepareContactSubmitData = (
 ) => {
   const contactRecord: ContactRecordUpdate = {
     id: contactRec.id,
-    type: contactRec.type,
-    source_id: formData.sourceID,
-    status_id: formData.statusID,
-    category_id: formData.categoryID,
+    salutation_id: formData.salutationID,
     first_name: formData.firstName,
     middle_name: formData.middleName,
     last_name: formData.lastName,
-    tax_id: formData.taxID,
+    nickname: formData.nickname,
+    gender_id: formData.genderID,
     dob: formData.dateOfBirth,
-    /*
-    AnniversaryDate: contact.an
-    CategoryID: formData.categoryID,
-    ClientID: contact.ContactRecord.ClientID,
-    ClientSinceDate: contact.ContactRecord.ClientSinceDate,
-    CompanyID: contact.ContactRecord.CompanyID,
-    DateOfBirth: toRedtailDatestring(formData.dateOfBirth),
-    Designation: contact.ContactRecord.Designation,
-    Family: contact.ContactRecord.Family,
-    FamilyHeadID: contact.ContactRecord.FamilyHeadID,
-    Familyname: contact.ContactRecord.Familyname,
-    Firstname: formData.firstName,
-    Gender: formData.gender,
-    JobTitle: contact.ContactRecord.JobTitle,
-    Lastname: formData.lastName,
-    MaritalStatus: contact.ContactRecord.MaritalStatus,
-    Middlename: formData.middleName,
-    Name: contact.ContactRecord.Name,
-    Nickname: formData.nickname,
-    ReferredBy: contact.ContactRecord.ReferredBy,
-    Salutation: formData.salutation,
-    ServicingAdvisorID: formData.servicingAdvisorID,
-    SourceID: formData.sourceID,
-    StatusID: formData.statusID,
-    Suffix: contact.ContactRecord.Suffix,
-    TaxID: formData.taxID,
-    TypeID: contact.ContactRecord.ClientType,
-    WritingAdvisorID: formData.writingAdvisorID,
-    */
+    category_id: formData.categoryID,
+    status_id: formData.statusID,
+    source_id: formData.sourceID,
+    tax_id: formData.taxID,
+    servicing_advisor_id: formData.servicingAdvisorID,
+    writing_advisor_id: formData.writingAdvisorID,
   };
 
   const addresses: AddressUpdate[] = formData.addresses.map((item) => {
@@ -127,7 +102,7 @@ export const prepareContactSubmitData = (
     );
     const updatedUrl: UrlUpdate = {
       id: item.ID,
-      address: item.website,
+      address: item.address,
       url_type: item.typeID,
       custom_type_title: fromSource.custom_type_title,
     };

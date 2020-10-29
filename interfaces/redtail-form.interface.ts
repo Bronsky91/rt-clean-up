@@ -56,7 +56,7 @@ export interface AddressFormData {
 export interface UrlFormData {
   ID: number;
   key: string;
-  website: string;
+  address: string;
   typeID: number;
 }
 

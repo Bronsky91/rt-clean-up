@@ -72,10 +72,10 @@ export const createEmptyFormData = (): Readonly<ContactFormData> =>
     taxID: "",
     servicingAdvisorID: 0,
     writingAdvisorID: 0,
-    phones: [createEmptyContactField["phoneNumbers"]()],
-    emails: [createEmptyContactField["emailAddresses"]()],
-    addresses: [createEmptyContactField["streetAddresses"]()],
-    urls: [createEmptyContactField["websites"]()],
+    phones: [createEmptyContactField["phones"]()],
+    emails: [createEmptyContactField["emails"]()],
+    addresses: [createEmptyContactField["addresses"]()],
+    urls: [createEmptyContactField["urls"]()],
     contactFieldsToDelete: {
       emails: [],
       addresses: [],
@@ -84,7 +84,6 @@ export const createEmptyFormData = (): Readonly<ContactFormData> =>
     },
   });
 
-//TODO: FIX
 export const createEmptyDropDownData = (): Readonly<RedtailSettingsData> =>
   Object.freeze({
     status_id: [],
@@ -129,12 +128,11 @@ export const createEmptyContactField = {
   urls: () => ({
     key: uuid(),
     ID: 0,
-    website: "",
+    address: "",
     typeID: 0,
   }),
 };
 
-//TODO: FIX
 export const createEmptyFilterData = (): Readonly<FilterData[]> =>
   Array.from([
     {
