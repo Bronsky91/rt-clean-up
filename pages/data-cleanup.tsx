@@ -25,7 +25,7 @@ import AddressFields from "../components/address-field";
 import DateField from "../components/date-field";
 import { RedtailContactListRec } from "../interfaces/redtail-contact-list.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
-import { RedtailContactMasterRec } from "../interfaces/redtail-contact.interface";
+import { RedtailContactRec } from "../interfaces/redtail-contact.interface";
 import { ContactFormData } from "../interfaces/redtail-form.interface";
 import DashboardPage from ".";
 export default function DataCleanupPage(props) {
@@ -116,7 +116,7 @@ export default function DataCleanupPage(props) {
   // If unathenticated with Redtail, load Dashboard component
   if (!isRedtailAuth) return <DashboardPage {...props} />;
 
-  const emptySourceContactRef: Readonly<RedtailContactMasterRec> = createEmptyContactRefData();
+  const emptySourceContactRef: Readonly<RedtailContactRec> = createEmptyContactRefData();
   const emptyFormData: Readonly<ContactFormData> = createEmptyFormData();
   const emptyDropDowns: Readonly<RedtailSettingsData> = createEmptyDropDownData();
   const initialSelectedContact: SelectedContact = {
@@ -178,10 +178,8 @@ export default function DataCleanupPage(props) {
     const contactIndex: number = isFiltered
       ? filteredContactList
           .map((contact) => contact.id)
-          .indexOf(sourceContactRef.ContactRecord.ClientID)
-      : contactList
-          .map((contact) => contact.id)
-          .indexOf(sourceContactRef.ContactRecord.ClientID);
+          .indexOf(sourceContactRef.id)
+      : contactList.map((contact) => contact.id).indexOf(sourceContactRef.id);
 
     setContactPrevDisabled(
       isFiltered
@@ -390,7 +388,7 @@ export default function DataCleanupPage(props) {
           if (isFiltered) {
             setFilteredContactList(
               filteredContactList.map((contact) =>
-                contact.id === sourceContactRef.ContactRecord.ClientID
+                contact.id === sourceContactRef.id
                   ? { ...contact, lastName: formData.lastName }
                   : contact
               )
@@ -398,14 +396,14 @@ export default function DataCleanupPage(props) {
           } else {
             setContactList(
               contactList.map((contact) =>
-                contact.id === sourceContactRef.ContactRecord.ClientID
+                contact.id === sourceContactRef.id
                   ? { ...contact, lastName: formData.lastName }
                   : contact
               )
             );
           }
           // Reload contact page from Redtail as a data validation measure
-          selectContact(sourceContactRef.ContactRecord.ClientID.toString());
+          selectContact(sourceContactRef.id.toString());
 
           alert("Contact Saved!");
         } else {
@@ -424,10 +422,8 @@ export default function DataCleanupPage(props) {
     const contactIndex: number = isFiltered
       ? filteredContactList
           .map((contact) => contact.id)
-          .indexOf(sourceContactRef.ContactRecord.ClientID)
-      : contactList
-          .map((contact) => contact.id)
-          .indexOf(sourceContactRef.ContactRecord.ClientID);
+          .indexOf(sourceContactRef.id)
+      : contactList.map((contact) => contact.id).indexOf(sourceContactRef.id);
     if (contactIndex === -1) return; // -1 indicates current contact's ID was not found in contact list
 
     if (isFiltered) {
@@ -459,10 +455,8 @@ export default function DataCleanupPage(props) {
     const contactIndex: number = isFiltered
       ? filteredContactList
           .map((contact) => contact.id)
-          .indexOf(sourceContactRef.ContactRecord.ClientID)
-      : contactList
-          .map((contact) => contact.id)
-          .indexOf(sourceContactRef.ContactRecord.ClientID);
+          .indexOf(sourceContactRef.id)
+      : contactList.map((contact) => contact.id).indexOf(sourceContactRef.id);
     if (contactIndex === -1) return; // -1 indicates current contact's ID was not found in contact list
 
     if (isFiltered) {
@@ -532,8 +526,8 @@ export default function DataCleanupPage(props) {
                 <div className={styles.formColumn}>
                   <DropDownField
                     label="Salutation"
-                    fieldName="salutation"
-                    fieldValue={formData.salutation}
+                    fieldName="salutationID"
+                    fieldValue={formData.salutationID}
                     dropDownItems={dropdownData.salutations}
                     handleChange={handleChange}
                   ></DropDownField>
@@ -568,9 +562,9 @@ export default function DataCleanupPage(props) {
 
                   <DropDownField
                     label="Gender"
-                    fieldName="gender"
-                    fieldValue={formData.gender}
-                    dropDownItems={dropdownData.gender}
+                    fieldName="genderID"
+                    fieldValue={formData.genderID}
+                    dropDownItems={dropdownData.genderTypes}
                     handleChange={handleChange}
                   ></DropDownField>
 
@@ -683,7 +677,7 @@ export default function DataCleanupPage(props) {
                       </div>
                     </div>
                     <EmailFields
-                      emails={formData.emailAddresses}
+                      emails={formData.emails}
                       handleArrChange={handleArrChange}
                       dropdownData={dropdownData}
                       removeContactField={removeContactField}
@@ -710,7 +704,7 @@ export default function DataCleanupPage(props) {
                       </div>
                     </div>
                     <PhoneFields
-                      phoneNumbers={formData.phoneNumbers}
+                      phoneNumbers={formData.phones}
                       handleArrChange={handleArrChange}
                       dropdownData={dropdownData}
                       removeContactField={removeContactField}
@@ -757,7 +751,7 @@ export default function DataCleanupPage(props) {
                     </div>
                   </div>
                   <AddressFields
-                    streetAddresses={formData.streetAddresses}
+                    streetAddresses={formData.addresses}
                     handleArrChange={handleArrChange}
                     dropdownData={dropdownData}
                     removeContactField={removeContactField}

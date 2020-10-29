@@ -1,54 +1,63 @@
 export interface ContactFormData {
   key: string;
-  salutation: string;
+  salutationID: number;
   firstName: string;
   middleName: string;
   lastName: string;
   nickname: string;
   dateOfBirth: string;
-  gender: string;
+  genderID: number;
   categoryID: number;
   statusID: number;
   sourceID: number;
   taxID: string;
   servicingAdvisorID: number;
   writingAdvisorID: number;
-  phoneNumbers: PhoneNumberFormData[];
-  emailAddresses: EmailAddressFormData[];
-  streetAddresses: StreetAddressFormData[];
+  phones: PhoneFormData[];
+  emails: EmailFormData[];
+  addresses: AddressFormData[];
+  urls: UrlFormData[];
   contactFieldsToDelete: {
-    emailAddresses: number[];
-    streetAddresses: number[];
-    phoneNumbers: number[];
+    emails: number[];
+    addresses: number[];
+    phones: number[];
+    urls: number[];
   };
 }
 
-export interface PhoneNumberFormData {
-  recID: number;
+export interface PhoneFormData {
+  ID: number;
   key: string;
   phoneNumber: string;
-  typeID: string;
+  typeID: number;
   primaryPhone: boolean;
 }
 
-export interface EmailAddressFormData {
-  recID: number;
+export interface EmailFormData {
+  ID: number;
   key: string;
   emailAddress: string;
   typeID: number;
   primaryEmail: boolean;
 }
 
-export interface StreetAddressFormData {
-  recID: number;
+export interface AddressFormData {
+  ID: number;
   key: string;
   streetAddress: string;
   secondaryAddress: string;
   city: string;
   state: string;
   zip: string;
-  typeID: string;
+  typeID: number;
   primaryStreet: boolean;
+}
+
+export interface UrlFormData {
+  ID: number;
+  key: string;
+  website: string;
+  typeID: number;
 }
 
 export interface StateAbbr {

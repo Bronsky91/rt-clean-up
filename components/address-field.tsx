@@ -1,12 +1,12 @@
 import {
   StateAbbr,
-  StreetAddressFormData,
+  AddressFormData,
 } from "../interfaces/redtail-form.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
 
 export default function AddressFields(props) {
-  const addresses: StreetAddressFormData[] = props.streetAddresses;
+  const addresses: AddressFormData[] = props.streetAddresses;
   const dropdownData: RedtailSettingsData = props.dropdownData;
 
   const states: StateAbbr[] = [
@@ -76,7 +76,7 @@ export default function AddressFields(props) {
                 onChange={props.handleArrChange(
                   index,
                   "streetAddresses",
-                  obj.recID
+                  obj.ID
                 )}
               />
               <input
@@ -87,7 +87,7 @@ export default function AddressFields(props) {
                 onChange={props.handleArrChange(
                   index,
                   "streetAddresses",
-                  obj.recID
+                  obj.ID
                 )}
               />
               <input
@@ -98,7 +98,7 @@ export default function AddressFields(props) {
                 onChange={props.handleArrChange(
                   index,
                   "streetAddresses",
-                  obj.recID
+                  obj.ID
                 )}
               />
               <div>
@@ -107,7 +107,7 @@ export default function AddressFields(props) {
                   onChange={props.handleArrChange(
                     index,
                     "streetAddresses",
-                    obj.recID
+                    obj.ID
                   )}
                   name="state"
                   value={obj.state || ""}
@@ -127,7 +127,7 @@ export default function AddressFields(props) {
                 onChange={props.handleArrChange(
                   index,
                   "streetAddresses",
-                  obj.recID
+                  obj.ID
                 )}
               />
               <div>
@@ -136,14 +136,14 @@ export default function AddressFields(props) {
                   onChange={props.handleArrChange(
                     index,
                     "streetAddresses",
-                    obj.recID
+                    obj.ID
                   )}
                   name="typeID"
                 >
                   {dropdownData && dropdownData.addressTypes ? (
                     dropdownData.addressTypes.map((obj, index) => (
-                      <option key={index} value={obj.TypeID || ""}>
-                        {obj.Description || ""}
+                      <option key={index} value={obj.id || ""}>
+                        {obj.name || ""}
                       </option>
                     ))
                   ) : (
@@ -161,7 +161,7 @@ export default function AddressFields(props) {
                   onChange={props.handleArrChange(
                     index,
                     "streetAddresses",
-                    obj.recID
+                    obj.ID
                   )}
                 />
                 <button

@@ -1,9 +1,9 @@
-import { EmailAddressFormData } from "../interfaces/redtail-form.interface";
+import { EmailFormData } from "../interfaces/redtail-form.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
 
 export default function EmailFields(props) {
-  const emails: EmailAddressFormData[] = props.emails;
+  const emails: EmailFormData[] = props.emails;
   const dropdownData: RedtailSettingsData = props.dropdownData;
 
   return (
@@ -19,7 +19,7 @@ export default function EmailFields(props) {
                 onChange={props.handleArrChange(
                   index,
                   "emailAddresses",
-                  obj.recID
+                  obj.ID
                 )}
               />
 
@@ -29,14 +29,14 @@ export default function EmailFields(props) {
                   onChange={props.handleArrChange(
                     index,
                     "emailAddresses",
-                    obj.recID
+                    obj.ID
                   )}
                   name="typeID"
                 >
-                  {dropdownData && dropdownData.internetTypes ? (
-                    dropdownData.internetTypes.map((obj, index) => (
-                      <option key={index} value={obj.TypeID || ""}>
-                        {obj.Description || ""}
+                  {dropdownData && dropdownData.emailTypes ? (
+                    dropdownData.emailTypes.map((obj, index) => (
+                      <option key={index} value={obj.id || ""}>
+                        {obj.name || ""}
                       </option>
                     ))
                   ) : (
@@ -54,7 +54,7 @@ export default function EmailFields(props) {
                   onChange={props.handleArrChange(
                     index,
                     "emailAddresses",
-                    obj.recID
+                    obj.ID
                   )}
                 />
                 <button

@@ -1,7 +1,14 @@
 import Axios from "axios";
 import { v4 as uuid } from "uuid";
 import { fromRedtailDatestring } from "./redtail-datestrings";
-import { RedtailContactMasterRec } from "../interfaces/redtail-contact.interface";
+import {
+  AddressRec,
+  EmailRec,
+  PhoneRec,
+  RedtailContactRec,
+  UrlRec,
+} from "../interfaces/redtail-contact.interface";
+import { ContactFormData } from "../interfaces/redtail-form.interface";
 
 export const getContactAndPopulateForm = (
   updateSourceContactRef,
@@ -11,75 +18,66 @@ export const getContactAndPopulateForm = (
   formData,
   id
 ) => {
-  const genderMap = {
-    M: "Male",
-    F: "Female",
-    Z: "Unknown",
-  };
-
   return Axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/rt/get-contact`,
     { id },
     { withCredentials: true }
   ).then((res) => {
-    const data: RedtailContactMasterRec = res.data;
+    const data: RedtailContactRec = res.data;
     updateSourceContactRef(data);
 
-    const loadedFormData = {
+    const loadedFormData: ContactFormData = {
       key: formData.key,
-      salutation: data.ContactRecord.Salutation
-        ? data.ContactRecord.Salutation.toString()
-        : "",
-      firstName: data.ContactRecord.Firstname,
-      middleName: data.ContactRecord.Middlename,
-      lastName: data.ContactRecord.Lastname,
-      nickname: data.ContactRecord.Nickname,
-      dateOfBirth: fromRedtailDatestring(data.ContactRecord.DateOfBirth),
-      gender: genderMap[data.ContactRecord.Gender],
-      categoryID: data.ContactRecord.CategoryID
-        ? data.ContactRecord.CategoryID
-        : 0,
-      statusID: data.ContactRecord.StatusID ? data.ContactRecord.StatusID : 0,
-      sourceID: data.ContactRecord.SourceID ? data.ContactRecord.SourceID : 0,
-      taxID: data.ContactRecord.TaxID ? data.ContactRecord.TaxID : "",
-      servicingAdvisorID: data.ContactRecord.ServicingAdvisorID
-        ? data.ContactRecord.ServicingAdvisorID
-        : 0,
-      writingAdvisorID: data.ContactRecord.WritingAdvisorID
-        ? data.ContactRecord.WritingAdvisorID
-        : 0,
-      phoneNumbers: data.Phone.map((obj) => ( {
+      salutationID: data.salutation_id,
+      firstName: data.first_name,
+      middleName: data.middle_name,
+      lastName: data.last_name,
+      nickname: data.nickname,
+      dateOfBirth: data.dob, //fromRedtailDatestring(data.ContactRecord.DateOfBirth),
+      genderID: data.gender_id,
+      categoryID: data.category_id,
+      statusID: data.status_id,
+      sourceID: data.source_id,
+      taxID: data.tax_id,
+      servicingAdvisorID: data.servicing_advisor_id,
+      writingAdvisorID: data.writing_advisor_id,
+      phones: data.phones.map((obj: PhoneRec) => ({
         key: uuid(),
-        recID: obj.RecID,
-        phoneNumber: obj.Number,
-        typeID: obj.TypeID,
-        primaryPhone: obj.Primary,
+        ID: obj.id,
+        phoneNumber: obj.number,
+        typeID: obj.phone_type,
+        primaryPhone: obj.is_primary,
       })),
-      emailAddresses: data.Internet
-        .filter(obj => emailTypes.includes(obj.TypeID))
-        .map((obj) => ({
-          key: uuid(),
-          recID: obj.RecID,
-          emailAddress: obj.Address,
-          typeID: obj.TypeID,
-          primaryEmail: obj.Primary,
-        })),
-      streetAddresses: data.Address.map((obj) => ({
+      emails: data.emails.map((obj: EmailRec) => ({
         key: uuid(),
-        recID: obj.RecID,
-        streetAddress: obj.Address1,
-        secondaryAddress: obj.Address2,
-        city: obj.City,
-        state: obj.State,
-        zip: obj.Zip,
-        typeID: obj.TypeID,
-        primaryStreet: obj.Primary,
+        ID: obj.id,
+        emailAddress: obj.address,
+        typeID: obj.email_type,
+        primaryEmail: obj.is_primary,
       })),
-        contactFieldsToDelete: {
-        emailAddresses: [],
-        streetAddresses: [],
-        phoneNumbers: []
-      }
+      addresses: data.addresses.map((obj: AddressRec) => ({
+        key: uuid(),
+        ID: obj.id,
+        streetAddress: obj.street_address,
+        secondaryAddress: obj.secondary_address,
+        city: obj.city,
+        state: obj.state,
+        zip: obj.zip,
+        typeID: obj.address_type,
+        primaryStreet: obj.is_primary,
+      })),
+      urls: data.urls.map((obj: UrlRec) => ({
+        key: uuid(),
+        ID: obj.id,
+        website: obj.address,
+        typeID: obj.url_type,
+      })),
+      contactFieldsToDelete: {
+        addresses: [],
+        emails: [],
+        phones: [],
+        urls: [],
+      },
     };
 
     updateFormData(loadedFormData);
@@ -87,5 +85,3 @@ export const getContactAndPopulateForm = (
     updateFormDirty(false);
   });
 };
-
-const emailTypes = [1, 3, 4]

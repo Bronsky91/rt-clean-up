@@ -1,9 +1,9 @@
-import { PhoneNumberFormData } from "../interfaces/redtail-form.interface";
+import { PhoneFormData } from "../interfaces/redtail-form.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
 
 export default function PhoneFields(props) {
-  const phones: PhoneNumberFormData[] = props.phoneNumbers;
+  const phones: PhoneFormData[] = props.phoneNumbers;
   const dropdownData: RedtailSettingsData = props.dropdownData;
 
   return (
@@ -16,11 +16,7 @@ export default function PhoneFields(props) {
                 type="tel"
                 name="phoneNumber"
                 value={obj.phoneNumber || ""}
-                onChange={props.handleArrChange(
-                  index,
-                  "phoneNumbers",
-                  obj.recID
-                )}
+                onChange={props.handleArrChange(index, "phoneNumbers", obj.ID)}
               />
               <div>
                 <select
@@ -28,14 +24,14 @@ export default function PhoneFields(props) {
                   onChange={props.handleArrChange(
                     index,
                     "phoneNumbers",
-                    obj.recID
+                    obj.ID
                   )}
                   name="typeID"
                 >
                   {dropdownData && dropdownData.phoneTypes ? (
                     dropdownData.phoneTypes.map((obj, index) => (
-                      <option key={index} value={obj.TypeID || ""}>
-                        {obj.Description || ""}
+                      <option key={index} value={obj.id || ""}>
+                        {obj.name || ""}
                       </option>
                     ))
                   ) : (
@@ -53,7 +49,7 @@ export default function PhoneFields(props) {
                   onChange={props.handleArrChange(
                     index,
                     "phoneNumbers",
-                    obj.recID
+                    obj.ID
                   )}
                 />
                 <button
