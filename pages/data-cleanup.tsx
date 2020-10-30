@@ -209,7 +209,7 @@ export default function DataCleanupPage(props) {
         ...formData.contactFieldsToDelete,
         [fieldName]: [
           ...formData.contactFieldsToDelete[fieldName],
-          removedContactField[0].recID,
+          removedContactField[0].id,
         ],
       },
     };
@@ -235,7 +235,7 @@ export default function DataCleanupPage(props) {
   const handleArrChange = (
     index: number,
     arrName: string,
-    targetRecId: number
+    targetID: number
   ) => (e) => {
     const targetName: string = e.target.name;
     const newArr = [...formData[arrName]];
@@ -243,7 +243,7 @@ export default function DataCleanupPage(props) {
       const checked: boolean = e.target.checked;
       newArr[index][targetName] = checked;
       for (const item of newArr) {
-        if (item.recID !== targetRecId) item[targetName] = !checked;
+        if (item.id !== targetID) item[targetName] = !checked;
       }
     } else {
       newArr[index][targetName] = e.target.value;
@@ -685,7 +685,7 @@ export default function DataCleanupPage(props) {
                     <div className={styles.formRowEven}>
                       <button
                         className={styles.addButton}
-                        onClick={addContactField("emailAddresses")}
+                        onClick={addContactField("emails")}
                       />
                     </div>
                   </div>
@@ -704,7 +704,7 @@ export default function DataCleanupPage(props) {
                       </div>
                     </div>
                     <PhoneFields
-                      phoneNumbers={formData.phones}
+                      phones={formData.phones}
                       handleArrChange={handleArrChange}
                       dropdownData={dropdownData}
                       removeContactField={removeContactField}
@@ -712,7 +712,7 @@ export default function DataCleanupPage(props) {
                     <div className={styles.formRowEven}>
                       <button
                         className={styles.addButton}
-                        onClick={addContactField("phoneNumbers")}
+                        onClick={addContactField("phones")}
                       />
                     </div>
                   </div>
@@ -751,7 +751,7 @@ export default function DataCleanupPage(props) {
                     </div>
                   </div>
                   <AddressFields
-                    streetAddresses={formData.addresses}
+                    addresses={formData.addresses}
                     handleArrChange={handleArrChange}
                     dropdownData={dropdownData}
                     removeContactField={removeContactField}
@@ -759,7 +759,7 @@ export default function DataCleanupPage(props) {
                   <div className={styles.formRowEven}>
                     <button
                       className={styles.addButton}
-                      onClick={addContactField("streetAddresses")}
+                      onClick={addContactField("addresses")}
                     />
                   </div>
                 </div>

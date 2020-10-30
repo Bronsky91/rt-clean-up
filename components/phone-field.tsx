@@ -3,39 +3,38 @@ import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
 
 export default function PhoneFields(props) {
-  const phones: PhoneFormData[] = props.phoneNumbers;
+  const phones: PhoneFormData[] = props.phones;
   const dropdownData: RedtailSettingsData = props.dropdownData;
 
   return (
     <div className={styles.formColumnScroll}>
       {phones
-        ? phones.map((obj, index) => (
-            <div className={styles.formRow} key={obj.key}>
+        ? phones.map((phone, index) => (
+            <div className={styles.formRow} key={phone.key}>
               <input
                 className={styles.formSoloInput}
                 type="tel"
                 name="phoneNumber"
-                value={obj.phoneNumber || ""}
-                onChange={props.handleArrChange(index, "phoneNumbers", obj.ID)}
+                value={phone.phoneNumber || ""}
+                onChange={props.handleArrChange(index, "phones", phone.id)}
               />
               <div>
                 <select
                   className={styles.formSoloInputShort}
-                  onChange={props.handleArrChange(
-                    index,
-                    "phoneNumbers",
-                    obj.ID
-                  )}
+                  onChange={props.handleArrChange(index, "phones", phone.id)}
                   name="typeID"
+                  value={phone.typeID}
                 >
                   {dropdownData && dropdownData.phoneTypes ? (
-                    dropdownData.phoneTypes.map((obj, index) => (
-                      <option key={index} value={obj.id || ""}>
-                        {obj.name || ""}
-                      </option>
-                    ))
+                    dropdownData.phoneTypes.map((phoneType, index) => {
+                      return (
+                        <option key={index} value={phoneType.id || 0}>
+                          {phoneType.name || ""}
+                        </option>
+                      );
+                    })
                   ) : (
-                    <option value=""></option>
+                    <option value={0}></option>
                   )}
                 </select>
               </div>
@@ -45,16 +44,12 @@ export default function PhoneFields(props) {
                   type="radio"
                   name="primaryPhone"
                   value=""
-                  checked={obj.primaryPhone}
-                  onChange={props.handleArrChange(
-                    index,
-                    "phoneNumbers",
-                    obj.ID
-                  )}
+                  checked={phone.primaryPhone}
+                  onChange={props.handleArrChange(index, "phones", phone.id)}
                 />
                 <button
                   className={styles.deleteButton}
-                  onClick={props.removeContactField("phoneNumbers", index)}
+                  onClick={props.removeContactField("phones", index)}
                 />
               </div>
             </div>

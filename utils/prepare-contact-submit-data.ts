@@ -39,32 +39,28 @@ export const prepareContactSubmitData = (
 
   const addresses: AddressUpdate[] = formData.addresses.map((item) => {
     const fromSource: AddressRec | undefined = contactRec.addresses.find(
-      (i) => i.id === item.ID
+      (i) => i.id === item.id
     );
 
     return {
-      id: item.ID,
+      id: item.id,
       street_address: item.streetAddress,
       secondary_address: item.secondaryAddress,
       city: item.city,
       state: item.state,
       zip: item.zip,
-      country: fromSource.country,
       address_type: item.typeID,
-      custom_type_title: fromSource.custom_type_title,
-      description: fromSource.description,
       is_primary: item.primaryStreet,
-      is_preferred: fromSource.is_preferred,
     };
   });
 
   const emails: EmailUpdate[] = formData.emails.map((item) => {
     const fromSource: EmailRec | undefined = contactRec.emails.find(
-      (i) => i.id === item.ID
+      (i) => i.id === item.id
     );
 
     const updatedEmail: EmailUpdate = {
-      id: item.ID,
+      id: item.id,
       address: item.emailAddress,
       email_type: item.typeID,
       is_primary: item.primaryEmail,
@@ -74,10 +70,10 @@ export const prepareContactSubmitData = (
 
   const phones: PhoneUpdate[] = formData.phones.map((item) => {
     const fromSource: PhoneRec | undefined = contactRec.phones.find(
-      (i) => i.id === item.ID
+      (i) => i.id === item.id
     );
     const updatedPhone: PhoneUpdate = {
-      id: item.ID,
+      id: item.id,
       number: item.phoneNumber,
       phone_type: item.typeID,
       is_primary: item.primaryPhone,
@@ -88,10 +84,10 @@ export const prepareContactSubmitData = (
 
   const urls: UrlUpdate[] = formData.urls.map((item) => {
     const fromSource: UrlRec | undefined = contactRec.urls.find(
-      (i) => i.id === item.ID
+      (i) => i.id === item.id
     );
     const updatedUrl: UrlUpdate = {
-      id: item.ID,
+      id: item.id,
       address: item.address,
       url_type: item.typeID,
     };

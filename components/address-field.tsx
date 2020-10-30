@@ -6,7 +6,7 @@ import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
 
 export default function AddressFields(props) {
-  const addresses: AddressFormData[] = props.streetAddresses;
+  const addresses: AddressFormData[] = props.addresses;
   const dropdownData: RedtailSettingsData = props.dropdownData;
 
   const states: StateAbbr[] = [
@@ -66,51 +66,39 @@ export default function AddressFields(props) {
   return (
     <div className={styles.formColumnScroll}>
       {addresses
-        ? addresses.map((obj, index) => (
-            <div className={styles.formRow} key={obj.key}>
+        ? addresses.map((address, index) => (
+            <div className={styles.formRow} key={address.key}>
               <input
                 className={styles.formSoloInputLong}
                 type="text"
                 name="streetAddress"
-                value={obj.streetAddress || ""}
-                onChange={props.handleArrChange(
-                  index,
-                  "streetAddresses",
-                  obj.ID
-                )}
+                value={address.streetAddress || ""}
+                onChange={props.handleArrChange(index, "addresses", address.id)}
               />
               <input
                 className={styles.formSoloInputLong}
                 type="text"
                 name="secondaryAddress"
-                value={obj.secondaryAddress || ""}
-                onChange={props.handleArrChange(
-                  index,
-                  "streetAddresses",
-                  obj.ID
-                )}
+                value={address.secondaryAddress || ""}
+                onChange={props.handleArrChange(index, "addresses", address.id)}
               />
               <input
                 className={styles.formSoloInput}
                 type="text"
                 name="city"
-                value={obj.city || ""}
-                onChange={props.handleArrChange(
-                  index,
-                  "streetAddresses",
-                  obj.ID
-                )}
+                value={address.city || ""}
+                onChange={props.handleArrChange(index, "addresses", address.id)}
               />
               <div>
                 <select
                   className={styles.formSoloInputShort}
                   onChange={props.handleArrChange(
                     index,
-                    "streetAddresses",
-                    obj.ID
+                    "addresses",
+                    address.id
                   )}
                   name="state"
-                  value={obj.state || ""}
+                  value={address.state || ""}
                 >
                   {states.map((obj, index) => (
                     <option key={index} value={obj.short}>
@@ -123,31 +111,28 @@ export default function AddressFields(props) {
                 className={styles.formSoloInput}
                 type="text"
                 name="zip"
-                value={obj.zip || ""}
-                onChange={props.handleArrChange(
-                  index,
-                  "streetAddresses",
-                  obj.ID
-                )}
+                value={address.zip || ""}
+                onChange={props.handleArrChange(index, "addresses", address.id)}
               />
               <div>
                 <select
                   className={styles.formSoloInput}
                   onChange={props.handleArrChange(
                     index,
-                    "streetAddresses",
-                    obj.ID
+                    "addresses",
+                    address.id
                   )}
                   name="typeID"
+                  value={address.typeID}
                 >
                   {dropdownData && dropdownData.addressTypes ? (
-                    dropdownData.addressTypes.map((obj, index) => (
-                      <option key={index} value={obj.id || ""}>
-                        {obj.name || ""}
+                    dropdownData.addressTypes.map((addressType, index) => (
+                      <option key={index} value={addressType.id || 0}>
+                        {addressType.name || ""}
                       </option>
                     ))
                   ) : (
-                    <option value=""></option>
+                    <option value={0}></option>
                   )}
                 </select>
               </div>
@@ -157,16 +142,16 @@ export default function AddressFields(props) {
                   type="radio"
                   name="primaryStreet"
                   value=""
-                  checked={obj.primaryStreet}
+                  checked={address.primaryStreet}
                   onChange={props.handleArrChange(
                     index,
-                    "streetAddresses",
-                    obj.ID
+                    "addresses",
+                    address.id
                   )}
                 />
                 <button
                   className={styles.deleteButton}
-                  onClick={props.removeContactField("streetAddresses", index)}
+                  onClick={props.removeContactField("addresses", index)}
                 />
               </div>
             </div>

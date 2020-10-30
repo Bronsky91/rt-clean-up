@@ -102,34 +102,34 @@ export const createEmptyDropDownData = (): Readonly<RedtailSettingsData> =>
 export const createEmptyContactField = {
   addresses: () => ({
     key: uuid(),
-    ID: 0,
+    id: 0,
     streetAddress: "",
     secondaryAddress: "",
     city: "",
     state: "",
     zip: "",
-    typeID: 0,
+    typeID: 1,
     primaryStreet: false,
   }),
   emails: () => ({
     key: uuid(),
-    ID: 0,
+    id: 0,
     emailAddress: "",
     typeID: 1,
     primaryEmail: false,
   }),
   phones: () => ({
     key: uuid(),
-    ID: 0,
+    id: 0,
     phoneNumber: "",
-    typeID: 0,
+    typeID: 1,
     primaryPhone: false,
   }),
   urls: () => ({
     key: uuid(),
-    ID: 0,
+    id: 0,
     address: "",
-    typeID: 0,
+    typeID: 1,
   }),
 };
 

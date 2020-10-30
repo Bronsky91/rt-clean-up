@@ -9,38 +9,31 @@ export default function EmailFields(props) {
   return (
     <div className={styles.formColumnScroll}>
       {emails
-        ? emails.map((obj, index) => (
-            <div className={styles.formRow} key={obj.key}>
+        ? emails.map((email, index) => (
+            <div className={styles.formRow} key={email.key}>
               <input
                 className={styles.formSoloInputLong}
                 type="text"
                 name="emailAddress"
-                value={obj.emailAddress || ""}
-                onChange={props.handleArrChange(
-                  index,
-                  "emailAddresses",
-                  obj.ID
-                )}
+                value={email.emailAddress || ""}
+                onChange={props.handleArrChange(index, "emails", email.id)}
               />
 
               <div>
                 <select
                   className={styles.formSoloInputShort}
-                  onChange={props.handleArrChange(
-                    index,
-                    "emailAddresses",
-                    obj.ID
-                  )}
+                  onChange={props.handleArrChange(index, "emails", email.id)}
                   name="typeID"
+                  value={email.typeID}
                 >
                   {dropdownData && dropdownData.emailTypes ? (
-                    dropdownData.emailTypes.map((obj, index) => (
-                      <option key={index} value={obj.id || ""}>
-                        {obj.name || ""}
+                    dropdownData.emailTypes.map((emailType, index) => (
+                      <option key={index} value={emailType.id || 0}>
+                        {emailType.name || ""}
                       </option>
                     ))
                   ) : (
-                    <option value=""></option>
+                    <option value={0}></option>
                   )}
                 </select>
               </div>
@@ -50,16 +43,12 @@ export default function EmailFields(props) {
                   className={styles.formRadio}
                   type="radio"
                   name="primaryEmail"
-                  checked={obj.primaryEmail}
-                  onChange={props.handleArrChange(
-                    index,
-                    "emailAddresses",
-                    obj.ID
-                  )}
+                  checked={email.primaryEmail}
+                  onChange={props.handleArrChange(index, "emails", email.id)}
                 />
                 <button
                   className={styles.deleteButton}
-                  onClick={props.removeContactField("emailAddresses", index)}
+                  onClick={props.removeContactField("emails", index)}
                 />
               </div>
             </div>

@@ -26,7 +26,7 @@ export interface ContactFormData {
 }
 
 export interface PhoneFormData {
-  ID: number;
+  id: number;
   key: string;
   phoneNumber: string;
   typeID: number;
@@ -34,7 +34,7 @@ export interface PhoneFormData {
 }
 
 export interface EmailFormData {
-  ID: number;
+  id: number;
   key: string;
   emailAddress: string;
   typeID: number;
@@ -42,7 +42,7 @@ export interface EmailFormData {
 }
 
 export interface AddressFormData {
-  ID: number;
+  id: number;
   key: string;
   streetAddress: string;
   secondaryAddress: string;
@@ -54,7 +54,7 @@ export interface AddressFormData {
 }
 
 export interface UrlFormData {
-  ID: number;
+  id: number;
   key: string;
   address: string;
   typeID: number;
