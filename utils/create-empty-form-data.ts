@@ -1,8 +1,14 @@
 import { v4 as uuid } from "uuid";
-import { Z_FIXED } from "zlib";
 import { FilterData } from "../interfaces/redtail-contact-list.interface";
-import { RedtailContactRec } from "../interfaces/redtail-contact.interface";
-import { ContactFormData } from "../interfaces/redtail-form.interface";
+import { RedtailContactRec } from "../interfaces/redtail-contact-receive.interface";
+import {
+  AddressUpdate,
+  ContactRecordUpdate,
+  EmailUpdate,
+  PhoneUpdate,
+  RedtailContactUpdate,
+  UrlUpdate,
+} from "../interfaces/redtail-contact-update.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 
 export const createEmptyContactRefData = (): Readonly<RedtailContactRec> =>
@@ -56,25 +62,13 @@ export const createEmptyContactRefData = (): Readonly<RedtailContactRec> =>
     urls: null,
   });
 
-export const createEmptyFormData = (): Readonly<ContactFormData> =>
+export const createEmptyFormData = (): Readonly<RedtailContactUpdate> =>
   Object.freeze({
     key: uuid(),
-    salutationID: 0,
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    nickname: "",
-    dateOfBirth: "",
-    genderID: 0,
-    categoryID: 0,
-    statusID: 0,
-    sourceID: 0,
-    taxID: "",
-    servicingAdvisorID: 0,
-    writingAdvisorID: 0,
-    phones: [createEmptyContactField["phones"]()],
-    emails: [createEmptyContactField["emails"]()],
+    contactRecord: createEmptyContactField["contactRecord"](),
     addresses: [createEmptyContactField["addresses"]()],
+    emails: [createEmptyContactField["emails"]()],
+    phones: [createEmptyContactField["phones"]()],
     urls: [createEmptyContactField["urls"]()],
     contactFieldsToDelete: {
       emails: [],
@@ -83,6 +77,57 @@ export const createEmptyFormData = (): Readonly<ContactFormData> =>
       urls: [],
     },
   });
+
+export const createEmptyContactField = {
+  contactRecord: (): ContactRecordUpdate => ({
+    id: 0,
+    salutation_id: 0,
+    first_name: "",
+    middle_name: "",
+    last_name: "",
+    nickname: "",
+    gender_id: 0,
+    dob: "",
+    category_id: 0,
+    status_id: 0,
+    source_id: 0,
+    tax_id: "",
+    servicing_advisor_id: 0,
+    writing_advisor_id: 0,
+  }),
+  addresses: (): AddressUpdate => ({
+    key: uuid(),
+    id: 0,
+    street_address: "",
+    secondary_address: "",
+    city: "",
+    state: "",
+    zip: "",
+    address_type: 1,
+    is_primary: false,
+  }),
+  emails: (): EmailUpdate => ({
+    key: uuid(),
+    id: 0,
+    address: "",
+    email_type: 1,
+    is_primary: false,
+  }),
+  phones: (): PhoneUpdate => ({
+    key: uuid(),
+    id: 0,
+    country_code: 1,
+    number: "",
+    phone_type: 1,
+    is_primary: false,
+  }),
+  urls: (): UrlUpdate => ({
+    key: uuid(),
+    id: 0,
+    address: "",
+    url_type: 1,
+  }),
+};
 
 export const createEmptyDropDownData = (): Readonly<RedtailSettingsData> =>
   Object.freeze({
@@ -98,40 +143,6 @@ export const createEmptyDropDownData = (): Readonly<RedtailSettingsData> =>
     phoneTypes: [],
     urlTypes: [],
   });
-
-export const createEmptyContactField = {
-  addresses: () => ({
-    key: uuid(),
-    id: 0,
-    streetAddress: "",
-    secondaryAddress: "",
-    city: "",
-    state: "",
-    zip: "",
-    typeID: 1,
-    primaryStreet: false,
-  }),
-  emails: () => ({
-    key: uuid(),
-    id: 0,
-    emailAddress: "",
-    typeID: 1,
-    primaryEmail: false,
-  }),
-  phones: () => ({
-    key: uuid(),
-    id: 0,
-    phoneNumber: "",
-    typeID: 1,
-    primaryPhone: false,
-  }),
-  urls: () => ({
-    key: uuid(),
-    id: 0,
-    address: "",
-    typeID: 1,
-  }),
-};
 
 export const createEmptyFilterData = (): Readonly<FilterData[]> =>
   Array.from([

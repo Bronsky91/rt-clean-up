@@ -7,13 +7,12 @@ import {
   PhoneRec,
   RedtailContactRec,
   UrlRec,
-} from "../interfaces/redtail-contact.interface";
-import { ContactFormData } from "../interfaces/redtail-form.interface";
+} from "../interfaces/redtail-contact-receive.interface";
+import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
 
 export const getContactAndPopulateForm = (
-  updateSourceContactRef,
-  updateFormData,
   updateOriginalFormData,
+  updateFormData,
   updateFormDirty,
   formData,
   id
@@ -24,65 +23,73 @@ export const getContactAndPopulateForm = (
     { withCredentials: true }
   ).then((res) => {
     const data: RedtailContactRec = res.data.contact;
-    updateSourceContactRef(data);
 
-    const loadedFormData: ContactFormData = {
+    const loadedFormData: RedtailContactUpdate = {
       key: formData.key,
-      salutationID: data.salutation_id,
-      firstName: data.first_name,
-      middleName: data.middle_name,
-      lastName: data.last_name,
-      nickname: data.nickname,
-      dateOfBirth: data.dob, //fromRedtailDatestring(data.ContactRecord.DateOfBirth),
-      genderID: data.gender_id,
-      categoryID: data.category_id,
-      statusID: data.status_id,
-      sourceID: data.source_id,
-      taxID: data.tax_id,
-      servicingAdvisorID: data.servicing_advisor_id,
-      writingAdvisorID: data.writing_advisor_id,
-      phones: data.phones
-        ? data.phones.map((obj: PhoneRec) => ({
+      contactRecord: {
+        id: data.id ? data.id : 0,
+        salutation_id: data.salutation_id ? data.salutation_id : 0,
+        first_name: data.first_name ? data.first_name : "",
+        middle_name: data.middle_name ? data.middle_name : "",
+        last_name: data.last_name ? data.last_name : "",
+        nickname: data.nickname ? data.nickname : "",
+        gender_id: data.gender_id ? data.gender_id : 0,
+        dob: data.dob ? data.dob : "",
+        category_id: data.category_id ? data.category_id : 0,
+        status_id: data.status_id ? data.status_id : 0,
+        source_id: data.source_id ? data.source_id : 0,
+        tax_id: data.tax_id ? data.tax_id : "",
+        servicing_advisor_id: data.servicing_advisor_id
+          ? data.servicing_advisor_id
+          : 0,
+        writing_advisor_id: data.writing_advisor_id
+          ? data.writing_advisor_id
+          : 0,
+      },
+      addresses: data.addresses
+        ? data.addresses.map((obj: AddressRec) => ({
             key: uuid(),
-            id: obj.id,
-            phoneNumber: obj.number,
-            typeID: obj.phone_type,
-            primaryPhone: obj.is_primary,
+            id: obj.id ? obj.id : 0,
+            street_address: obj.street_address ? obj.street_address : "",
+            secondary_address: obj.secondary_address
+              ? obj.secondary_address
+              : "",
+            city: obj.city ? obj.city : "",
+            state: obj.state ? obj.state : "",
+            zip: obj.zip ? obj.zip : "",
+            address_type: obj.address_type ? obj.address_type : 0,
+            is_primary: obj.is_primary ? obj.is_primary : false,
           }))
         : null,
       emails: data.emails
         ? data.emails.map((obj: EmailRec) => ({
             key: uuid(),
-            id: obj.id,
-            emailAddress: obj.address,
-            typeID: obj.email_type,
-            primaryEmail: obj.is_primary,
+            id: obj.id ? obj.id : 0,
+            address: obj.address ? obj.address : "",
+            email_type: obj.email_type ? obj.email_type : 0,
+            is_primary: obj.is_primary ? obj.is_primary : false,
           }))
         : null,
-      addresses: data.addresses
-        ? data.addresses.map((obj: AddressRec) => ({
+      phones: data.phones
+        ? data.phones.map((obj: PhoneRec) => ({
             key: uuid(),
-            id: obj.id,
-            streetAddress: obj.street_address,
-            secondaryAddress: obj.secondary_address,
-            city: obj.city,
-            state: obj.state,
-            zip: obj.zip,
-            typeID: obj.address_type,
-            primaryStreet: obj.is_primary,
+            id: obj.id ? obj.id : 0,
+            number: obj.number ? obj.number : "",
+            phone_type: obj.phone_type ? obj.phone_type : 0,
+            is_primary: obj.is_primary ? obj.is_primary : false,
           }))
         : null,
       urls: data.urls
         ? data.urls.map((obj: UrlRec) => ({
             key: uuid(),
-            id: obj.id,
-            address: obj.address,
-            typeID: obj.url_type,
+            id: obj.id ? obj.id : 0,
+            address: obj.address ? obj.address : "",
+            url_type: obj.url_type ? obj.url_type : 0,
           }))
         : null,
       contactFieldsToDelete: {
-        addresses: [],
         emails: [],
+        addresses: [],
         phones: [],
         urls: [],
       },

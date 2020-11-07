@@ -1,9 +1,9 @@
-import { PhoneFormData } from "../interfaces/redtail-form.interface";
+import { PhoneUpdate } from "../interfaces/redtail-contact-update.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
 
 export default function PhoneFields(props) {
-  const phones: PhoneFormData[] = props.phones;
+  const phones: PhoneUpdate[] = props.phones;
   const dropdownData: RedtailSettingsData = props.dropdownData;
 
   return (
@@ -14,16 +14,16 @@ export default function PhoneFields(props) {
               <input
                 className={styles.formSoloInput}
                 type="tel"
-                name="phoneNumber"
-                value={phone.phoneNumber || ""}
+                name="number"
+                value={phone.number || ""}
                 onChange={props.handleArrChange(index, "phones", phone.id)}
               />
               <div>
                 <select
                   className={styles.formSoloInputShort}
                   onChange={props.handleArrChange(index, "phones", phone.id)}
-                  name="typeID"
-                  value={phone.typeID}
+                  name="phone_type"
+                  value={phone.phone_type}
                 >
                   {dropdownData && dropdownData.phoneTypes ? (
                     dropdownData.phoneTypes.map((phoneType, index) => {
@@ -42,9 +42,9 @@ export default function PhoneFields(props) {
                 <input
                   className={styles.formRadio}
                   type="radio"
-                  name="primaryPhone"
+                  name="is_primary_phone"
                   value=""
-                  checked={phone.primaryPhone}
+                  checked={phone.is_primary}
                   onChange={props.handleArrChange(index, "phones", phone.id)}
                 />
                 <button

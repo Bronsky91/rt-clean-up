@@ -1,9 +1,9 @@
-import { EmailFormData } from "../interfaces/redtail-form.interface";
+import { EmailUpdate } from "../interfaces/redtail-contact-update.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
 
 export default function EmailFields(props) {
-  const emails: EmailFormData[] = props.emails;
+  const emails: EmailUpdate[] = props.emails;
   const dropdownData: RedtailSettingsData = props.dropdownData;
 
   return (
@@ -14,8 +14,8 @@ export default function EmailFields(props) {
               <input
                 className={styles.formSoloInputLong}
                 type="text"
-                name="emailAddress"
-                value={email.emailAddress || ""}
+                name="address"
+                value={email.address || ""}
                 onChange={props.handleArrChange(index, "emails", email.id)}
               />
 
@@ -23,8 +23,8 @@ export default function EmailFields(props) {
                 <select
                   className={styles.formSoloInputShort}
                   onChange={props.handleArrChange(index, "emails", email.id)}
-                  name="typeID"
-                  value={email.typeID}
+                  name="email_type"
+                  value={email.email_type}
                 >
                   {dropdownData && dropdownData.emailTypes ? (
                     dropdownData.emailTypes.map((emailType, index) => (
@@ -42,8 +42,8 @@ export default function EmailFields(props) {
                 <input
                   className={styles.formRadio}
                   type="radio"
-                  name="primaryEmail"
-                  checked={email.primaryEmail}
+                  name="is_primary_email"
+                  checked={email.is_primary}
                   onChange={props.handleArrChange(index, "emails", email.id)}
                 />
                 <button

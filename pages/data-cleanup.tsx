@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 import Login from "./login";
 import { getContactAndPopulateForm } from "../utils/get-contact-and-populate-form";
 import { applyLocalStorage } from "../utils/apply-local-storage";
-import { prepareContactSubmitData } from "../utils/prepare-contact-submit-data";
 import ContactListPanel from "../components/contact-list-panel";
 import {
   createEmptyContactRefData,
@@ -16,7 +15,6 @@ import {
   createEmptyContactField,
 } from "../utils/create-empty-form-data";
 import { setLocalStorage } from "../utils/set-local-storage";
-import { SelectedContact } from "../interfaces/form.interface";
 import TextField from "../components/text-field";
 import DropDownField from "../components/drop-down-field";
 import EmailFields from "../components/email-field";
@@ -25,8 +23,8 @@ import AddressFields from "../components/address-field";
 import DateField from "../components/date-field";
 import { RedtailContactListRec } from "../interfaces/redtail-contact-list.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
-import { RedtailContactRec } from "../interfaces/redtail-contact.interface";
-import { ContactFormData } from "../interfaces/redtail-form.interface";
+import { RedtailContactRec } from "../interfaces/redtail-contact-receive.interface";
+import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
 import DashboardPage from ".";
 export default function DataCleanupPage(props) {
   const router = useRouter();
@@ -89,10 +87,8 @@ export default function DataCleanupPage(props) {
 
       // Update Form with LocalStorage if it's available
       applyLocalStorage(
-        updateSelectedContact,
-        updateSourceContactRef,
-        updateFormData,
         updateOriginalFormData,
+        updateFormData,
         updateFormDirty
       );
 
@@ -116,23 +112,12 @@ export default function DataCleanupPage(props) {
   // If unathenticated with Redtail, load Dashboard component
   if (!isRedtailAuth) return <DashboardPage {...props} />;
 
-  const emptySourceContactRef: Readonly<RedtailContactRec> = createEmptyContactRefData();
-  const emptyFormData: Readonly<ContactFormData> = createEmptyFormData();
+  const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
   const emptyDropDowns: Readonly<RedtailSettingsData> = createEmptyDropDownData();
-  const initialSelectedContact: SelectedContact = {
-    id: "",
-  };
-
-  const [sourceContactRef, updateSourceContactRef] = useState(
-    emptySourceContactRef
-  );
   const [formData, updateFormData] = useState(emptyFormData);
   const [originalFormData, updateOriginalFormData] = useState(emptyFormData);
   const [formDirty, updateFormDirty] = useState(false);
   const contactsPerPage = 50;
-  const [selectedContact, updateSelectedContact] = useState(
-    initialSelectedContact
-  );
   const [contactList, setContactList] = useState([]);
   const [filteredContactList, setFilteredContactList] = useState([]);
   const [isFiltered, setIsFiltered] = useState(false);
@@ -158,28 +143,18 @@ export default function DataCleanupPage(props) {
 
   // Saves Form State to Local Storage after each change
   useEffect(() => {
-    setLocalStorage(
-      selectedContact,
-      sourceContactRef,
-      originalFormData,
-      formData,
-      formDirty
-    );
-  }, [
-    selectedContact,
-    sourceContactRef,
-    formData,
-    originalFormData,
-    formDirty,
-  ]);
+    setLocalStorage(originalFormData, formData, formDirty);
+  }, [originalFormData, formData, formDirty]);
 
   // When contact changes, re-calculate prev & next contact button disabled state
   useEffect(() => {
     const contactIndex: number = isFiltered
       ? filteredContactList
           .map((contact) => contact.id)
-          .indexOf(sourceContactRef.id)
-      : contactList.map((contact) => contact.id).indexOf(sourceContactRef.id);
+          .indexOf(originalFormData.contactRecord.id)
+      : contactList
+          .map((contact) => contact.id)
+          .indexOf(originalFormData.contactRecord.id);
 
     setContactPrevDisabled(
       isFiltered
@@ -194,7 +169,7 @@ export default function DataCleanupPage(props) {
             contactIndex + (pageData.currentPage - 1) * contactsPerPage ===
               pageData.totalContacts - 1
     );
-  }, [sourceContactRef]);
+  }, [originalFormData]);
 
   const removeContactField = (fieldName: string, index: number) => (e) => {
     e.preventDefault();
@@ -229,6 +204,9 @@ export default function DataCleanupPage(props) {
     };
 
     updateFormData(updatedFormData);
+    updateFormDirty(
+      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
+    );
   };
 
   // Updates form state for phones, emails, and addresses
@@ -239,11 +217,11 @@ export default function DataCleanupPage(props) {
   ) => (e) => {
     const targetName: string = e.target.name;
     const newArr = [...formData[arrName]];
-    if (targetName.startsWith("primary")) {
+    if (targetName.startsWith("is_primary")) {
       const checked: boolean = e.target.checked;
-      newArr[index][targetName] = checked;
+      newArr[index]["is_primary"] = checked;
       for (const item of newArr) {
-        if (item.id !== targetID) item[targetName] = !checked;
+        if (item.id !== targetID) item["is_primary"] = !checked;
       }
     } else {
       newArr[index][targetName] = e.target.value;
@@ -258,14 +236,31 @@ export default function DataCleanupPage(props) {
   };
 
   const handleDateChange = (date: any, fieldName) => {
-    updateFormData({ ...formData, [fieldName]: date });
+    const updatedFormData = {
+      ...formData,
+      contactRecord: {
+        ...formData.contactRecord,
+        [fieldName]: date,
+      },
+    };
+
+    updateFormData(updatedFormData);
+    updateFormDirty(
+      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
+    );
   };
 
   const handleChange = (e) => {
     e.preventDefault();
     const target = e.target;
 
-    const updatedFormData = { ...formData, [target.name]: target.value.trim() };
+    const updatedFormData = {
+      ...formData,
+      contactRecord: {
+        ...formData.contactRecord,
+        [target.name]: target.value.trim(),
+      },
+    };
     updateFormData(updatedFormData);
     updateFormDirty(
       JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
@@ -277,11 +272,9 @@ export default function DataCleanupPage(props) {
     setLoadingContact(true);
 
     const id = e.target.value;
-    updateSelectedContact({ id });
     getContactAndPopulateForm(
-      updateSourceContactRef,
-      updateFormData,
       updateOriginalFormData,
+      updateFormData,
       updateFormDirty,
       formData,
       id
@@ -292,11 +285,9 @@ export default function DataCleanupPage(props) {
 
   const selectContact = (id: string) => {
     setLoadingContact(true);
-    updateSelectedContact({ id });
     getContactAndPopulateForm(
-      updateSourceContactRef,
-      updateFormData,
       updateOriginalFormData,
+      updateFormData,
       updateFormDirty,
       formData,
       id
@@ -370,6 +361,7 @@ export default function DataCleanupPage(props) {
   const handleUndo = (e) => {
     e.preventDefault();
     updateFormData(originalFormData);
+    updateFormDirty(false);
   };
 
   const handleSubmit = (e) => {
@@ -378,7 +370,7 @@ export default function DataCleanupPage(props) {
     axios
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/rt/contact-submit`,
-        { data: prepareContactSubmitData(formData, sourceContactRef) },
+        { data: formData },
         { withCredentials: true }
       )
       .then(async (res) => {
@@ -388,22 +380,22 @@ export default function DataCleanupPage(props) {
           if (isFiltered) {
             setFilteredContactList(
               filteredContactList.map((contact) =>
-                contact.id === sourceContactRef.id
-                  ? { ...contact, lastName: formData.lastName }
+                contact.id === formData.contactRecord.id
+                  ? { ...contact, lastName: formData.contactRecord.last_name }
                   : contact
               )
             );
           } else {
             setContactList(
               contactList.map((contact) =>
-                contact.id === sourceContactRef.id
-                  ? { ...contact, lastName: formData.lastName }
+                contact.id === formData.contactRecord.id
+                  ? { ...contact, lastName: formData.contactRecord.last_name }
                   : contact
               )
             );
           }
           // Reload contact page from Redtail as a data validation measure
-          selectContact(sourceContactRef.id.toString());
+          selectContact(formData.contactRecord.id.toString());
 
           alert("Contact Saved!");
         } else {
@@ -422,8 +414,10 @@ export default function DataCleanupPage(props) {
     const contactIndex: number = isFiltered
       ? filteredContactList
           .map((contact) => contact.id)
-          .indexOf(sourceContactRef.id)
-      : contactList.map((contact) => contact.id).indexOf(sourceContactRef.id);
+          .indexOf(formData.contactRecord.id)
+      : contactList
+          .map((contact) => contact.id)
+          .indexOf(formData.contactRecord.id);
     if (contactIndex === -1) return; // -1 indicates current contact's ID was not found in contact list
 
     if (isFiltered) {
@@ -455,8 +449,10 @@ export default function DataCleanupPage(props) {
     const contactIndex: number = isFiltered
       ? filteredContactList
           .map((contact) => contact.id)
-          .indexOf(sourceContactRef.id)
-      : contactList.map((contact) => contact.id).indexOf(sourceContactRef.id);
+          .indexOf(formData.contactRecord.id)
+      : contactList
+          .map((contact) => contact.id)
+          .indexOf(formData.contactRecord.id);
     if (contactIndex === -1) return; // -1 indicates current contact's ID was not found in contact list
 
     if (isFiltered) {
@@ -490,9 +486,9 @@ export default function DataCleanupPage(props) {
     >
       <div className={styles.container}>
         <ContactListPanel
+          formData={formData}
           contactsPerPage={contactsPerPage}
           contactSelected={contactSelected}
-          selectedContact={selectedContact}
           contactList={contactList}
           setContactList={setContactList}
           filteredContactList={filteredContactList}
@@ -526,52 +522,52 @@ export default function DataCleanupPage(props) {
                 <div className={styles.formColumn}>
                   <DropDownField
                     label="Salutation"
-                    fieldName="salutationID"
-                    fieldValue={formData.salutationID}
+                    fieldName="salutation_id"
+                    fieldValue={formData.contactRecord?.salutation_id}
                     dropDownItems={dropdownData.salutations}
                     handleChange={handleChange}
                   ></DropDownField>
 
                   <TextField
                     label="First Name"
-                    fieldName="firstName"
-                    fieldValue={formData.firstName}
+                    fieldName="first_name"
+                    fieldValue={formData.contactRecord?.first_name}
                     handleChange={handleChange}
                   ></TextField>
 
                   <TextField
                     label="Middle Name"
-                    fieldName="middleName"
-                    fieldValue={formData.middleName}
+                    fieldName="middle_name"
+                    fieldValue={formData.contactRecord?.middle_name}
                     handleChange={handleChange}
                   ></TextField>
 
                   <TextField
                     label="Last Name"
-                    fieldName="lastName"
-                    fieldValue={formData.lastName}
+                    fieldName="last_name"
+                    fieldValue={formData.contactRecord?.last_name}
                     handleChange={handleChange}
                   ></TextField>
 
                   <TextField
                     label="Nickname"
                     fieldName="nickname"
-                    fieldValue={formData.nickname}
+                    fieldValue={formData.contactRecord?.nickname}
                     handleChange={handleChange}
                   ></TextField>
 
                   <DropDownField
                     label="Gender"
-                    fieldName="genderID"
-                    fieldValue={formData.genderID}
+                    fieldName="gender_id"
+                    fieldValue={formData.contactRecord?.gender_id}
                     dropDownItems={dropdownData.genderTypes}
                     handleChange={handleChange}
                   ></DropDownField>
 
                   <DateField
                     label="Date of Birth"
-                    fieldName="dateOfBirth"
-                    fieldValue={formData.dateOfBirth}
+                    fieldName="dob"
+                    fieldValue={formData.contactRecord?.dob}
                     handleDateChange={handleDateChange}
                   ></DateField>
                 </div>
@@ -579,47 +575,47 @@ export default function DataCleanupPage(props) {
                 <div className={styles.formColumn}>
                   <DropDownField
                     label="Category"
-                    fieldName="categoryID"
-                    fieldValue={formData.categoryID}
+                    fieldName="category_id"
+                    fieldValue={formData.contactRecord?.category_id}
                     dropDownItems={dropdownData.category_id}
                     handleChange={handleChange}
                   ></DropDownField>
 
                   <DropDownField
                     label="Status"
-                    fieldName="statusID"
-                    fieldValue={formData.statusID}
+                    fieldName="status_id"
+                    fieldValue={formData.contactRecord?.status_id}
                     dropDownItems={dropdownData.status_id}
                     handleChange={handleChange}
                   ></DropDownField>
 
                   <DropDownField
                     label="Source"
-                    fieldName="sourceID"
-                    fieldValue={formData.sourceID}
+                    fieldName="source_id"
+                    fieldValue={formData.contactRecord?.source_id}
                     dropDownItems={dropdownData.source_id}
                     handleChange={handleChange}
                   ></DropDownField>
 
                   <TextField
                     label="Tax ID"
-                    fieldName="taxID"
-                    fieldValue={formData.taxID}
+                    fieldName="tax_id"
+                    fieldValue={formData.contactRecord?.tax_id}
                     handleChange={handleChange}
                   ></TextField>
 
                   <DropDownField
                     label="Servicing Advisor"
-                    fieldName="servicingAdvisorID"
-                    fieldValue={formData.servicingAdvisorID}
+                    fieldName="servicing_advisor_id"
+                    fieldValue={formData.contactRecord?.servicing_advisor_id}
                     dropDownItems={dropdownData.servicingAdvisors}
                     handleChange={handleChange}
                   ></DropDownField>
 
                   <DropDownField
                     label="Writing Advisor"
-                    fieldName="writingAdvisorID"
-                    fieldValue={formData.writingAdvisorID}
+                    fieldName="writing_advisor_id"
+                    fieldValue={formData.contactRecord?.writing_advisor_id}
                     dropDownItems={dropdownData.writingAdvisors}
                     handleChange={handleChange}
                   ></DropDownField>

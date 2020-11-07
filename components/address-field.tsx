@@ -1,12 +1,10 @@
-import {
-  StateAbbr,
-  AddressFormData,
-} from "../interfaces/redtail-form.interface";
+import { AddressUpdate } from "../interfaces/redtail-contact-update.interface";
+import { StateAbbr } from "../interfaces/redtail-settings.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
 
 export default function AddressFields(props) {
-  const addresses: AddressFormData[] = props.addresses;
+  const addresses: AddressUpdate[] = props.addresses;
   const dropdownData: RedtailSettingsData = props.dropdownData;
 
   const states: StateAbbr[] = [
@@ -71,15 +69,15 @@ export default function AddressFields(props) {
               <input
                 className={styles.formSoloInputLong}
                 type="text"
-                name="streetAddress"
-                value={address.streetAddress || ""}
+                name="street_address"
+                value={address.street_address || ""}
                 onChange={props.handleArrChange(index, "addresses", address.id)}
               />
               <input
                 className={styles.formSoloInputLong}
                 type="text"
-                name="secondaryAddress"
-                value={address.secondaryAddress || ""}
+                name="secondary_address"
+                value={address.secondary_address || ""}
                 onChange={props.handleArrChange(index, "addresses", address.id)}
               />
               <input
@@ -122,8 +120,8 @@ export default function AddressFields(props) {
                     "addresses",
                     address.id
                   )}
-                  name="typeID"
-                  value={address.typeID}
+                  name="address_type"
+                  value={address.address_type}
                 >
                   {dropdownData && dropdownData.addressTypes ? (
                     dropdownData.addressTypes.map((addressType, index) => (
@@ -140,9 +138,9 @@ export default function AddressFields(props) {
                 <input
                   className={styles.formRadio}
                   type="radio"
-                  name="primaryStreet"
+                  name="is_primary_address"
                   value=""
-                  checked={address.primaryStreet}
+                  checked={address.is_primary}
                   onChange={props.handleArrChange(
                     index,
                     "addresses",
