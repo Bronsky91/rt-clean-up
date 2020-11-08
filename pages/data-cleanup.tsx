@@ -371,7 +371,7 @@ export default function DataCleanupPage(props) {
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/rt/contact-submit`,
         { data: formData },
-        { withCredentials: true }
+        { withCredentials: true, validateStatus: (status) => status <= 500 }
       )
       .then(async (res) => {
         setSavingContact(false);
@@ -400,9 +400,7 @@ export default function DataCleanupPage(props) {
           alert("Contact Saved!");
         } else {
           alert(
-            "ERROR (HTTP " +
-              res.status.toString() +
-              ")\nPlease wait and try again later."
+            "ERROR: Looks like something went wrong updating this contact\nPlease check form and try again."
           );
         }
       });
