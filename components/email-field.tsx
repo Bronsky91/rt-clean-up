@@ -1,46 +1,39 @@
-import { EmailAddressFormData } from "../interfaces/redtail-form.interface";
+import { EmailUpdate } from "../interfaces/redtail-contact-update.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
 
 export default function EmailFields(props) {
-  const emails: EmailAddressFormData[] = props.emails;
+  const emails: EmailUpdate[] = props.emails;
   const dropdownData: RedtailSettingsData = props.dropdownData;
 
   return (
     <div className={styles.formColumnScroll}>
       {emails
-        ? emails.map((obj, index) => (
-            <div className={styles.formRow} key={obj.key}>
+        ? emails.map((email, index) => (
+            <div className={styles.formRow} key={email.key}>
               <input
                 className={styles.formSoloInputLong}
                 type="text"
-                name="emailAddress"
-                value={obj.emailAddress || ""}
-                onChange={props.handleArrChange(
-                  index,
-                  "emailAddresses",
-                  obj.recID
-                )}
+                name="address"
+                value={email.address || ""}
+                onChange={props.handleArrChange(index, "emails", email.id)}
               />
 
               <div>
                 <select
                   className={styles.formSoloInputShort}
-                  onChange={props.handleArrChange(
-                    index,
-                    "emailAddresses",
-                    obj.recID
-                  )}
-                  name="typeID"
+                  onChange={props.handleArrChange(index, "emails", email.id)}
+                  name="email_type"
+                  value={email.email_type}
                 >
-                  {dropdownData && dropdownData.internetTypes ? (
-                    dropdownData.internetTypes.map((obj, index) => (
-                      <option key={index} value={obj.TypeID || ""}>
-                        {obj.Description || ""}
+                  {dropdownData && dropdownData.emailTypes ? (
+                    dropdownData.emailTypes.map((emailType, index) => (
+                      <option key={index} value={emailType.id || 0}>
+                        {emailType.name || ""}
                       </option>
                     ))
                   ) : (
-                    <option value=""></option>
+                    <option value={0}></option>
                   )}
                 </select>
               </div>
@@ -49,17 +42,13 @@ export default function EmailFields(props) {
                 <input
                   className={styles.formRadio}
                   type="radio"
-                  name="primaryEmail"
-                  checked={obj.primaryEmail}
-                  onChange={props.handleArrChange(
-                    index,
-                    "emailAddresses",
-                    obj.recID
-                  )}
+                  name="is_primary_email"
+                  checked={email.is_primary}
+                  onChange={props.handleArrChange(index, "emails", email.id)}
                 />
                 <button
                   className={styles.deleteButton}
-                  onClick={props.removeContactField("emailAddresses", index)}
+                  onClick={props.removeContactField("emails", index)}
                 />
               </div>
             </div>

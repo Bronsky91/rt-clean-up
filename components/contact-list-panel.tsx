@@ -200,7 +200,9 @@ export default function ContactListPanel(props) {
         name="contact-list"
         size={props.contactsPerPage}
         value={
-          props.selectedContact.id === "" ? undefined : props.selectedContact.id
+          props.formData.contactRecord.id === 0
+            ? undefined
+            : props.formData.contactRecord.id
         }
       >
         {props.isFiltered
