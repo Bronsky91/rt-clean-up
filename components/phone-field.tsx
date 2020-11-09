@@ -1,5 +1,6 @@
 import { PhoneUpdate } from "../interfaces/redtail-contact-update.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
+import PhoneInput from "react-phone-input-2";
 import styles from "../styles/DataCleanupPage.module.scss";
 
 export default function PhoneFields(props) {
@@ -11,12 +12,14 @@ export default function PhoneFields(props) {
       {phones
         ? phones.map((phone, index) => (
             <div className={styles.formRow} key={phone.key}>
-              <input
-                className={styles.formSoloInput}
-                type="tel"
-                name="number"
+              <PhoneInput
+                containerClass={styles.phoneContainer}
+                buttonClass={styles.phoneButton}
+                inputClass={styles.phoneInput}
+                dropdownClass={styles.phoneDropdown}
+                country={phone.country_code || "us"}
                 value={phone.number || ""}
-                onChange={props.handleArrChange(index, "phones", phone.id)}
+                onChange={props.handlePhoneChange(index, "phones", phone.id)}
               />
               <div>
                 <select

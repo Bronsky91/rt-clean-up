@@ -235,6 +235,22 @@ export default function DataCleanupPage(props) {
     );
   };
 
+  const handlePhoneChange = (index: number, targetID: string) => (
+    value,
+    country
+  ) => {
+    const newArr = [...formData["phones"]];
+    newArr[index]["number"] = value;
+    newArr[index]["country_code"] = country.dialCode;
+
+    const updatedFormData = { ...formData, ["phones"]: newArr };
+
+    updateFormData(updatedFormData);
+    updateFormDirty(
+      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
+    );
+  };
+
   const handleDateChange = (date: any, fieldName) => {
     const updatedFormData = {
       ...formData,
@@ -685,8 +701,10 @@ export default function DataCleanupPage(props) {
                   </div>
                   <div className={styles.formColumn}>
                     <div className={styles.formRow}>
-                      <div className={styles.formHeader}>
-                        <label className={styles.formLabel}>Phone Number</label>
+                      <div className={styles.formHeaderLong}>
+                        <label className={styles.formHeaderLabelLong}>
+                          Phone Number
+                        </label>
                       </div>
                       <div className={styles.formHeaderShort}>
                         <label className={styles.formHeaderLabelShort}>
@@ -700,6 +718,7 @@ export default function DataCleanupPage(props) {
                     <PhoneFields
                       phones={formData.phones}
                       handleArrChange={handleArrChange}
+                      handlePhoneChange={handlePhoneChange}
                       dropdownData={dropdownData}
                       removeContactField={removeContactField}
                     ></PhoneFields>

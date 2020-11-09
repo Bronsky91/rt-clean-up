@@ -74,7 +74,11 @@ export const getContactAndPopulateForm = (
         ? data.phones.map((obj: PhoneRec) => ({
             key: uuid(),
             id: obj.id ? obj.id : 0,
-            number: obj.number ? obj.number : "",
+            country_code: obj.country_code ? obj.country_code : 1,
+            number:
+              obj.country_code && obj.number
+                ? obj.country_code.toString() + obj.number
+                : "",
             phone_type: obj.phone_type ? obj.phone_type : 0,
             is_primary: obj.is_primary ? obj.is_primary : false,
           }))

@@ -322,3 +322,30 @@ $long-field-multiplyer: 1.75;
   height: auto;
   max-height: ($field-height * 3) + 1rem;
 }
+
+.phoneContainer {
+  margin: 0.2rem !important;
+}
+
+.phoneInput {
+  height: $field-height !important;
+  width: $solo-field-width * $long-field-multiplyer !important;
+  min-width: $solo-field-width * $long-field-multiplyer !important;
+  max-width: $solo-field-width * $long-field-multiplyer !important;
+  border: 1px solid black !important;
+  border-radius: 0 !important;
+}
+
+.phoneButton {
+  margin-right: 0 !important;
+  height: $field-height !important;
+  width: $solo-field-width * $long-field-multiplyer * 0.2 !important;
+  min-width: $solo-field-width * $long-field-multiplyer * 0.2 !important;
+  max-width: $solo-field-width * $long-field-multiplyer * 0.2 !important;
+  border: 1px solid black !important;
+  border-radius: 0 !important;
+}
+
+.phoneDropdown {
+  position: fixed !important;
+}
