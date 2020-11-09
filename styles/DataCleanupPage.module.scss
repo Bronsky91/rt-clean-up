@@ -323,6 +323,8 @@ $long-field-multiplyer: 1.75;
   max-height: ($field-height * 3) + 1rem;
 }
 
+// Note: Phone classes marked !important to overwrite react-phone-input-2 default CSS
+// =============================================================
 .phoneContainer {
   margin: 0.2rem !important;
 }
@@ -355,3 +357,4 @@ $long-field-multiplyer: 1.75;
 .phoneDropdown {
   position: fixed !important;
 }
+// =============================================================

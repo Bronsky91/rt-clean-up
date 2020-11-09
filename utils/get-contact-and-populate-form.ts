@@ -77,7 +77,7 @@ export const getContactAndPopulateForm = (
             country_code: obj.country_code ? obj.country_code : 1,
             number:
               obj.country_code && obj.number
-                ? obj.country_code.toString() + obj.number
+                ? obj.country_code.toString() + obj.number // add country_code to number for react-phone-input-2
                 : "",
             phone_type: obj.phone_type ? obj.phone_type : 0,
             is_primary: obj.is_primary ? obj.is_primary : false,

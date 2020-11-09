@@ -717,8 +717,8 @@ export default function DataCleanupPage(props) {
                     </div>
                     <PhoneFields
                       phones={formData.phones}
-                      handleArrChange={handleArrChange}
-                      handlePhoneChange={handlePhoneChange}
+                      handleArrChange={handleArrChange} // Used by Type and Primary inputs
+                      handlePhoneChange={handlePhoneChange} // Used by Phone Number input
                       dropdownData={dropdownData}
                       removeContactField={removeContactField}
                     ></PhoneFields>

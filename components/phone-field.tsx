@@ -19,7 +19,7 @@ export default function PhoneFields(props) {
                 dropdownClass={styles.phoneDropdown}
                 preferredCountries={["us", "ca"]}
                 placeholder={""}
-                country={phone.country_code || "us"}
+                country={phone.country_code || "us"} // Using "us" instead of 1 here, as 1 does not correctly resolve to US flag when passed a new, empty phone number
                 value={phone.number || ""}
                 onChange={props.handlePhoneChange(index, "phones", phone.id)}
               />
