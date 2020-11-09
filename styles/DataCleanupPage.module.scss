@@ -332,8 +332,11 @@ $long-field-multiplyer: 1.75;
   width: $solo-field-width * $long-field-multiplyer !important;
   min-width: $solo-field-width * $long-field-multiplyer !important;
   max-width: $solo-field-width * $long-field-multiplyer !important;
-  border: 1px solid black !important;
+  border: 1px solid rgb(118, 118, 118) !important;
   border-radius: 0 !important;
+  &:hover {
+    border: 1px solid rgb(59, 59, 59) !important;
+  }
 }
 
 .phoneButton {
@@ -342,8 +345,11 @@ $long-field-multiplyer: 1.75;
   width: $solo-field-width * $long-field-multiplyer * 0.2 !important;
   min-width: $solo-field-width * $long-field-multiplyer * 0.2 !important;
   max-width: $solo-field-width * $long-field-multiplyer * 0.2 !important;
-  border: 1px solid black !important;
+  border: 1px solid rgb(118, 118, 118) !important;
   border-radius: 0 !important;
+  &:hover {
+    border: 1px solid rgb(59, 59, 59) !important;
+  }
 }
 
 .phoneDropdown {
