@@ -17,6 +17,8 @@ export default function PhoneFields(props) {
                 buttonClass={styles.phoneButton}
                 inputClass={styles.phoneInput}
                 dropdownClass={styles.phoneDropdown}
+                preferredCountries={["us", "ca"]}
+                placeholder={""}
                 country={phone.country_code || "us"}
                 value={phone.number || ""}
                 onChange={props.handlePhoneChange(index, "phones", phone.id)}
