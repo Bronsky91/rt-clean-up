@@ -116,7 +116,7 @@ export const createEmptyContactField = {
   phones: (): PhoneUpdate => ({
     key: uuid(),
     id: 0,
-    country_code: 1,
+    country_code: null,
     number: "",
     phone_type: 1,
     is_primary: false,

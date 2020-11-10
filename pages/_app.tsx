@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import "../styles/globals.scss";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import "react-phone-input-2/lib/style.css";
 import cookie from "cookie";
 import Cookies from "js-cookie";
 
