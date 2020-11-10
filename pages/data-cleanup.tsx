@@ -15,6 +15,7 @@ import {
   createEmptyContactList,
   createEmptyFilterPageData,
   createEmptyPageData,
+  createEmptyFilterData,
 } from "../utils/create-empty-form-data";
 import { setLocalStorage } from "../utils/set-local-storage";
 import TextField from "../components/text-field";
@@ -32,7 +33,6 @@ import {
 } from "../interfaces/redtail-contact-list.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
-import { createEmptyFilterData } from "../utils/create-empty-form-data";
 import DashboardPage from ".";
 export default function DataCleanupPage(props) {
   const router = useRouter();
@@ -68,6 +68,8 @@ export default function DataCleanupPage(props) {
   const [contactNextDisabled, setContactNextDisabled] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("status_id");
   const [filterData, setFilterData] = useState(emptyFilterData);
+  const [appliedFilterData, setAppliedFilterData] = useState(emptyFilterData);
+  const [filterDirty, setFilterDirty] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [selectedContactID, setSelectedContactID] = useState(0);
   const [isLocalStorageValid, setIsLocalStorageValid] = useState(false);
@@ -82,7 +84,6 @@ export default function DataCleanupPage(props) {
       applyLocalStorage(
         setOriginalFormData,
         setFormData,
-        setFormDirty,
         setContactList,
         setFilteredContactList,
         setIsFiltered,
@@ -93,6 +94,7 @@ export default function DataCleanupPage(props) {
         setContactNextDisabled,
         setSelectedFilter,
         setFilterData,
+        setAppliedFilterData,
         setShowFilters,
         setSelectedContactID,
         setDropdownData,
@@ -191,6 +193,17 @@ export default function DataCleanupPage(props) {
   // If unathenticated with Redtail, load Dashboard component
   if (!isRedtailAuth) return <DashboardPage {...props} />;
 
+  // Updates formDirty flag every time formData is updated
+  useEffect(() => {
+    setFormDirty(JSON.stringify(originalFormData) !== JSON.stringify(formData));
+  }, [originalFormData, formData]);
+
+  // Updates filterDirty flag every time filterData is updated
+  useEffect(() => {
+    setFilterDirty(
+      JSON.stringify(appliedFilterData) !== JSON.stringify(filterData)
+    );
+  }, [appliedFilterData, filterData]);
   // Saves Form State to Local Storage after each change
   useEffect(() => {
     // Only update LocalStorage values after we're done loading from LocalStorage
@@ -198,7 +211,6 @@ export default function DataCleanupPage(props) {
       setLocalStorage(
         originalFormData,
         formData,
-        formDirty,
         contactList,
         filteredContactList,
         isFiltered,
@@ -209,6 +221,7 @@ export default function DataCleanupPage(props) {
         contactNextDisabled,
         selectedFilter,
         filterData,
+        appliedFilterData,
         showFilters,
         selectedContactID,
         dropdownData
@@ -217,7 +230,6 @@ export default function DataCleanupPage(props) {
   }, [
     originalFormData,
     formData,
-    formDirty,
     contactList,
     filteredContactList,
     isFiltered,
@@ -228,7 +240,9 @@ export default function DataCleanupPage(props) {
     contactNextDisabled,
     selectedFilter,
     filterData,
+    appliedFilterData,
     showFilters,
+    selectedContactID,
     dropdownData,
   ]);
 
@@ -263,19 +277,28 @@ export default function DataCleanupPage(props) {
     const newContactFieldArray = formData[fieldName];
     const removedContactField = newContactFieldArray.splice(index, 1);
 
-    const updatedFormData = {
-      ...formData,
-      [fieldName]: [...newContactFieldArray],
-      contactFieldsToDelete: {
-        ...formData.contactFieldsToDelete,
-        [fieldName]: [
-          ...formData.contactFieldsToDelete[fieldName],
-          removedContactField[0].id,
-        ],
-      },
-    };
-
-    setFormData(updatedFormData);
+    if (removedContactField[0].id === 0) {
+      // If the deleted contact field was new, splice it from formData
+      const updatedFormData = {
+        ...formData,
+        [fieldName]: [...newContactFieldArray],
+      };
+      setFormData(updatedFormData);
+    } else {
+      // Otherwise, if the deleted contact field came from Redtail, queue it for API deletion on save
+      const updatedFormData = {
+        ...formData,
+        [fieldName]: [...newContactFieldArray],
+        contactFieldsToDelete: {
+          ...formData.contactFieldsToDelete,
+          [fieldName]: [
+            ...formData.contactFieldsToDelete[fieldName],
+            removedContactField[0].id,
+          ],
+        },
+      };
+      setFormData(updatedFormData);
+    }
   };
 
   const addContactField = (fieldName: string) => (e) => {
@@ -290,9 +313,6 @@ export default function DataCleanupPage(props) {
     };
 
     setFormData(updatedFormData);
-    setFormDirty(
-      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
-    );
   };
 
   // Updates form state for phones, emails, and addresses
@@ -316,9 +336,6 @@ export default function DataCleanupPage(props) {
     const updatedFormData = { ...formData, [arrName]: newArr };
 
     setFormData(updatedFormData);
-    setFormDirty(
-      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
-    );
   };
 
   const handlePhoneChange = (index: number, targetID: string) => (
@@ -331,10 +348,7 @@ export default function DataCleanupPage(props) {
 
     const updatedFormData = { ...formData, ["phones"]: newArr };
 
-    updateFormData(updatedFormData);
-    updateFormDirty(
-      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
-    );
+    setFormData(updatedFormData);
   };
 
   const handleDateChange = (date: any, fieldName) => {
@@ -347,9 +361,6 @@ export default function DataCleanupPage(props) {
     };
 
     setFormData(updatedFormData);
-    setFormDirty(
-      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
-    );
   };
 
   const handleChange = (e) => {
@@ -364,9 +375,6 @@ export default function DataCleanupPage(props) {
       },
     };
     setFormData(updatedFormData);
-    setFormDirty(
-      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
-    );
   };
 
   const contactSelected = (e) => {
@@ -377,7 +385,6 @@ export default function DataCleanupPage(props) {
     getContactAndPopulateForm(
       setOriginalFormData,
       setFormData,
-      setFormDirty,
       formData,
       id
     ).then(() => {
@@ -391,7 +398,6 @@ export default function DataCleanupPage(props) {
     getContactAndPopulateForm(
       setOriginalFormData,
       setFormData,
-      setFormDirty,
       formData,
       id
     ).then(() => {
@@ -460,7 +466,6 @@ export default function DataCleanupPage(props) {
   const handleUndo = (e) => {
     e.preventDefault();
     setFormData(originalFormData);
-    setFormDirty(false);
   };
 
   const handleSubmit = (e) => {
@@ -593,8 +598,10 @@ export default function DataCleanupPage(props) {
           setIsFiltered={setIsFiltered}
           clearFilter={clearFilter}
           setClearFilter={setClearFilter}
+          setAppliedFilterData={setAppliedFilterData}
           filterPageData={filterPageData}
           setFilterPageData={setFilterPageData}
+          filterDirty={filterDirty}
           pageData={pageData}
           changePage={changePage}
           pageInput={pageInput}
@@ -736,12 +743,17 @@ export default function DataCleanupPage(props) {
                       />
 
                       <div className={styles.saveButtonContainer}>
-                        <button type="submit" className={styles.saveButton}>
+                        <button
+                          type="submit"
+                          className={styles.saveButton}
+                          disabled={!formDirty}
+                        >
                           SAVE
                         </button>
                         <button
                           className={styles.undoButton}
                           onClick={handleUndo}
+                          disabled={!formDirty}
                         >
                           UNDO
                         </button>
