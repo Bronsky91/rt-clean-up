@@ -29,6 +29,7 @@ export default function PageLayout({ children }) {
   };
 
   const cleanupClickHandler = (e) => {
+    localStorage.clear();
     if (!isRedtailAuth) openModal();
   };
 
@@ -77,7 +78,9 @@ export default function PageLayout({ children }) {
                 }
                 onClick={cleanupClickHandler}
               >
-                {/* TODO: Fix to accomodate for more than one page */}
+                {
+                  // TODO: Fix to accomodate for more than one page
+                }
                 {router.pathname !== "/" ? (
                   <img src="/data-cleanup-icon.png" />
                 ) : (

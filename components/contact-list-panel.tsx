@@ -7,17 +7,11 @@ import {
   FilterData,
   RedtailSearchParam,
 } from "../interfaces/redtail-contact-list.interface";
-import { createEmptyFilterData } from "../utils/create-empty-form-data";
 
 export default function ContactListPanel(props) {
-  const emptyFilterData: Readonly<FilterData[]> = createEmptyFilterData();
-  const [selectedFilter, updateSelectedFilter] = useState("status_id");
-  const [filterData, updateFilterData] = useState(emptyFilterData);
-  const [showFilters, setShowFilters] = useState(false);
-
   const toggleFilterWindow = (e) => {
     e.preventDefault();
-    setShowFilters(!showFilters);
+    props.setShowFilters(!props.showFilters);
   };
 
   const handlePageInput = (e) => {
@@ -139,7 +133,7 @@ export default function ContactListPanel(props) {
           endIndex: props.contactsPerPage,
         });
         props.setIsFiltered(true);
-        setShowFilters(false);
+        props.setShowFilters(false);
         props.pageInput.current.value = "1";
         props.setPageInputText("1");
 
@@ -160,32 +154,34 @@ export default function ContactListPanel(props) {
     });
     props.setFilteredContactList([]);
     props.setIsFiltered(false);
-    setShowFilters(false);
+    props.setClearFilter(true);
+    props.setShowFilters(false);
   };
 
-  // Change page back to 1 after isFilter is set to false
+  // Change page back to 1 after filter is cleared and state has updated to reflect this
   useEffect(() => {
-    if (!props.isFiltered) {
+    if (!props.isFiltered && props.clearFilter) {
+      props.setClearFilter(false);
       props.changePage(1);
     }
-  }, [props.isFiltered]);
+  }, [props.isFiltered, props.clearFilter]);
 
   return (
     <div className={styles.contactsPanel}>
       <div className={styles.contactsTopRow}>
         <label className={styles.contactsTitle}>Contacts</label>
         <button className={styles.filterButton} onClick={toggleFilterWindow} />
-        {showFilters ? (
+        {props.showFilters ? (
           <ContactFilter
             dropdownData={props.dropdownData}
             handleFilter={handleFilter}
             handleClear={handleClear}
             isFiltered={props.isFiltered}
-            updateSelectedFilter={updateSelectedFilter}
-            selectedFilter={selectedFilter}
-            updateFilterData={updateFilterData}
-            filterData={filterData}
-            setShowFilters={setShowFilters}
+            setSelectedFilter={props.setSelectedFilter}
+            selectedFilter={props.selectedFilter}
+            setFilterData={props.setFilterData}
+            filterData={props.filterData}
+            setShowFilters={props.setShowFilters}
           ></ContactFilter>
         ) : null}
       </div>
@@ -200,9 +196,7 @@ export default function ContactListPanel(props) {
         name="contact-list"
         size={props.contactsPerPage}
         value={
-          props.formData.contactRecord.id === 0
-            ? undefined
-            : props.formData.contactRecord.id
+          props.selectedContactID === 0 ? undefined : props.selectedContactID
         }
       >
         {props.isFiltered
@@ -253,8 +247,8 @@ export default function ContactListPanel(props) {
             style={{
               width: (props.pageInputText.length + 2).toString() + "rem",
             }}
-          />{" "}
-          of{" "}
+          />
+          {" of "}
           {props.isFiltered
             ? props.filterPageData.totalPages.toString() + " "
             : props.pageData.totalPages.toString() + " "}
