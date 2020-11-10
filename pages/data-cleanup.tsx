@@ -590,6 +590,7 @@ export default function DataCleanupPage(props) {
           setFilterData={setFilterData}
           showFilters={showFilters}
           setShowFilters={setShowFilters}
+          selectedContactID={selectedContactID}
         ></ContactListPanel>
         <LoadingOverlay active={savingContact} spinner text="Saving Contact">
           <LoadingOverlay
