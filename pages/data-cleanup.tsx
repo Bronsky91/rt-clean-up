@@ -38,6 +38,7 @@ import {
 } from "../interfaces/redtail-contact-update.interface";
 import DashboardPage from ".";
 import { isIndividual } from "../utils/isIndividual";
+
 export default function DataCleanupPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
