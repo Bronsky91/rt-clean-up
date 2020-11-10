@@ -12,6 +12,9 @@ import {
   createEmptyFormData,
   createEmptyDropDownData,
   createEmptyContactField,
+  createEmptyContactList,
+  createEmptyFilterPageData,
+  createEmptyPageData,
 } from "../utils/create-empty-form-data";
 import { setLocalStorage } from "../utils/set-local-storage";
 import TextField from "../components/text-field";
@@ -21,7 +24,10 @@ import PhoneFields from "../components/phone-field";
 import AddressFields from "../components/address-field";
 import DateField from "../components/date-field";
 import {
+  ContactListEntry,
   FilterData,
+  FilterPageData,
+  PageData,
   RedtailContactListRec,
 } from "../interfaces/redtail-contact-list.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
@@ -37,24 +43,22 @@ export default function DataCleanupPage(props) {
   const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
   const emptyDropDowns: Readonly<RedtailSettingsData> = createEmptyDropDownData();
   const emptyFilterData: Readonly<FilterData[]> = createEmptyFilterData();
+  const emptyFilterPageData: Readonly<FilterPageData> = createEmptyFilterPageData();
+  const emptyPageData: Readonly<PageData> = createEmptyPageData();
+  const emptyContactList: Readonly<
+    ContactListEntry[]
+  > = createEmptyContactList();
   const [formData, setFormData] = useState(emptyFormData);
   const [originalFormData, setOriginalFormData] = useState(emptyFormData);
   const [formDirty, setFormDirty] = useState(false);
-  const [contactList, setContactList] = useState([]);
-  const [filteredContactList, setFilteredContactList] = useState([]);
+  const [contactList, setContactList] = useState(emptyContactList);
+  const [filteredContactList, setFilteredContactList] = useState(
+    emptyContactList
+  );
   const [isFiltered, setIsFiltered] = useState(false);
   const [clearFilter, setClearFilter] = useState(false);
-  const [filterPageData, setFilterPageData] = useState({
-    currentPage: 1,
-    totalPages: 1,
-    startIndex: 0,
-    endIndex: contactsPerPage,
-  });
-  const [pageData, setPageData] = useState({
-    currentPage: 1,
-    totalPages: 1,
-    totalContacts: 0,
-  });
+  const [filterPageData, setFilterPageData] = useState(emptyFilterPageData);
+  const [pageData, setPageData] = useState(emptyPageData);
   const [pageInputText, setPageInputText] = useState("");
   const [dropdownData, setDropdownData] = useState(emptyDropDowns);
   const [loadingPage, setLoadingPage] = useState(false);
@@ -65,6 +69,7 @@ export default function DataCleanupPage(props) {
   const [selectedFilter, setSelectedFilter] = useState("status_id");
   const [filterData, setFilterData] = useState(emptyFilterData);
   const [showFilters, setShowFilters] = useState(false);
+  const [isLocalStorageValid, setIsLocalStorageValid] = useState(false);
   const [localStorageApplied, setLocalStorageApplied] = useState(false);
 
   useEffect(() => {
@@ -89,6 +94,7 @@ export default function DataCleanupPage(props) {
         setSelectedFilter,
         setFilterData,
         setShowFilters,
+        setIsLocalStorageValid,
         setLocalStorageApplied
       );
     } else if (!isRedtailAuth) {
@@ -107,9 +113,12 @@ export default function DataCleanupPage(props) {
     if (!isAuth || !isRedtailAuth) return;
 
     if (localStorageApplied) {
+
+
+    // Only load clean slate data from Redtail if valid data was not in Local Storage
+    if (localStorageApplied && !isLocalStorageValid) {
       // This 'mounted' boolean used to avoid issue outlined here: https://www.debuggr.io/react-update-unmounted-component/
       let mounted = true;
-
 
       axios
         .get(
@@ -133,7 +142,7 @@ export default function DataCleanupPage(props) {
               totalContacts: totalCount,
             });
 
-            const formattedContactList = contacts
+            const formattedContactList: ContactListEntry[] = contacts
               .map((contact) => {
                 return {
                   id: contact.id,
@@ -146,9 +155,9 @@ export default function DataCleanupPage(props) {
 
             // If contacts returned, select first one
             // console.log("contacts returned from redtail, selecting first one");
-            // if (formattedContactList && formattedContactList.length >= 1) {
-            //   selectContact(formattedContactList[0].id.toString());
-            // }
+            if (formattedContactList && formattedContactList.length >= 1) {
+              selectContact(formattedContactList[0].id);
+            }
           }
 
           axios
@@ -160,7 +169,6 @@ export default function DataCleanupPage(props) {
                 const dropdownData: RedtailSettingsData = res.data;
                 setDropdownData(dropdownData);
                 setLoadingPage(false);
-                setLocalStorageApplied(false);
               }
             });
         });
@@ -168,6 +176,8 @@ export default function DataCleanupPage(props) {
       return () => {
         mounted = false;
       };
+    } else {
+      setLoadingPage(false);
     }
   }, [localStorageApplied]);
 
@@ -179,23 +189,26 @@ export default function DataCleanupPage(props) {
 
   // Saves Form State to Local Storage after each change
   useEffect(() => {
+    // Only update LocalStorage values after we're done loading from LocalStorage
+    if (localStorageApplied) {
     console.log("setting local storage");
-    setLocalStorage(
-      originalFormData,
-      formData,
-      formDirty,
-      contactList,
-      filteredContactList,
-      isFiltered,
-      filterPageData,
-      pageData,
-      pageInputText,
-      contactPrevDisabled,
-      contactNextDisabled,
-      selectedFilter,
-      filterData,
-      showFilters
-    );
+      setLocalStorage(
+        originalFormData,
+        formData,
+        formDirty,
+        contactList,
+        filteredContactList,
+        isFiltered,
+        filterPageData,
+        pageData,
+        pageInputText,
+        contactPrevDisabled,
+        contactNextDisabled,
+        selectedFilter,
+        filterData,
+        showFilters
+      );
+    }
   }, [
     originalFormData,
     formData,
@@ -350,7 +363,7 @@ export default function DataCleanupPage(props) {
     });
   };
 
-  const selectContact = (id: string) => {
+  const selectContact = (id: number) => {
     setLoadingContact(true);
     getContactAndPopulateForm(
       setOriginalFormData,
@@ -379,9 +392,7 @@ export default function DataCleanupPage(props) {
       });
       // After loading page, select contact
       if (filteredContactList && filteredContactList[startIndex]) {
-        selectContact(
-          filteredContactList[startIndex + selectContactIndex].id.toString()
-        );
+        selectContact(filteredContactList[startIndex + selectContactIndex].id);
       }
       setLoadingPage(false);
     } else {
@@ -404,7 +415,7 @@ export default function DataCleanupPage(props) {
             totalContacts: totalCount,
           });
 
-          const formattedContactList = contacts
+          const formattedContactList: ContactListEntry[] = contacts
             .map((contact) => {
               return {
                 id: contact.id,
@@ -416,9 +427,7 @@ export default function DataCleanupPage(props) {
           setContactList(formattedContactList);
           // Select contact after they are returned
           if (formattedContactList && formattedContactList.length >= 1) {
-            selectContact(
-              formattedContactList[selectContactIndex].id.toString()
-            );
+            selectContact(formattedContactList[selectContactIndex].id);
           }
           setLoadingPage(false);
         });
@@ -463,6 +472,7 @@ export default function DataCleanupPage(props) {
           }
           // Reload contact page from Redtail as a data validation measure
           selectContact(formData.contactRecord.id.toString());
+          selectContact(formData.contactRecord.id);
 
           alert("Contact Saved!");
         } else {

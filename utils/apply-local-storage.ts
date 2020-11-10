@@ -1,3 +1,5 @@
+import { DataCleanUpLocalStorage } from "../interfaces/linkpoint-form-interface";
+
 export const applyLocalStorage = (
   setOriginalFormData,
   setFormData,
@@ -13,24 +15,93 @@ export const applyLocalStorage = (
   setSelectedFilter,
   setFilterData,
   setShowFilters,
+  setIsLocalStorageValid,
   setLocalStorageApplied
 ) => {
-  const ls = JSON.parse(localStorage.getItem("dataCleanUpLocalStorage"));
+  let isLocalStorageValid = true;
 
-  if (ls?.originalFormData) setOriginalFormData(ls?.originalFormData);
-  if (ls?.formData) setFormData(ls?.formData);
-  if (ls?.formDirty) setFormDirty(ls?.formDirty);
-  if (ls?.contactList) setContactList(ls?.contactList);
-  if (ls?.filteredContactList) setFilteredContactList(ls?.filteredContactList);
-  if (ls?.isFiltered) setIsFiltered(ls?.isFiltered);
-  if (ls?.filterPageData) setFilterPageData(ls?.filterPageData);
-  if (ls?.pageData) setPageData(ls?.pageData);
-  if (ls?.pageInputText) setPageInputText(ls?.pageInputText);
-  if (ls?.contactPrevDisabled) setContactPrevDisabled(ls?.contactPrevDisabled);
-  if (ls?.contactNextDisabled) setContactNextDisabled(ls?.contactNextDisabled);
-  if (ls?.selectedFilter) setSelectedFilter(ls?.selectedFilter);
-  if (ls?.filterData) setFilterData(ls?.filterData);
-  if (ls?.showFilters) setShowFilters(ls?.showFilters);
+  const ls: DataCleanUpLocalStorage = JSON.parse(
+    localStorage.getItem("dataCleanUpLocalStorage")
+  );
 
+  // If no LocalStorage object, bail out early
+  if (!ls) {
+    setIsLocalStorageValid(false);
+    setLocalStorageApplied(true);
+    return;
+  }
+
+  if (ls.hasOwnProperty("originalFormData")) {
+    setOriginalFormData(ls.originalFormData);
+  } else {
+    isLocalStorageValid = false;
+  }
+  if (ls.hasOwnProperty("formData")) {
+    setFormData(ls.formData);
+  } else {
+    isLocalStorageValid = false;
+  }
+  if (ls.hasOwnProperty("formDirty")) {
+    setFormDirty(ls.formDirty);
+  } else {
+    isLocalStorageValid = false;
+  }
+  if (ls.hasOwnProperty("contactList")) {
+    setContactList(ls.contactList);
+  } else {
+    isLocalStorageValid = false;
+  }
+  if (ls.hasOwnProperty("filteredContactList")) {
+    setFilteredContactList(ls.filteredContactList);
+  } else {
+    isLocalStorageValid = false;
+  }
+  if (ls.hasOwnProperty("isFiltered")) {
+    setIsFiltered(ls.isFiltered);
+  } else {
+    isLocalStorageValid = false;
+  }
+  if (ls.hasOwnProperty("filterPageData")) {
+    setFilterPageData(ls.filterPageData);
+  } else {
+    isLocalStorageValid = false;
+  }
+  if (ls.hasOwnProperty("pageData")) {
+    setPageData(ls.pageData);
+  } else {
+    isLocalStorageValid = false;
+  }
+  if (ls.hasOwnProperty("pageInputText")) {
+    setPageInputText(ls.pageInputText);
+  } else {
+    isLocalStorageValid = false;
+  }
+  if (ls.hasOwnProperty("contactPrevDisabled")) {
+    setContactPrevDisabled(ls.contactPrevDisabled);
+  } else {
+    isLocalStorageValid = false;
+  }
+  if (ls.hasOwnProperty("contactNextDisabled")) {
+    setContactNextDisabled(ls.contactNextDisabled);
+  } else {
+    isLocalStorageValid = false;
+  }
+  if (ls.hasOwnProperty("selectedFilter")) {
+    setSelectedFilter(ls.selectedFilter);
+  } else {
+    isLocalStorageValid = false;
+  }
+  if (ls.hasOwnProperty("filterData")) {
+    setFilterData(ls.filterData);
+  } else {
+    isLocalStorageValid = false;
+  }
+  if (ls.hasOwnProperty("showFilters")) {
+    setShowFilters(ls.showFilters);
+  } else {
+    isLocalStorageValid = false;
+  }
+
+  setIsLocalStorageValid(isLocalStorageValid);
   setLocalStorageApplied(true);
 };

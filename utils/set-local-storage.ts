@@ -1,15 +1,21 @@
-import { FilterData } from "../interfaces/redtail-contact-list.interface";
+import { DataCleanUpLocalStorage } from "../interfaces/linkpoint-form-interface";
+import {
+  ContactListEntry,
+  FilterData,
+  FilterPageData,
+  PageData,
+} from "../interfaces/redtail-contact-list.interface";
 import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
 
 export const setLocalStorage = (
   originalFormData: Readonly<RedtailContactUpdate>,
   formData: Readonly<RedtailContactUpdate>,
   formDirty: boolean,
-  contactList,
-  filteredContactList,
+  contactList: Readonly<ContactListEntry[]>,
+  filteredContactList: Readonly<ContactListEntry[]>,
   isFiltered: boolean,
-  filterPageData,
-  pageData,
+  filterPageData: Readonly<FilterPageData>,
+  pageData: Readonly<PageData>,
   pageInputText: string,
   contactPrevDisabled: boolean,
   contactNextDisabled: boolean,
@@ -17,7 +23,7 @@ export const setLocalStorage = (
   filterData: Readonly<FilterData[]>,
   showFilters: boolean
 ) => {
-  const ls = {
+  const ls: DataCleanUpLocalStorage = {
     originalFormData: originalFormData,
     formData: formData,
     formDirty: formDirty,
