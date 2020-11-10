@@ -353,7 +353,7 @@ export default function DataCleanupPage(props) {
   const contactSelected = (e) => {
     e.preventDefault();
     setLoadingContact(true);
-    const id = e.target.value;
+    const id: number = parseInt(e.target.value);
     setSelectedContactID(id);
     getContactAndPopulateForm(
       setOriginalFormData,
