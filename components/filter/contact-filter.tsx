@@ -42,7 +42,7 @@ export default function ContactFilter(props) {
   const onFilterClicked = (e) => {
     e.preventDefault();
     const filter = e.target.value;
-    props.updateSelectedFilter(filter);
+    props.setSelectedFilter(filter);
   };
 
   return (

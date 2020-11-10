@@ -1,5 +1,10 @@
 import { v4 as uuid } from "uuid";
-import { FilterData } from "../interfaces/redtail-contact-list.interface";
+import {
+  ContactListEntry,
+  FilterData,
+  FilterPageData,
+  PageData,
+} from "../interfaces/redtail-contact-list.interface";
 import { RedtailContactRec } from "../interfaces/redtail-contact-receive.interface";
 import {
   AddressUpdate,
@@ -167,3 +172,20 @@ export const createEmptyFilterData = (): Readonly<FilterData[]> =>
     //   selectedIds: [],
     // },
   ]);
+
+export const createEmptyFilterPageData = (): Readonly<FilterPageData> =>
+  Object.freeze({
+    currentPage: 1,
+    totalPages: 1,
+    startIndex: 0,
+    endIndex: 50,
+  });
+
+export const createEmptyPageData = (): Readonly<PageData> =>
+  Object.freeze({
+    currentPage: 1,
+    totalPages: 1,
+    totalContacts: 0,
+  });
+
+export const createEmptyContactList = (): Readonly<ContactListEntry[]> => [];
