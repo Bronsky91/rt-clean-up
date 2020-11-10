@@ -36,7 +36,6 @@ import {
   ContactTypes,
   RedtailContactUpdate,
 } from "../interfaces/redtail-contact-update.interface";
-import { createEmptyFilterData } from "../utils/create-empty-form-data";
 import DashboardPage from ".";
 import { isIndividual } from "../utils/isIndividual";
 export default function DataCleanupPage(props) {

@@ -8,8 +8,6 @@ import {
 } from "../interfaces/redtail-contact-list.interface";
 
 export default function ContactListPanel(props) {
-  const [selectedFilter, updateSelectedFilter] = useState("status_id");
-  const [showFilters, setShowFilters] = useState(false);
   const toggleFilterWindow = (e) => {
     e.preventDefault();
     props.setShowFilters(!props.showFilters);
