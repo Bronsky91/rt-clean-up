@@ -12,11 +12,11 @@ export default function RedtailAuthModal(props) {
     password: "",
   });
 
-  const [formData, updateFormData] = useState(initialFormData);
+  const [formData, setFormData] = useState(initialFormData);
 
   const handleChange = (event) => {
     const target = event.target;
-    updateFormData({
+    setFormData({
       ...formData,
       // Trimming any whitespace
       [target.name]: target.value.trim(),

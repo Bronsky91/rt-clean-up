@@ -12,8 +12,8 @@ import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.inter
 
 export const getContactAndPopulateForm = (
   updateOriginalFormData,
-  updateFormData,
-  updateFormDirty,
+  setFormData,
+  setFormDirty,
   formData,
   id
 ) => {
@@ -27,68 +27,64 @@ export const getContactAndPopulateForm = (
     const loadedFormData: RedtailContactUpdate = {
       key: formData.key,
       contactRecord: {
-        id: data.id ? data.id : 0,
-        salutation_id: data.salutation_id ? data.salutation_id : 0,
-        first_name: data.first_name ? data.first_name : "",
-        middle_name: data.middle_name ? data.middle_name : "",
-        last_name: data.last_name ? data.last_name : "",
-        nickname: data.nickname ? data.nickname : "",
-        gender_id: data.gender_id ? data.gender_id : 0,
-        dob: data.dob ? data.dob : "",
-        category_id: data.category_id ? data.category_id : 0,
-        status_id: data.status_id ? data.status_id : 0,
-        source_id: data.source_id ? data.source_id : 0,
-        tax_id: data.tax_id ? data.tax_id : "",
-        servicing_advisor_id: data.servicing_advisor_id
-          ? data.servicing_advisor_id
-          : 0,
-        writing_advisor_id: data.writing_advisor_id
-          ? data.writing_advisor_id
-          : 0,
+        id: data.id || 0,
+        type: data.type || "",
+        salutation_id: data.salutation_id || 0,
+        first_name: data.first_name || "",
+        middle_name: data.middle_name || "",
+        last_name: data.last_name || "",
+        nickname: data.nickname || "",
+        company_name: data.company_name || "",
+        gender_id: data.gender_id || 0,
+        dob: data.dob || "",
+        category_id: data.category_id || 0,
+        status_id: data.status_id || 0,
+        source_id: data.source_id || 0,
+        tax_id: data.tax_id || "",
+        servicing_advisor_id: data.servicing_advisor_id || 0,
+        writing_advisor_id: data.writing_advisor_id || 0,
       },
       addresses: data.addresses
         ? data.addresses.map((obj: AddressRec) => ({
             key: uuid(),
             id: obj.id ? obj.id : 0,
-            street_address: obj.street_address ? obj.street_address : "",
-            secondary_address: obj.secondary_address
-              ? obj.secondary_address
-              : "",
-            city: obj.city ? obj.city : "",
-            state: obj.state ? obj.state : "",
-            zip: obj.zip ? obj.zip : "",
-            address_type: obj.address_type ? obj.address_type : 0,
-            is_primary: obj.is_primary ? obj.is_primary : false,
+            street_address: obj.street_address || "",
+            secondary_address: obj.secondary_address || "",
+            city: obj.city || "",
+            state: obj.state || "",
+            zip: obj.zip || "",
+            address_type: obj.address_type || 0,
+            is_primary: obj.is_primary || false,
           }))
         : null,
       emails: data.emails
         ? data.emails.map((obj: EmailRec) => ({
             key: uuid(),
-            id: obj.id ? obj.id : 0,
-            address: obj.address ? obj.address : "",
-            email_type: obj.email_type ? obj.email_type : 0,
-            is_primary: obj.is_primary ? obj.is_primary : false,
+            id: obj.id || 0,
+            address: obj.address || "",
+            email_type: obj.email_type || 0,
+            is_primary: obj.is_primary || false,
           }))
         : null,
       phones: data.phones
         ? data.phones.map((obj: PhoneRec) => ({
             key: uuid(),
-            id: obj.id ? obj.id : 0,
-            country_code: obj.country_code ? obj.country_code : 1,
+            id: obj.id || 0,
+            country_code: obj.country_code || 1,
             number:
               obj.country_code && obj.number
                 ? obj.country_code.toString() + obj.number // add country_code to number for react-phone-input-2
                 : "",
-            phone_type: obj.phone_type ? obj.phone_type : 0,
-            is_primary: obj.is_primary ? obj.is_primary : false,
+            phone_type: obj.phone_type || 0,
+            is_primary: obj.is_primary || false,
           }))
         : null,
       urls: data.urls
         ? data.urls.map((obj: UrlRec) => ({
             key: uuid(),
-            id: obj.id ? obj.id : 0,
-            address: obj.address ? obj.address : "",
-            url_type: obj.url_type ? obj.url_type : 0,
+            id: obj.id || 0,
+            address: obj.address || "",
+            url_type: obj.url_type || 0,
           }))
         : null,
       contactFieldsToDelete: {
@@ -99,8 +95,8 @@ export const getContactAndPopulateForm = (
       },
     };
 
-    updateFormData(loadedFormData);
+    setFormData(loadedFormData);
     updateOriginalFormData(JSON.parse(JSON.stringify(loadedFormData))); // force pass by val not ref
-    updateFormDirty(false);
+    setFormDirty(false);
   });
 };

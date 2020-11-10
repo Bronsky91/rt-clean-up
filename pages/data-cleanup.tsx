@@ -31,9 +31,13 @@ import {
   RedtailContactListRec,
 } from "../interfaces/redtail-contact-list.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
-import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
+import {
+  ContactTypes,
+  RedtailContactUpdate,
+} from "../interfaces/redtail-contact-update.interface";
 import { createEmptyFilterData } from "../utils/create-empty-form-data";
 import DashboardPage from ".";
+import { isIndividual } from "../utils/isIndividual";
 export default function DataCleanupPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
@@ -153,7 +157,10 @@ export default function DataCleanupPage(props) {
               .map((contact) => {
                 return {
                   id: contact.id,
-                  lastName: contact.last_name,
+                  name:
+                    contact.type !== ContactTypes.Individual
+                      ? contact.full_name
+                      : contact.last_name,
                 };
               })
               .sort((a, b) => a.id - b.id);
@@ -321,23 +328,20 @@ export default function DataCleanupPage(props) {
     );
   };
 
-  const handlePhoneChange = (index: number, targetID: string) => (
-    value,
-    country
-  ) => {
+  const handlePhoneChange = (index: number) => (value, country) => {
     const newArr = [...formData["phones"]];
     newArr[index]["number"] = value;
     newArr[index]["country_code"] = country.dialCode;
 
     const updatedFormData = { ...formData, ["phones"]: newArr };
 
-    updateFormData(updatedFormData);
-    updateFormDirty(
+    setFormData(updatedFormData);
+    setFormDirty(
       JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
     );
   };
 
-  const handleDateChange = (date: any, fieldName) => {
+  const handleDateChange = (date: any, fieldName: string) => {
     const updatedFormData = {
       ...formData,
       contactRecord: {
@@ -369,20 +373,10 @@ export default function DataCleanupPage(props) {
     );
   };
 
-  const contactSelected = (e) => {
+  const handleContactChange = (e) => {
     e.preventDefault();
-    setLoadingContact(true);
-    const id: number = parseInt(e.target.value);
-    setSelectedContactID(id);
-    getContactAndPopulateForm(
-      setOriginalFormData,
-      setFormData,
-      setFormDirty,
-      formData,
-      id
-    ).then(() => {
-      setLoadingContact(false);
-    });
+    const id: number = Number(e.target.value);
+    selectContact(id);
   };
 
   const selectContact = (id: number) => {
@@ -442,7 +436,7 @@ export default function DataCleanupPage(props) {
             .map((contact) => {
               return {
                 id: contact.id,
-                lastName: contact.last_name,
+                name: contact.last_name,
               };
             })
             .sort((a, b) => a.id - b.id);
@@ -583,9 +577,8 @@ export default function DataCleanupPage(props) {
     >
       <div className={styles.container}>
         <ContactListPanel
-          formData={formData}
           contactsPerPage={contactsPerPage}
-          contactSelected={contactSelected}
+          handleContactChange={handleContactChange}
           contactList={contactList}
           filteredContactList={filteredContactList}
           setFilteredContactList={setFilteredContactList}
@@ -624,56 +617,66 @@ export default function DataCleanupPage(props) {
             >
               <div className={styles.formRow}>
                 <div className={styles.formColumn}>
-                  <DropDownField
-                    label="Salutation"
-                    fieldName="salutation_id"
-                    fieldValue={formData.contactRecord?.salutation_id}
-                    dropDownItems={dropdownData.salutations}
-                    handleChange={handleChange}
-                  ></DropDownField>
+                  {isIndividual(formData) ? (
+                    <div>
+                      <DropDownField
+                        label="Salutation"
+                        fieldName="salutation_id"
+                        fieldValue={formData.contactRecord?.salutation_id}
+                        dropDownItems={dropdownData.salutations}
+                        handleChange={handleChange}
+                      ></DropDownField>
 
-                  <TextField
-                    label="First Name"
-                    fieldName="first_name"
-                    fieldValue={formData.contactRecord?.first_name}
-                    handleChange={handleChange}
-                  ></TextField>
+                      <TextField
+                        label="First Name"
+                        fieldName="first_name"
+                        fieldValue={formData.contactRecord?.first_name}
+                        handleChange={handleChange}
+                      ></TextField>
+                      <TextField
+                        label="Middle Name"
+                        fieldName="middle_name"
+                        fieldValue={formData.contactRecord?.middle_name}
+                        handleChange={handleChange}
+                      ></TextField>
 
-                  <TextField
-                    label="Middle Name"
-                    fieldName="middle_name"
-                    fieldValue={formData.contactRecord?.middle_name}
-                    handleChange={handleChange}
-                  ></TextField>
+                      <TextField
+                        label="Last Name"
+                        fieldName="last_name"
+                        fieldValue={formData.contactRecord?.last_name}
+                        handleChange={handleChange}
+                      ></TextField>
 
-                  <TextField
-                    label="Last Name"
-                    fieldName="last_name"
-                    fieldValue={formData.contactRecord?.last_name}
-                    handleChange={handleChange}
-                  ></TextField>
+                      <TextField
+                        label="Nickname"
+                        fieldName="nickname"
+                        fieldValue={formData.contactRecord?.nickname}
+                        handleChange={handleChange}
+                      ></TextField>
 
-                  <TextField
-                    label="Nickname"
-                    fieldName="nickname"
-                    fieldValue={formData.contactRecord?.nickname}
-                    handleChange={handleChange}
-                  ></TextField>
+                      <DropDownField
+                        label="Gender"
+                        fieldName="gender_id"
+                        fieldValue={formData.contactRecord?.gender_id}
+                        dropDownItems={dropdownData.genderTypes}
+                        handleChange={handleChange}
+                      ></DropDownField>
 
-                  <DropDownField
-                    label="Gender"
-                    fieldName="gender_id"
-                    fieldValue={formData.contactRecord?.gender_id}
-                    dropDownItems={dropdownData.genderTypes}
-                    handleChange={handleChange}
-                  ></DropDownField>
-
-                  <DateField
-                    label="Date of Birth"
-                    fieldName="dob"
-                    fieldValue={formData.contactRecord?.dob}
-                    handleDateChange={handleDateChange}
-                  ></DateField>
+                      <DateField
+                        label="Date of Birth"
+                        fieldName="dob"
+                        fieldValue={formData.contactRecord?.dob}
+                        handleDateChange={handleDateChange}
+                      ></DateField>
+                    </div>
+                  ) : (
+                    <TextField
+                      label="Company Name"
+                      fieldName="company_name"
+                      fieldValue={formData.contactRecord?.company_name}
+                      handleChange={handleChange}
+                    ></TextField>
+                  )}
                 </div>
 
                 <div className={styles.formColumn}>
