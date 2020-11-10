@@ -171,8 +171,6 @@ export default function ContactListPanel(props) {
     }
   }, [props.isFiltered, props.clearFilter]);
 
-  useEffect(() => {}, [props.filterData, selectedFilter]);
-
   return (
     <div className={styles.contactsPanel}>
       <div className={styles.contactsTopRow}>

@@ -33,7 +33,6 @@ import {
 } from "../interfaces/redtail-contact-list.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
-import { createEmptyFilterData } from "../utils/create-empty-form-data";
 import DashboardPage from ".";
 export default function DataCleanupPage(props) {
   const router = useRouter();
@@ -85,7 +84,6 @@ export default function DataCleanupPage(props) {
       applyLocalStorage(
         setOriginalFormData,
         setFormData,
-        setFormDirty,
         setContactList,
         setFilteredContactList,
         setIsFiltered,
@@ -96,6 +94,7 @@ export default function DataCleanupPage(props) {
         setContactNextDisabled,
         setSelectedFilter,
         setFilterData,
+        setAppliedFilterData,
         setShowFilters,
         setSelectedContactID,
         setDropdownData,
@@ -193,12 +192,10 @@ export default function DataCleanupPage(props) {
 
   // If unathenticated with Redtail, load Dashboard component
   if (!isRedtailAuth) return <DashboardPage {...props} />;
-  
+
   // Updates formDirty flag every time formData is updated
   useEffect(() => {
-    setFormDirty(
-      JSON.stringify(originalFormData) !== JSON.stringify(formData)
-    );
+    setFormDirty(JSON.stringify(originalFormData) !== JSON.stringify(formData));
   }, [originalFormData, formData]);
 
   // Updates filterDirty flag every time filterData is updated
@@ -214,7 +211,6 @@ export default function DataCleanupPage(props) {
       setLocalStorage(
         originalFormData,
         formData,
-        formDirty,
         contactList,
         filteredContactList,
         isFiltered,
@@ -225,6 +221,7 @@ export default function DataCleanupPage(props) {
         contactNextDisabled,
         selectedFilter,
         filterData,
+        appliedFilterData,
         showFilters,
         selectedContactID,
         dropdownData
@@ -233,7 +230,6 @@ export default function DataCleanupPage(props) {
   }, [
     originalFormData,
     formData,
-    formDirty,
     contactList,
     filteredContactList,
     isFiltered,
@@ -244,7 +240,9 @@ export default function DataCleanupPage(props) {
     contactNextDisabled,
     selectedFilter,
     filterData,
+    appliedFilterData,
     showFilters,
+    selectedContactID,
     dropdownData,
   ]);
 
@@ -350,7 +348,7 @@ export default function DataCleanupPage(props) {
 
     const updatedFormData = { ...formData, ["phones"]: newArr };
 
-    updateFormData(updatedFormData);
+    setFormData(updatedFormData);
   };
 
   const handleDateChange = (date: any, fieldName) => {

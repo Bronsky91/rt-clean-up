@@ -10,7 +10,6 @@ import { RedtailSettingsData } from "./redtail-settings.interface";
 export interface DataCleanUpLocalStorage {
   originalFormData?: Readonly<RedtailContactUpdate>;
   formData?: Readonly<RedtailContactUpdate>;
-  formDirty?: boolean;
   contactList?: Readonly<ContactListEntry[]>;
   filteredContactList?: Readonly<ContactListEntry[]>;
   isFiltered?: boolean;
@@ -21,6 +20,7 @@ export interface DataCleanUpLocalStorage {
   contactNextDisabled?: boolean;
   selectedFilter?: string;
   filterData?: Readonly<FilterData[]>;
+  appliedFilterData?: Readonly<FilterData[]>;
   showFilters?: boolean;
   selectedContactID?: number;
   dropdownData?: Readonly<RedtailSettingsData>;

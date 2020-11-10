@@ -11,7 +11,6 @@ import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 export const setLocalStorage = (
   originalFormData: Readonly<RedtailContactUpdate>,
   formData: Readonly<RedtailContactUpdate>,
-  formDirty: boolean,
   contactList: Readonly<ContactListEntry[]>,
   filteredContactList: Readonly<ContactListEntry[]>,
   isFiltered: boolean,
@@ -22,6 +21,7 @@ export const setLocalStorage = (
   contactNextDisabled: boolean,
   selectedFilter: string,
   filterData: Readonly<FilterData[]>,
+  appliedFilterData: Readonly<FilterData[]>,
   showFilters: boolean,
   selectedContactID: number,
   dropdownData: Readonly<RedtailSettingsData>
@@ -29,7 +29,6 @@ export const setLocalStorage = (
   const ls: DataCleanUpLocalStorage = {
     originalFormData: originalFormData,
     formData: formData,
-    formDirty: formDirty,
     contactList: contactList,
     filteredContactList: filteredContactList,
     isFiltered: isFiltered,
@@ -40,6 +39,7 @@ export const setLocalStorage = (
     contactNextDisabled: contactNextDisabled,
     selectedFilter: selectedFilter,
     filterData: filterData,
+    appliedFilterData: appliedFilterData,
     showFilters: showFilters,
     selectedContactID: selectedContactID,
     dropdownData: dropdownData,

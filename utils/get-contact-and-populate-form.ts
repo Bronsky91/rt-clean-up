@@ -11,8 +11,8 @@ import {
 import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
 
 export const getContactAndPopulateForm = (
-  updateOriginalFormData,
-  updateFormData,
+  setOriginalFormData,
+  setFormData,
   formData,
   id
 ) => {
@@ -98,7 +98,7 @@ export const getContactAndPopulateForm = (
       },
     };
 
-    updateFormData(loadedFormData);
-    updateOriginalFormData(JSON.parse(JSON.stringify(loadedFormData))); // force pass by val not ref
+    setFormData(loadedFormData);
+    setOriginalFormData(JSON.parse(JSON.stringify(loadedFormData))); // force pass by val not ref
   });
 };
