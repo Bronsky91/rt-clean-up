@@ -15,6 +15,7 @@ export const applyLocalStorage = (
   setSelectedFilter,
   setFilterData,
   setShowFilters,
+  setSelectedContactID,
   setIsLocalStorageValid,
   setLocalStorageApplied
 ) => {
@@ -98,6 +99,11 @@ export const applyLocalStorage = (
   }
   if (ls.hasOwnProperty("showFilters")) {
     setShowFilters(ls.showFilters);
+  } else {
+    isLocalStorageValid = false;
+  }
+  if (ls.hasOwnProperty("selectedContactID")) {
+    setSelectedContactID(ls.selectedContactID);
   } else {
     isLocalStorageValid = false;
   }

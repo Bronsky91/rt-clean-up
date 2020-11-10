@@ -21,7 +21,8 @@ export const setLocalStorage = (
   contactNextDisabled: boolean,
   selectedFilter: string,
   filterData: Readonly<FilterData[]>,
-  showFilters: boolean
+  showFilters: boolean,
+  selectedContactID: number
 ) => {
   const ls: DataCleanUpLocalStorage = {
     originalFormData: originalFormData,
@@ -38,6 +39,7 @@ export const setLocalStorage = (
     selectedFilter: selectedFilter,
     filterData: filterData,
     showFilters: showFilters,
+    selectedContactID: selectedContactID,
   };
 
   localStorage.setItem("dataCleanUpLocalStorage", JSON.stringify(ls));

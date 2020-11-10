@@ -21,4 +21,5 @@ export interface DataCleanUpLocalStorage {
   selectedFilter?: string;
   filterData?: Readonly<FilterData[]>;
   showFilters?: boolean;
+  selectedContactID?: number;
 }

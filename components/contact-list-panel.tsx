@@ -161,7 +161,6 @@ export default function ContactListPanel(props) {
   // Change page back to 1 after filter is cleared and state has updated to reflect this
   useEffect(() => {
     if (!props.isFiltered && props.clearFilter) {
-      console.log("isFiltered changed to false, changing page to 1");
       props.setClearFilter(false);
       props.changePage(1);
     }
@@ -197,9 +196,7 @@ export default function ContactListPanel(props) {
         name="contact-list"
         size={props.contactsPerPage}
         value={
-          props.formData.contactRecord.id === 0
-            ? undefined
-            : props.formData.contactRecord.id
+          props.selectedContactID === 0 ? undefined : props.selectedContactID
         }
       >
         {props.isFiltered
@@ -250,8 +247,8 @@ export default function ContactListPanel(props) {
             style={{
               width: (props.pageInputText.length + 2).toString() + "rem",
             }}
-          />{" "}
-          of{" "}
+          />
+          {" of "}
           {props.isFiltered
             ? props.filterPageData.totalPages.toString() + " "
             : props.pageData.totalPages.toString() + " "}

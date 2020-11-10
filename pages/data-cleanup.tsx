@@ -61,7 +61,7 @@ export default function DataCleanupPage(props) {
   const [pageData, setPageData] = useState(emptyPageData);
   const [pageInputText, setPageInputText] = useState("");
   const [dropdownData, setDropdownData] = useState(emptyDropDowns);
-  const [loadingPage, setLoadingPage] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(true);
   const [loadingContact, setLoadingContact] = useState(false);
   const [savingContact, setSavingContact] = useState(false);
   const [contactPrevDisabled, setContactPrevDisabled] = useState(false);
@@ -69,6 +69,7 @@ export default function DataCleanupPage(props) {
   const [selectedFilter, setSelectedFilter] = useState("status_id");
   const [filterData, setFilterData] = useState(emptyFilterData);
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedContactID, setSelectedContactID] = useState(0);
   const [isLocalStorageValid, setIsLocalStorageValid] = useState(false);
   const [localStorageApplied, setLocalStorageApplied] = useState(false);
 
@@ -78,7 +79,6 @@ export default function DataCleanupPage(props) {
       setLoadingPage(true);
 
       // Update Form from LocalStorage if it's available
-      console.log("applying local storage");
       applyLocalStorage(
         setOriginalFormData,
         setFormData,
@@ -94,6 +94,7 @@ export default function DataCleanupPage(props) {
         setSelectedFilter,
         setFilterData,
         setShowFilters,
+        setSelectedContactID,
         setIsLocalStorageValid,
         setLocalStorageApplied
       );
@@ -110,13 +111,18 @@ export default function DataCleanupPage(props) {
 
   useEffect(() => {
     // Do not load contacts from Redtail if not actively authenticated
-    if (!isAuth || !isRedtailAuth) return;
+    if (!isAuth || !isRedtailAuth) {
+      setLoadingPage(false);
+      return;
+    }
 
-    if (localStorageApplied) {
-
+    // Likewise, do not load contacts if LocalStorage has not been applied yet
+    if (!localStorageApplied) return;
 
     // Only load clean slate data from Redtail if valid data was not in Local Storage
-    if (localStorageApplied && !isLocalStorageValid) {
+    if (isLocalStorageValid) {
+      setLoadingPage(false);
+    } else {
       // This 'mounted' boolean used to avoid issue outlined here: https://www.debuggr.io/react-update-unmounted-component/
       let mounted = true;
 
@@ -154,7 +160,6 @@ export default function DataCleanupPage(props) {
             setContactList(formattedContactList);
 
             // If contacts returned, select first one
-            // console.log("contacts returned from redtail, selecting first one");
             if (formattedContactList && formattedContactList.length >= 1) {
               selectContact(formattedContactList[0].id);
             }
@@ -176,8 +181,6 @@ export default function DataCleanupPage(props) {
       return () => {
         mounted = false;
       };
-    } else {
-      setLoadingPage(false);
     }
   }, [localStorageApplied]);
 
@@ -191,7 +194,6 @@ export default function DataCleanupPage(props) {
   useEffect(() => {
     // Only update LocalStorage values after we're done loading from LocalStorage
     if (localStorageApplied) {
-    console.log("setting local storage");
       setLocalStorage(
         originalFormData,
         formData,
@@ -206,7 +208,8 @@ export default function DataCleanupPage(props) {
         contactNextDisabled,
         selectedFilter,
         filterData,
-        showFilters
+        showFilters,
+        selectedContactID
       );
     }
   }, [
@@ -350,8 +353,8 @@ export default function DataCleanupPage(props) {
   const contactSelected = (e) => {
     e.preventDefault();
     setLoadingContact(true);
-
     const id = e.target.value;
+    setSelectedContactID(id);
     getContactAndPopulateForm(
       setOriginalFormData,
       setFormData,
@@ -365,6 +368,7 @@ export default function DataCleanupPage(props) {
 
   const selectContact = (id: number) => {
     setLoadingContact(true);
+    setSelectedContactID(id);
     getContactAndPopulateForm(
       setOriginalFormData,
       setFormData,
@@ -471,7 +475,6 @@ export default function DataCleanupPage(props) {
             );
           }
           // Reload contact page from Redtail as a data validation measure
-          selectContact(formData.contactRecord.id.toString());
           selectContact(formData.contactRecord.id);
 
           alert("Contact Saved!");
