@@ -20,7 +20,6 @@ export const applyLocalStorage = (
   setIsLocalStorageValid,
   setLocalStorageApplied
 ) => {
-  let isLocalStorageValid = true;
 
   const ls: DataCleanUpLocalStorage = JSON.parse(
     localStorage.getItem("dataCleanUpLocalStorage")
@@ -31,89 +30,44 @@ export const applyLocalStorage = (
     setIsLocalStorageValid(false);
     setLocalStorageApplied(true);
     return;
+    
+  }  
+  
+  const lsSetters = {
+    originalFormData: setOriginalFormData,
+    formData: setFormData,
+    formDirty: setFormDirty,
+    contactList: setContactList,
+    filteredContactList: setFilteredContactList,
+    isFiltered: setIsFiltered,
+    filterPageData: setFilterPageData,
+    pageData: setPageData,
+    pageInputText: setPageInputText,
+    contactPrevDisabled: setContactPrevDisabled,
+    contactNextDisabled: setContactNextDisabled,
+    selectedFilter: setSelectedFilter,
+    filterData: setFilterData,
+    showFilters: setShowFilters,
+    selectedContactID: setSelectedContactID,
+    dropdownData: setDropdownData,
   }
 
-  if (ls.hasOwnProperty("originalFormData")) {
-    setOriginalFormData(ls.originalFormData);
-  } else {
-    isLocalStorageValid = false;
-  }
-  if (ls.hasOwnProperty("formData")) {
-    setFormData(ls.formData);
-  } else {
-    isLocalStorageValid = false;
-  }
-  if (ls.hasOwnProperty("formDirty")) {
-    setFormDirty(ls.formDirty);
-  } else {
-    isLocalStorageValid = false;
-  }
-  if (ls.hasOwnProperty("contactList")) {
-    setContactList(ls.contactList);
-  } else {
-    isLocalStorageValid = false;
-  }
-  if (ls.hasOwnProperty("filteredContactList")) {
-    setFilteredContactList(ls.filteredContactList);
-  } else {
-    isLocalStorageValid = false;
-  }
-  if (ls.hasOwnProperty("isFiltered")) {
-    setIsFiltered(ls.isFiltered);
-  } else {
-    isLocalStorageValid = false;
-  }
-  if (ls.hasOwnProperty("filterPageData")) {
-    setFilterPageData(ls.filterPageData);
-  } else {
-    isLocalStorageValid = false;
-  }
-  if (ls.hasOwnProperty("pageData")) {
-    setPageData(ls.pageData);
-  } else {
-    isLocalStorageValid = false;
-  }
-  if (ls.hasOwnProperty("pageInputText")) {
-    setPageInputText(ls.pageInputText);
-  } else {
-    isLocalStorageValid = false;
-  }
-  if (ls.hasOwnProperty("contactPrevDisabled")) {
-    setContactPrevDisabled(ls.contactPrevDisabled);
-  } else {
-    isLocalStorageValid = false;
-  }
-  if (ls.hasOwnProperty("contactNextDisabled")) {
-    setContactNextDisabled(ls.contactNextDisabled);
-  } else {
-    isLocalStorageValid = false;
-  }
-  if (ls.hasOwnProperty("selectedFilter")) {
-    setSelectedFilter(ls.selectedFilter);
-  } else {
-    isLocalStorageValid = false;
-  }
-  if (ls.hasOwnProperty("filterData")) {
-    setFilterData(ls.filterData);
-  } else {
-    isLocalStorageValid = false;
-  }
-  if (ls.hasOwnProperty("showFilters")) {
-    setShowFilters(ls.showFilters);
-  } else {
-    isLocalStorageValid = false;
-  }
-  if (ls.hasOwnProperty("selectedContactID")) {
-    setSelectedContactID(ls.selectedContactID);
-  } else {
-    isLocalStorageValid = false;
-  }
-  if (ls.hasOwnProperty("dropdownData")) {
-    setDropdownData(ls.dropdownData);
-  } else {
-    isLocalStorageValid = false;
-  }
 
+  let isLocalStorageValid = true;
+
+  for(const key of Object.keys(lsSetters)){
+    // Makes sure each setter variable is in local storage
+    if (ls.hasOwnProperty(key)) {
+      // Call setter and apply data if exists
+      lsSetters[key](ls[key])
+    } else {
+      // If data is missing, clear and return false for valid local storage to pull new data from API
+      localStorage.clear()
+      isLocalStorageValid = false;
+      break;
+    }
+  }
+  
   setIsLocalStorageValid(isLocalStorageValid);
   setLocalStorageApplied(true);
 };
