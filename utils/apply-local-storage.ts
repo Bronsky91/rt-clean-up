@@ -12,7 +12,8 @@ export const applyLocalStorage = (
   setContactNextDisabled,
   setSelectedFilter,
   setFilterData,
-  setShowFilters
+  setShowFilters,
+  setLocalStorageApplied
 ) => {
   const ls = JSON.parse(localStorage.getItem("dataCleanUpLocalStorage"));
 
@@ -30,4 +31,6 @@ export const applyLocalStorage = (
   if (ls?.selectedFilter) setSelectedFilter(ls?.selectedFilter);
   if (ls?.filterData) setFilterData(ls?.filterData);
   if (ls?.showFilters) setShowFilters(ls?.showFilters);
+
+  setLocalStorageApplied(true);
 };

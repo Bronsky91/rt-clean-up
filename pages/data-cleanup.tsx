@@ -32,12 +32,43 @@ export default function DataCleanupPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
   const isRedtailAuth = props.rtAuth;
+  const pageInput = useRef(null);
+  const contactsPerPage = 50;
+  const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
+  const emptyDropDowns: Readonly<RedtailSettingsData> = createEmptyDropDownData();
+  const emptyFilterData: Readonly<FilterData[]> = createEmptyFilterData();
+  const [formData, setFormData] = useState(emptyFormData);
+  const [originalFormData, setOriginalFormData] = useState(emptyFormData);
+  const [formDirty, setFormDirty] = useState(false);
+  const [contactList, setContactList] = useState([]);
+  const [filteredContactList, setFilteredContactList] = useState([]);
+  const [isFiltered, setIsFiltered] = useState(false);
+  const [clearFilter, setClearFilter] = useState(false);
+  const [filterPageData, setFilterPageData] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    startIndex: 0,
+    endIndex: contactsPerPage,
+  });
+  const [pageData, setPageData] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalContacts: 0,
+  });
+  const [pageInputText, setPageInputText] = useState("");
+  const [dropdownData, setDropdownData] = useState(emptyDropDowns);
+  const [loadingPage, setLoadingPage] = useState(false);
+  const [loadingContact, setLoadingContact] = useState(false);
+  const [savingContact, setSavingContact] = useState(false);
+  const [contactPrevDisabled, setContactPrevDisabled] = useState(false);
+  const [contactNextDisabled, setContactNextDisabled] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("status_id");
+  const [filterData, setFilterData] = useState(emptyFilterData);
+  const [showFilters, setShowFilters] = useState(false);
+  const [localStorageApplied, setLocalStorageApplied] = useState(false);
 
   useEffect(() => {
-    // mounted used to avoid issue outlined here: https://www.debuggr.io/react-update-unmounted-component/
-    let mounted = true;
-
-    // If authenticated, load contact data
+    // If authenticated, check LocalStorage for Form data, then load contact data in localStorageApplied useEffect hook
     if (isAuth && isRedtailAuth) {
       setLoadingPage(true);
 
@@ -57,13 +88,38 @@ export default function DataCleanupPage(props) {
         setContactNextDisabled,
         setSelectedFilter,
         setFilterData,
-        setShowFilters
+        setShowFilters,
+        setLocalStorageApplied
       );
+    } else if (!isRedtailAuth) {
+      // If unauthenticated with Redtail, redirect router to dashboard page and clear localStorage
+      localStorage.clear();
+      router.replace(router.pathname, "/", { shallow: true });
+    } else {
+      // If unauthenticated, redirect router to login page and clear localStorage
+      localStorage.clear();
+      router.replace(router.pathname, "/login", { shallow: true });
+    }
+  }, [isAuth, isRedtailAuth]);
+
+  useEffect(() => {
+    // Do not load contacts from Redtail if not actively authenticated
+    if (!isAuth || !isRedtailAuth) return;
+
+    if (localStorageApplied) {
+      // This 'mounted' boolean used to avoid issue outlined here: https://www.debuggr.io/react-update-unmounted-component/
+      let mounted = true;
+
 
       axios
-        .get(`${process.env.NEXT_PUBLIC_API_URL}/rt/get-contacts`, {
-          withCredentials: true,
-        })
+        .get(
+          `${process.env.NEXT_PUBLIC_API_URL}/rt/get-contacts?page=${
+            isFiltered ? filterPageData.currentPage : pageData.currentPage
+          }`,
+          {
+            withCredentials: true,
+          }
+        )
         .then((res) => {
           if (mounted) {
             const list: RedtailContactListRec = res.data;
@@ -104,6 +160,7 @@ export default function DataCleanupPage(props) {
                 const dropdownData: RedtailSettingsData = res.data;
                 setDropdownData(dropdownData);
                 setLoadingPage(false);
+                setLocalStorageApplied(false);
               }
             });
         });
@@ -111,56 +168,14 @@ export default function DataCleanupPage(props) {
       return () => {
         mounted = false;
       };
-    } else if (!isRedtailAuth) {
-      // If unauthenticated with Redtail, redirect router to dashboard page and clear localStorage
-      localStorage.clear();
-      router.replace(router.pathname, "/", { shallow: true });
-    } else {
-      // If unauthenticated, redirect router to login page and clear localStorage
-      localStorage.clear();
-      router.replace(router.pathname, "/login", { shallow: true });
     }
-  }, [isAuth, isRedtailAuth]);
+  }, [localStorageApplied]);
 
   // If unathenticated, load login component
   if (!isAuth) return <Login />;
 
   // If unathenticated with Redtail, load Dashboard component
   if (!isRedtailAuth) return <DashboardPage {...props} />;
-
-  const pageInput = useRef(null);
-  const contactsPerPage = 50;
-  const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
-  const emptyDropDowns: Readonly<RedtailSettingsData> = createEmptyDropDownData();
-  const emptyFilterData: Readonly<FilterData[]> = createEmptyFilterData();
-  const [formData, setFormData] = useState(emptyFormData);
-  const [originalFormData, setOriginalFormData] = useState(emptyFormData);
-  const [formDirty, setFormDirty] = useState(false);
-  const [contactList, setContactList] = useState([]);
-  const [filteredContactList, setFilteredContactList] = useState([]);
-  const [isFiltered, setIsFiltered] = useState(false);
-  const [clearFilter, setClearFilter] = useState(false);
-  const [filterPageData, setFilterPageData] = useState({
-    currentPage: 1,
-    totalPages: 1,
-    startIndex: 0,
-    endIndex: contactsPerPage,
-  });
-  const [pageData, setPageData] = useState({
-    currentPage: 1,
-    totalPages: 1,
-    totalContacts: 0,
-  });
-  const [pageInputText, setPageInputText] = useState("");
-  const [dropdownData, setDropdownData] = useState(emptyDropDowns);
-  const [loadingPage, setLoadingPage] = useState(false);
-  const [loadingContact, setLoadingContact] = useState(false);
-  const [savingContact, setSavingContact] = useState(false);
-  const [contactPrevDisabled, setContactPrevDisabled] = useState(false);
-  const [contactNextDisabled, setContactNextDisabled] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState("status_id");
-  const [filterData, setFilterData] = useState(emptyFilterData);
-  const [showFilters, setShowFilters] = useState(false);
 
   // Saves Form State to Local Storage after each change
   useEffect(() => {
