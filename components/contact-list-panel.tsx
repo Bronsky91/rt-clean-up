@@ -4,11 +4,12 @@ import ContactFilter from "./filter/contact-filter";
 import axios from "axios";
 import {
   ContactListEntry,
-  FilterData,
   RedtailSearchParam,
 } from "../interfaces/redtail-contact-list.interface";
 
 export default function ContactListPanel(props) {
+  const [selectedFilter, updateSelectedFilter] = useState("status_id");
+  const [showFilters, setShowFilters] = useState(false);
   const toggleFilterWindow = (e) => {
     e.preventDefault();
     props.setShowFilters(!props.showFilters);
@@ -105,10 +106,10 @@ export default function ContactListPanel(props) {
     );
   };
 
-  const handleFilter = (filterData: FilterData[]) => {
+  const handleFilter = () => {
     props.setLoadingPage(true);
 
-    const mappedParams = filterData.map((f) => {
+    const mappedParams = props.filterData.map((f) => {
       if (f.selectedIds.length > 0)
         return { [f.filter]: f.selectedIds.map(Number) };
     });
@@ -134,6 +135,7 @@ export default function ContactListPanel(props) {
         });
         props.setIsFiltered(true);
         props.setShowFilters(false);
+        props.setAppliedFilterData(props.filterData);
         props.pageInput.current.value = "1";
         props.setPageInputText("1");
 
@@ -146,6 +148,9 @@ export default function ContactListPanel(props) {
   };
 
   const handleClear = () => {
+    props.setFilterData(
+      props.filterData.map((f) => ({ ...f, selectedIds: [] }))
+    );
     props.setFilterPageData({
       currentPage: 1,
       totalPages: 1,
@@ -182,6 +187,7 @@ export default function ContactListPanel(props) {
             setFilterData={props.setFilterData}
             filterData={props.filterData}
             setShowFilters={props.setShowFilters}
+            filterDirty={props.filterDirty}
           ></ContactFilter>
         ) : null}
       </div>

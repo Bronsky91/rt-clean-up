@@ -3,7 +3,6 @@ import { DataCleanUpLocalStorage } from "../interfaces/linkpoint-form-interface"
 export const applyLocalStorage = (
   setOriginalFormData,
   setFormData,
-  setFormDirty,
   setContactList,
   setFilteredContactList,
   setIsFiltered,
@@ -14,13 +13,13 @@ export const applyLocalStorage = (
   setContactNextDisabled,
   setSelectedFilter,
   setFilterData,
+  setAppliedFilterData,
   setShowFilters,
   setSelectedContactID,
   setDropdownData,
   setIsLocalStorageValid,
   setLocalStorageApplied
 ) => {
-
   const ls: DataCleanUpLocalStorage = JSON.parse(
     localStorage.getItem("dataCleanUpLocalStorage")
   );
@@ -30,13 +29,11 @@ export const applyLocalStorage = (
     setIsLocalStorageValid(false);
     setLocalStorageApplied(true);
     return;
-    
-  }  
-  
+  }
+
   const lsSetters = {
     originalFormData: setOriginalFormData,
     formData: setFormData,
-    formDirty: setFormDirty,
     contactList: setContactList,
     filteredContactList: setFilteredContactList,
     isFiltered: setIsFiltered,
@@ -47,27 +44,27 @@ export const applyLocalStorage = (
     contactNextDisabled: setContactNextDisabled,
     selectedFilter: setSelectedFilter,
     filterData: setFilterData,
+    appliedFilterData: setAppliedFilterData,
     showFilters: setShowFilters,
     selectedContactID: setSelectedContactID,
     dropdownData: setDropdownData,
-  }
-
+  };
 
   let isLocalStorageValid = true;
 
-  for(const key of Object.keys(lsSetters)){
+  for (const key of Object.keys(lsSetters)) {
     // Makes sure each setter variable is in local storage
     if (ls.hasOwnProperty(key)) {
       // Call setter and apply data if exists
-      lsSetters[key](ls[key])
+      lsSetters[key](ls[key]);
     } else {
       // If data is missing, clear and return false for valid local storage to pull new data from API
-      localStorage.clear()
+      localStorage.clear();
       isLocalStorageValid = false;
       break;
     }
   }
-  
+
   setIsLocalStorageValid(isLocalStorageValid);
   setLocalStorageApplied(true);
 };
