@@ -159,7 +159,7 @@ export default function DataCleanupPage(props) {
                   id: contact.id,
                   name:
                     contact.type !== ContactTypes.Individual
-                      ? contact.full_name
+                      ? contact.company_name
                       : contact.last_name,
                 };
               })
