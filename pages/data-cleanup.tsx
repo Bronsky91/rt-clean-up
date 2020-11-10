@@ -180,19 +180,28 @@ export default function DataCleanupPage(props) {
     const newContactFieldArray = formData[fieldName];
     const removedContactField = newContactFieldArray.splice(index, 1);
 
-    const updatedFormData = {
-      ...formData,
-      [fieldName]: [...newContactFieldArray],
-      contactFieldsToDelete: {
-        ...formData.contactFieldsToDelete,
-        [fieldName]: [
-          ...formData.contactFieldsToDelete[fieldName],
-          removedContactField[0].id,
-        ],
-      },
-    };
-
-    updateFormData(updatedFormData);
+    if (removedContactField[0].id === 0) {
+      // If the deleted contact field was new, splice it from formData
+      const updatedFormData = {
+        ...formData,
+        [fieldName]: [...newContactFieldArray],
+      };
+      updateFormData(updatedFormData);
+    } else {
+      // Otherwise, if the deleted contact field came from Redtail, queue it for API deletion on save
+      const updatedFormData = {
+        ...formData,
+        [fieldName]: [...newContactFieldArray],
+        contactFieldsToDelete: {
+          ...formData.contactFieldsToDelete,
+          [fieldName]: [
+            ...formData.contactFieldsToDelete[fieldName],
+            removedContactField[0].id,
+          ],
+        },
+      };
+      updateFormData(updatedFormData);
+    }
   };
 
   const addContactField = (fieldName: string) => (e) => {
