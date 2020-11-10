@@ -9,7 +9,6 @@ import { getContactAndPopulateForm } from "../utils/get-contact-and-populate-for
 import { applyLocalStorage } from "../utils/apply-local-storage";
 import ContactListPanel from "../components/contact-list-panel";
 import {
-  createEmptyContactRefData,
   createEmptyFormData,
   createEmptyDropDownData,
   createEmptyContactField,
@@ -21,10 +20,13 @@ import EmailFields from "../components/email-field";
 import PhoneFields from "../components/phone-field";
 import AddressFields from "../components/address-field";
 import DateField from "../components/date-field";
-import { RedtailContactListRec } from "../interfaces/redtail-contact-list.interface";
+import {
+  FilterData,
+  RedtailContactListRec,
+} from "../interfaces/redtail-contact-list.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
-import { RedtailContactRec } from "../interfaces/redtail-contact-receive.interface";
 import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
+import { createEmptyFilterData } from "../utils/create-empty-form-data";
 import DashboardPage from ".";
 export default function DataCleanupPage(props) {
   const router = useRouter();
@@ -35,9 +37,29 @@ export default function DataCleanupPage(props) {
     // mounted used to avoid issue outlined here: https://www.debuggr.io/react-update-unmounted-component/
     let mounted = true;
 
+    // If authenticated, load contact data
     if (isAuth && isRedtailAuth) {
       setLoadingPage(true);
-      // If authenticated, load contact data
+
+      // Update Form from LocalStorage if it's available
+      console.log("applying local storage");
+      applyLocalStorage(
+        setOriginalFormData,
+        setFormData,
+        setFormDirty,
+        setContactList,
+        setFilteredContactList,
+        setIsFiltered,
+        setFilterPageData,
+        setPageData,
+        setPageInputText,
+        setContactPrevDisabled,
+        setContactNextDisabled,
+        setSelectedFilter,
+        setFilterData,
+        setShowFilters
+      );
+
       axios
         .get(`${process.env.NEXT_PUBLIC_API_URL}/rt/get-contacts`, {
           withCredentials: true,
@@ -49,7 +71,7 @@ export default function DataCleanupPage(props) {
             const totalCount: number = list.meta.total_records;
             const pageCount: number = list.meta.total_pages;
 
-            updatePageData({
+            setPageData({
               currentPage: 1,
               totalPages: pageCount,
               totalContacts: totalCount,
@@ -68,8 +90,9 @@ export default function DataCleanupPage(props) {
 
             // If contacts returned, select first one
             if (formattedContactList && formattedContactList.length >= 1) {
-              selectContact(formattedContactList[0].id.toString());
-            }
+            // if (formattedContactList && formattedContactList.length >= 1) {
+            //   selectContact(formattedContactList[0].id.toString());
+            // }
           }
 
           axios
@@ -79,18 +102,11 @@ export default function DataCleanupPage(props) {
             .then((res) => {
               if (mounted) {
                 const dropdownData: RedtailSettingsData = res.data;
-                updateDropdownData(dropdownData);
+                setDropdownData(dropdownData);
                 setLoadingPage(false);
               }
             });
         });
-
-      // Update Form with LocalStorage if it's available
-      applyLocalStorage(
-        updateOriginalFormData,
-        updateFormData,
-        updateFormDirty
-      );
 
       return () => {
         mounted = false;
@@ -112,39 +128,75 @@ export default function DataCleanupPage(props) {
   // If unathenticated with Redtail, load Dashboard component
   if (!isRedtailAuth) return <DashboardPage {...props} />;
 
+  const pageInput = useRef(null);
+  const contactsPerPage = 50;
   const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
   const emptyDropDowns: Readonly<RedtailSettingsData> = createEmptyDropDownData();
-  const [formData, updateFormData] = useState(emptyFormData);
-  const [originalFormData, updateOriginalFormData] = useState(emptyFormData);
-  const [formDirty, updateFormDirty] = useState(false);
-  const contactsPerPage = 50;
+  const emptyFilterData: Readonly<FilterData[]> = createEmptyFilterData();
+  const [formData, setFormData] = useState(emptyFormData);
+  const [originalFormData, setOriginalFormData] = useState(emptyFormData);
+  const [formDirty, setFormDirty] = useState(false);
   const [contactList, setContactList] = useState([]);
   const [filteredContactList, setFilteredContactList] = useState([]);
   const [isFiltered, setIsFiltered] = useState(false);
+  const [clearFilter, setClearFilter] = useState(false);
   const [filterPageData, setFilterPageData] = useState({
     currentPage: 1,
     totalPages: 1,
     startIndex: 0,
     endIndex: contactsPerPage,
   });
-  const [pageData, updatePageData] = useState({
+  const [pageData, setPageData] = useState({
     currentPage: 1,
     totalPages: 1,
     totalContacts: 0,
   });
-  const pageInput = useRef(null);
   const [pageInputText, setPageInputText] = useState("");
-  const [dropdownData, updateDropdownData] = useState(emptyDropDowns);
+  const [dropdownData, setDropdownData] = useState(emptyDropDowns);
   const [loadingPage, setLoadingPage] = useState(false);
   const [loadingContact, setLoadingContact] = useState(false);
   const [savingContact, setSavingContact] = useState(false);
   const [contactPrevDisabled, setContactPrevDisabled] = useState(false);
   const [contactNextDisabled, setContactNextDisabled] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("status_id");
+  const [filterData, setFilterData] = useState(emptyFilterData);
+  const [showFilters, setShowFilters] = useState(false);
 
   // Saves Form State to Local Storage after each change
   useEffect(() => {
-    setLocalStorage(originalFormData, formData, formDirty);
-  }, [originalFormData, formData, formDirty]);
+    console.log("setting local storage");
+    setLocalStorage(
+      originalFormData,
+      formData,
+      formDirty,
+      contactList,
+      filteredContactList,
+      isFiltered,
+      filterPageData,
+      pageData,
+      pageInputText,
+      contactPrevDisabled,
+      contactNextDisabled,
+      selectedFilter,
+      filterData,
+      showFilters
+    );
+  }, [
+    originalFormData,
+    formData,
+    formDirty,
+    contactList,
+    filteredContactList,
+    isFiltered,
+    filterPageData,
+    pageData,
+    pageInputText,
+    contactPrevDisabled,
+    contactNextDisabled,
+    selectedFilter,
+    filterData,
+    showFilters,
+  ]);
 
   // When contact changes, re-calculate prev & next contact button disabled state
   useEffect(() => {
@@ -189,7 +241,7 @@ export default function DataCleanupPage(props) {
       },
     };
 
-    updateFormData(updatedFormData);
+    setFormData(updatedFormData);
   };
 
   const addContactField = (fieldName: string) => (e) => {
@@ -203,8 +255,8 @@ export default function DataCleanupPage(props) {
       ],
     };
 
-    updateFormData(updatedFormData);
-    updateFormDirty(
+    setFormData(updatedFormData);
+    setFormDirty(
       JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
     );
   };
@@ -229,8 +281,8 @@ export default function DataCleanupPage(props) {
 
     const updatedFormData = { ...formData, [arrName]: newArr };
 
-    updateFormData(updatedFormData);
-    updateFormDirty(
+    setFormData(updatedFormData);
+    setFormDirty(
       JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
     );
   };
@@ -244,8 +296,8 @@ export default function DataCleanupPage(props) {
       },
     };
 
-    updateFormData(updatedFormData);
-    updateFormDirty(
+    setFormData(updatedFormData);
+    setFormDirty(
       JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
     );
   };
@@ -261,8 +313,8 @@ export default function DataCleanupPage(props) {
         [target.name]: target.value.trim(),
       },
     };
-    updateFormData(updatedFormData);
-    updateFormDirty(
+    setFormData(updatedFormData);
+    setFormDirty(
       JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
     );
   };
@@ -273,9 +325,9 @@ export default function DataCleanupPage(props) {
 
     const id = e.target.value;
     getContactAndPopulateForm(
-      updateOriginalFormData,
-      updateFormData,
-      updateFormDirty,
+      setOriginalFormData,
+      setFormData,
+      setFormDirty,
       formData,
       id
     ).then(() => {
@@ -286,9 +338,9 @@ export default function DataCleanupPage(props) {
   const selectContact = (id: string) => {
     setLoadingContact(true);
     getContactAndPopulateForm(
-      updateOriginalFormData,
-      updateFormData,
-      updateFormDirty,
+      setOriginalFormData,
+      setFormData,
+      setFormDirty,
       formData,
       id
     ).then(() => {
@@ -331,7 +383,7 @@ export default function DataCleanupPage(props) {
           const totalCount: number = list.meta.total_records;
           const pageCount: number = list.meta.total_pages;
 
-          updatePageData({
+          setPageData({
             currentPage: updatedPage,
             totalPages: pageCount,
             totalContacts: totalCount,
@@ -360,8 +412,8 @@ export default function DataCleanupPage(props) {
 
   const handleUndo = (e) => {
     e.preventDefault();
-    updateFormData(originalFormData);
-    updateFormDirty(false);
+    setFormData(originalFormData);
+    setFormDirty(false);
   };
 
   const handleSubmit = (e) => {
@@ -488,15 +540,15 @@ export default function DataCleanupPage(props) {
           contactsPerPage={contactsPerPage}
           contactSelected={contactSelected}
           contactList={contactList}
-          setContactList={setContactList}
           filteredContactList={filteredContactList}
           setFilteredContactList={setFilteredContactList}
           isFiltered={isFiltered}
           setIsFiltered={setIsFiltered}
+          clearFilter={clearFilter}
+          setClearFilter={setClearFilter}
           filterPageData={filterPageData}
           setFilterPageData={setFilterPageData}
           pageData={pageData}
-          updatePageData={updatePageData}
           changePage={changePage}
           pageInput={pageInput}
           pageInputText={pageInputText}
@@ -504,6 +556,12 @@ export default function DataCleanupPage(props) {
           dropdownData={dropdownData}
           setLoadingPage={setLoadingPage}
           selectContact={selectContact}
+          selectedFilter={selectedFilter}
+          setSelectedFilter={setSelectedFilter}
+          filterData={filterData}
+          setFilterData={setFilterData}
+          showFilters={showFilters}
+          setShowFilters={setShowFilters}
         ></ContactListPanel>
         <LoadingOverlay active={savingContact} spinner text="Saving Contact">
           <LoadingOverlay

@@ -19,7 +19,7 @@ export default function ContactFilter(props) {
   };
 
   const handleClear = (e) => {
-    props.updateFilterData(
+    props.setFilterData(
       props.filterData.map((f) => ({ ...f, selectedIds: [] }))
     );
     props.handleClear();
@@ -32,7 +32,7 @@ export default function ContactFilter(props) {
     const newSelectedId: number = e.target.value;
     const idSelected: boolean = e.target.checked;
 
-    props.updateFilterData(
+    props.setFilterData(
       props.filterData.map((f, index) => {
         if (index === selectedFilterIndex) {
           const newSelectedIds = idSelected
@@ -49,7 +49,7 @@ export default function ContactFilter(props) {
   const onFilterClicked = (e) => {
     e.preventDefault();
     const filter = e.target.value;
-    props.updateSelectedFilter(filter);
+    props.setSelectedFilter(filter);
   };
 
   return (

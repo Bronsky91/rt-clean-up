@@ -1,24 +1,33 @@
 export const applyLocalStorage = (
-  updateOriginalFormData,
-  updateFormData,
-  updateFormDirty
+  setOriginalFormData,
+  setFormData,
+  setFormDirty,
+  setContactList,
+  setFilteredContactList,
+  setIsFiltered,
+  setFilterPageData,
+  setPageData,
+  setPageInputText,
+  setContactPrevDisabled,
+  setContactNextDisabled,
+  setSelectedFilter,
+  setFilterData,
+  setShowFilters
 ) => {
-  const localStorageOriginalFormData = JSON.parse(
-    localStorage.getItem("dataCleanUpOriginalFormData")
-  );
-  const localStorageFormData = JSON.parse(
-    localStorage.getItem("dataCleanUpFormData")
-  );
-  const localStorageFormDirty = JSON.parse(
-    localStorage.getItem("dataCleanUpFormDirty")
-  );
+  const ls = JSON.parse(localStorage.getItem("dataCleanUpLocalStorage"));
 
-  if (localStorageOriginalFormData)
-    updateOriginalFormData(localStorageOriginalFormData);
-
-  if (localStorageFormData) updateFormData(localStorageFormData);
-
-  if (localStorageFormDirty) updateFormDirty(localStorageFormDirty);
-
-  return localStorageFormData;
+  if (ls?.originalFormData) setOriginalFormData(ls?.originalFormData);
+  if (ls?.formData) setFormData(ls?.formData);
+  if (ls?.formDirty) setFormDirty(ls?.formDirty);
+  if (ls?.contactList) setContactList(ls?.contactList);
+  if (ls?.filteredContactList) setFilteredContactList(ls?.filteredContactList);
+  if (ls?.isFiltered) setIsFiltered(ls?.isFiltered);
+  if (ls?.filterPageData) setFilterPageData(ls?.filterPageData);
+  if (ls?.pageData) setPageData(ls?.pageData);
+  if (ls?.pageInputText) setPageInputText(ls?.pageInputText);
+  if (ls?.contactPrevDisabled) setContactPrevDisabled(ls?.contactPrevDisabled);
+  if (ls?.contactNextDisabled) setContactNextDisabled(ls?.contactNextDisabled);
+  if (ls?.selectedFilter) setSelectedFilter(ls?.selectedFilter);
+  if (ls?.filterData) setFilterData(ls?.filterData);
+  if (ls?.showFilters) setShowFilters(ls?.showFilters);
 };
