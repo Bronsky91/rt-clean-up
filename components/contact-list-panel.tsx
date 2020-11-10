@@ -4,15 +4,11 @@ import ContactFilter from "./filter/contact-filter";
 import axios from "axios";
 import {
   ContactListEntry,
-  FilterData,
   RedtailSearchParam,
 } from "../interfaces/redtail-contact-list.interface";
-import { createEmptyFilterData } from "../utils/create-empty-form-data";
 
 export default function ContactListPanel(props) {
-  const emptyFilterData: Readonly<FilterData[]> = createEmptyFilterData();
   const [selectedFilter, updateSelectedFilter] = useState("status_id");
-  const [filterData, updateFilterData] = useState(emptyFilterData);
   const [showFilters, setShowFilters] = useState(false);
 
   const toggleFilterWindow = (e) => {
@@ -111,10 +107,10 @@ export default function ContactListPanel(props) {
     );
   };
 
-  const handleFilter = (filterData: FilterData[]) => {
+  const handleFilter = () => {
     props.setLoadingPage(true);
 
-    const mappedParams = filterData.map((f) => {
+    const mappedParams = props.filterData.map((f) => {
       if (f.selectedIds.length > 0)
         return { [f.filter]: f.selectedIds.map(Number) };
     });
@@ -140,6 +136,7 @@ export default function ContactListPanel(props) {
         });
         props.setIsFiltered(true);
         setShowFilters(false);
+        props.setAppliedFilterData(props.filterData);
         props.pageInput.current.value = "1";
         props.setPageInputText("1");
 
@@ -152,6 +149,9 @@ export default function ContactListPanel(props) {
   };
 
   const handleClear = () => {
+    props.setFilterData(
+      props.filterData.map((f) => ({ ...f, selectedIds: [] }))
+    );
     props.setFilterPageData({
       currentPage: 1,
       totalPages: 1,
@@ -170,6 +170,8 @@ export default function ContactListPanel(props) {
     }
   }, [props.isFiltered]);
 
+  useEffect(() => {}, [props.filterData, selectedFilter]);
+
   return (
     <div className={styles.contactsPanel}>
       <div className={styles.contactsTopRow}>
@@ -183,8 +185,9 @@ export default function ContactListPanel(props) {
             isFiltered={props.isFiltered}
             updateSelectedFilter={updateSelectedFilter}
             selectedFilter={selectedFilter}
-            updateFilterData={updateFilterData}
-            filterData={filterData}
+            setFilterData={props.setFilterData}
+            filterData={props.filterData}
+            filterDirty={props.filterDirty}
             setShowFilters={setShowFilters}
           ></ContactFilter>
         ) : null}

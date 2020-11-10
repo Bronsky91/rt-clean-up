@@ -13,6 +13,7 @@ import {
   createEmptyFormData,
   createEmptyDropDownData,
   createEmptyContactField,
+  createEmptyFilterData,
 } from "../utils/create-empty-form-data";
 import { setLocalStorage } from "../utils/set-local-storage";
 import TextField from "../components/text-field";
@@ -21,7 +22,10 @@ import EmailFields from "../components/email-field";
 import PhoneFields from "../components/phone-field";
 import AddressFields from "../components/address-field";
 import DateField from "../components/date-field";
-import { RedtailContactListRec } from "../interfaces/redtail-contact-list.interface";
+import {
+  FilterData,
+  RedtailContactListRec,
+} from "../interfaces/redtail-contact-list.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import { RedtailContactRec } from "../interfaces/redtail-contact-receive.interface";
 import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
@@ -107,7 +111,7 @@ export default function DataCleanupPage(props) {
 
   // If unathenticated with Redtail, load Dashboard component
   if (!isRedtailAuth) return <DashboardPage {...props} />;
-
+  const emptyFilterData: Readonly<FilterData[]> = createEmptyFilterData();
   const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
   const emptyDropDowns: Readonly<RedtailSettingsData> = createEmptyDropDownData();
   const [formData, updateFormData] = useState(emptyFormData);
@@ -116,6 +120,9 @@ export default function DataCleanupPage(props) {
   const contactsPerPage = 50;
   const [contactList, setContactList] = useState([]);
   const [filteredContactList, setFilteredContactList] = useState([]);
+  const [filterData, setFilterData] = useState(emptyFilterData);
+  const [appliedFilterData, setAppliedFilterData] = useState(emptyFilterData);
+  const [filterDirty, setFilterDirty] = useState(false);
   const [isFiltered, setIsFiltered] = useState(false);
   const [filterPageData, setFilterPageData] = useState({
     currentPage: 1,
@@ -143,6 +150,13 @@ export default function DataCleanupPage(props) {
       JSON.stringify(originalFormData) !== JSON.stringify(formData)
     );
   }, [originalFormData, formData]);
+
+  // Updates filterDirty flag every time filterData is updated
+  useEffect(() => {
+    setFilterDirty(
+      JSON.stringify(appliedFilterData) !== JSON.stringify(filterData)
+    );
+  }, [appliedFilterData, filterData]);
 
   // Saves Form State to Local Storage after each change
   useEffect(() => {
@@ -503,8 +517,12 @@ export default function DataCleanupPage(props) {
           setFilteredContactList={setFilteredContactList}
           isFiltered={isFiltered}
           setIsFiltered={setIsFiltered}
+          filterData={filterData}
+          setFilterData={setFilterData}
+          setAppliedFilterData={setAppliedFilterData}
           filterPageData={filterPageData}
           setFilterPageData={setFilterPageData}
+          filterDirty={filterDirty}
           pageData={pageData}
           updatePageData={updatePageData}
           changePage={changePage}

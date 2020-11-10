@@ -11,17 +11,10 @@ export default function ContactFilter(props) {
   };
 
   const handleApply = (e) => {
-    const data: FilterData[] = props.filterData;
-    const filterEmpty = data
-      .map((f) => f.selectedIds.length === 0)
-      .every((fEmpty) => fEmpty);
-    props.handleFilter(props.filterData);
+    props.handleFilter();
   };
 
   const handleClear = (e) => {
-    props.updateFilterData(
-      props.filterData.map((f) => ({ ...f, selectedIds: [] }))
-    );
     props.handleClear();
   };
 
@@ -32,7 +25,7 @@ export default function ContactFilter(props) {
     const newSelectedId: number = e.target.value;
     const idSelected: boolean = e.target.checked;
 
-    props.updateFilterData(
+    props.setFilterData(
       props.filterData.map((f, index) => {
         if (index === selectedFilterIndex) {
           const newSelectedIds = idSelected
@@ -131,10 +124,18 @@ export default function ContactFilter(props) {
             </div>
           </div>
           <div className={styles.flexButtonRow}>
-            <button className={styles.filterButton} onClick={handleApply}>
+            <button
+              className={styles.filterButton}
+              onClick={handleApply}
+              disabled={!props.filterDirty}
+            >
               Apply
             </button>
-            <button className={styles.filterButton} onClick={handleClear}>
+            <button
+              className={styles.filterButton}
+              onClick={handleClear}
+              disabled={!props.isFiltered}
+            >
               Clear All
             </button>
           </div>
