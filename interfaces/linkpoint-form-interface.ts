@@ -5,6 +5,7 @@ import {
   PageData,
 } from "./redtail-contact-list.interface";
 import { RedtailContactUpdate } from "./redtail-contact-update.interface";
+import { RedtailSettingsData } from "./redtail-settings.interface";
 
 export interface DataCleanUpLocalStorage {
   originalFormData?: Readonly<RedtailContactUpdate>;
@@ -22,4 +23,5 @@ export interface DataCleanUpLocalStorage {
   filterData?: Readonly<FilterData[]>;
   showFilters?: boolean;
   selectedContactID?: number;
+  dropdownData?: Readonly<RedtailSettingsData>;
 }

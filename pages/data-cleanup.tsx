@@ -95,6 +95,7 @@ export default function DataCleanupPage(props) {
         setFilterData,
         setShowFilters,
         setSelectedContactID,
+        setDropdownData,
         setIsLocalStorageValid,
         setLocalStorageApplied
       );
@@ -209,7 +210,8 @@ export default function DataCleanupPage(props) {
         selectedFilter,
         filterData,
         showFilters,
-        selectedContactID
+        selectedContactID,
+        dropdownData
       );
     }
   }, [
@@ -227,6 +229,7 @@ export default function DataCleanupPage(props) {
     selectedFilter,
     filterData,
     showFilters,
+    dropdownData,
   ]);
 
   // When contact changes, re-calculate prev & next contact button disabled state

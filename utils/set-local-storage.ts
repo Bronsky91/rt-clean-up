@@ -6,6 +6,7 @@ import {
   PageData,
 } from "../interfaces/redtail-contact-list.interface";
 import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
+import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 
 export const setLocalStorage = (
   originalFormData: Readonly<RedtailContactUpdate>,
@@ -22,7 +23,8 @@ export const setLocalStorage = (
   selectedFilter: string,
   filterData: Readonly<FilterData[]>,
   showFilters: boolean,
-  selectedContactID: number
+  selectedContactID: number,
+  dropdownData: Readonly<RedtailSettingsData>
 ) => {
   const ls: DataCleanUpLocalStorage = {
     originalFormData: originalFormData,
@@ -40,6 +42,7 @@ export const setLocalStorage = (
     filterData: filterData,
     showFilters: showFilters,
     selectedContactID: selectedContactID,
+    dropdownData: dropdownData,
   };
 
   localStorage.setItem("dataCleanUpLocalStorage", JSON.stringify(ls));
