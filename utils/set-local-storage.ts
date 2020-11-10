@@ -2,13 +2,11 @@ import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.inter
 
 export const setLocalStorage = (
   originalFormData: Readonly<RedtailContactUpdate>,
-  formData: Readonly<RedtailContactUpdate>,
-  formDirty: boolean
+  formData: Readonly<RedtailContactUpdate>
 ) => {
   localStorage.setItem(
     "dataCleanUpOriginalFormData",
     JSON.stringify(originalFormData)
   );
   localStorage.setItem("dataCleanUpFormData", JSON.stringify(formData));
-  localStorage.setItem("dataCleanUpFormDirty", JSON.stringify(formDirty));
 };

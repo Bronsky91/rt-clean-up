@@ -13,7 +13,6 @@ import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.inter
 export const getContactAndPopulateForm = (
   updateOriginalFormData,
   updateFormData,
-  updateFormDirty,
   formData,
   id
 ) => {
@@ -101,6 +100,5 @@ export const getContactAndPopulateForm = (
 
     updateFormData(loadedFormData);
     updateOriginalFormData(JSON.parse(JSON.stringify(loadedFormData))); // force pass by val not ref
-    updateFormDirty(false);
   });
 };

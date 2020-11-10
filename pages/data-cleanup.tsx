@@ -86,11 +86,7 @@ export default function DataCleanupPage(props) {
         });
 
       // Update Form with LocalStorage if it's available
-      applyLocalStorage(
-        updateOriginalFormData,
-        updateFormData,
-        updateFormDirty
-      );
+      applyLocalStorage(updateOriginalFormData, updateFormData);
 
       return () => {
         mounted = false;
@@ -141,10 +137,17 @@ export default function DataCleanupPage(props) {
   const [contactPrevDisabled, setContactPrevDisabled] = useState(false);
   const [contactNextDisabled, setContactNextDisabled] = useState(false);
 
+  // Updates formDirty flag every time formData is updated
+  useEffect(() => {
+    updateFormDirty(
+      JSON.stringify(originalFormData) !== JSON.stringify(formData)
+    );
+  }, [originalFormData, formData]);
+
   // Saves Form State to Local Storage after each change
   useEffect(() => {
-    setLocalStorage(originalFormData, formData, formDirty);
-  }, [originalFormData, formData, formDirty]);
+    setLocalStorage(originalFormData, formData);
+  }, [originalFormData, formData]);
 
   // When contact changes, re-calculate prev & next contact button disabled state
   useEffect(() => {
@@ -204,9 +207,6 @@ export default function DataCleanupPage(props) {
     };
 
     updateFormData(updatedFormData);
-    updateFormDirty(
-      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
-    );
   };
 
   // Updates form state for phones, emails, and addresses
@@ -230,9 +230,6 @@ export default function DataCleanupPage(props) {
     const updatedFormData = { ...formData, [arrName]: newArr };
 
     updateFormData(updatedFormData);
-    updateFormDirty(
-      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
-    );
   };
 
   const handlePhoneChange = (index: number, targetID: string) => (
@@ -246,9 +243,6 @@ export default function DataCleanupPage(props) {
     const updatedFormData = { ...formData, ["phones"]: newArr };
 
     updateFormData(updatedFormData);
-    updateFormDirty(
-      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
-    );
   };
 
   const handleDateChange = (date: any, fieldName) => {
@@ -261,9 +255,6 @@ export default function DataCleanupPage(props) {
     };
 
     updateFormData(updatedFormData);
-    updateFormDirty(
-      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
-    );
   };
 
   const handleChange = (e) => {
@@ -278,9 +269,6 @@ export default function DataCleanupPage(props) {
       },
     };
     updateFormData(updatedFormData);
-    updateFormDirty(
-      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
-    );
   };
 
   const contactSelected = (e) => {
@@ -291,7 +279,6 @@ export default function DataCleanupPage(props) {
     getContactAndPopulateForm(
       updateOriginalFormData,
       updateFormData,
-      updateFormDirty,
       formData,
       id
     ).then(() => {
@@ -304,7 +291,6 @@ export default function DataCleanupPage(props) {
     getContactAndPopulateForm(
       updateOriginalFormData,
       updateFormData,
-      updateFormDirty,
       formData,
       id
     ).then(() => {
@@ -377,7 +363,6 @@ export default function DataCleanupPage(props) {
   const handleUndo = (e) => {
     e.preventDefault();
     updateFormData(originalFormData);
-    updateFormDirty(false);
   };
 
   const handleSubmit = (e) => {
@@ -646,12 +631,17 @@ export default function DataCleanupPage(props) {
                       />
 
                       <div className={styles.saveButtonContainer}>
-                        <button type="submit" className={styles.saveButton}>
+                        <button
+                          type="submit"
+                          className={styles.saveButton}
+                          disabled={!formDirty}
+                        >
                           SAVE
                         </button>
                         <button
                           className={styles.undoButton}
                           onClick={handleUndo}
+                          disabled={!formDirty}
                         >
                           UNDO
                         </button>
