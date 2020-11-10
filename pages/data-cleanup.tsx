@@ -161,9 +161,9 @@ export default function DataCleanupPage(props) {
                 return {
                   id: contact.id,
                   name:
-                    contact.type !== ContactTypes.Individual
-                      ? contact.company_name
-                      : contact.last_name,
+                    contact.type === ContactTypes.Individual
+                      ? contact.last_name
+                      : contact.company_name,
                 };
               })
               .sort((a, b) => a.id - b.id);
