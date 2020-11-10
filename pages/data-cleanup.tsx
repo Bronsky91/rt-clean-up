@@ -89,7 +89,7 @@ export default function DataCleanupPage(props) {
             setContactList(formattedContactList);
 
             // If contacts returned, select first one
-            if (formattedContactList && formattedContactList.length >= 1) {
+            // console.log("contacts returned from redtail, selecting first one");
             // if (formattedContactList && formattedContactList.length >= 1) {
             //   selectContact(formattedContactList[0].id.toString());
             // }

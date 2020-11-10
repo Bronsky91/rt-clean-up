@@ -154,15 +154,18 @@ export default function ContactListPanel(props) {
     });
     props.setFilteredContactList([]);
     props.setIsFiltered(false);
-    setShowFilters(false);
+    props.setClearFilter(true);
+    props.setShowFilters(false);
   };
 
-  // Change page back to 1 after isFilter is set to false
+  // Change page back to 1 after filter is cleared and state has updated to reflect this
   useEffect(() => {
-    if (!props.isFiltered) {
+    if (!props.isFiltered && props.clearFilter) {
+      console.log("isFiltered changed to false, changing page to 1");
+      props.setClearFilter(false);
       props.changePage(1);
     }
-  }, [props.isFiltered]);
+  }, [props.isFiltered, props.clearFilter]);
 
   return (
     <div className={styles.contactsPanel}>
