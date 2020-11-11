@@ -1,11 +1,36 @@
-import { AddressUpdate } from "../interfaces/redtail-contact-update.interface";
+import { useEffect, useRef } from "react";
+import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
 import { StateAbbr } from "../interfaces/redtail-settings.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
+import { createEmptyFormData } from "../utils/create-empty-form-data";
 
 export default function AddressFields(props) {
-  const addresses: AddressUpdate[] = props.addresses;
+  const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
+  const parentRef = useRef(null);
+  const prevContactRef = useRef(emptyFormData);
+  const contact: RedtailContactUpdate = props.contact;
   const dropdownData: RedtailSettingsData = props.dropdownData;
+
+  useEffect(() => {
+    prevContactRef.current = contact;
+  });
+  const prevContactState = prevContactRef.current;
+
+  // If child row is added, scroll to bottom
+  useEffect(() => {
+    if (
+      contact &&
+      prevContactState &&
+      contact.contactRecord?.id === prevContactState.contactRecord?.id &&
+      contact.addresses?.length > prevContactState.addresses?.length
+    ) {
+      const scrollHeight = parentRef.current.scrollHeight;
+      const height = parentRef.current.clientHeight;
+      const maxScrollTop = scrollHeight - height;
+      parentRef.current.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+    }
+  }, [contact]);
 
   const states: StateAbbr[] = [
     { long: "", short: "" },
@@ -62,9 +87,9 @@ export default function AddressFields(props) {
   ];
 
   return (
-    <div className={styles.formColumnScroll}>
-      {addresses
-        ? addresses.map((address, index) => (
+    <div ref={parentRef} className={styles.formColumnScroll}>
+      {contact && contact.addresses
+        ? contact.addresses.map((address, index) => (
             <div className={styles.formRow} key={address.key}>
               <input
                 className={styles.formSoloInputLong}

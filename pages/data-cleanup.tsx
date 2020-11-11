@@ -212,6 +212,7 @@ export default function DataCleanupPage(props) {
       JSON.stringify(appliedFilterData) !== JSON.stringify(filterData)
     );
   }, [appliedFilterData, filterData]);
+
   // Saves Form State to Local Storage after each change
   useEffect(() => {
     // Only update LocalStorage values after we're done loading from LocalStorage
@@ -801,7 +802,7 @@ export default function DataCleanupPage(props) {
                       </div>
                     </div>
                     <EmailFields
-                      emails={formData.emails}
+                      contact={formData}
                       handleArrChange={handleArrChange}
                       dropdownData={dropdownData}
                       removeContactField={removeContactField}
@@ -830,7 +831,7 @@ export default function DataCleanupPage(props) {
                       </div>
                     </div>
                     <PhoneFields
-                      phones={formData.phones}
+                      contact={formData}
                       handleArrChange={handleArrChange} // Used by Type and Primary inputs
                       handlePhoneChange={handlePhoneChange} // Used by Phone Number input
                       dropdownData={dropdownData}
@@ -878,7 +879,7 @@ export default function DataCleanupPage(props) {
                     </div>
                   </div>
                   <AddressFields
-                    addresses={formData.addresses}
+                    contact={formData}
                     handleArrChange={handleArrChange}
                     dropdownData={dropdownData}
                     removeContactField={removeContactField}
