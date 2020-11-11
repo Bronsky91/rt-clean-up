@@ -99,6 +99,7 @@ export const createEmptyContactField = {
     status_id: 0,
     source_id: 0,
     tax_id: "",
+    referred_by: "",
     servicing_advisor_id: 0,
     writing_advisor_id: 0,
   }),
