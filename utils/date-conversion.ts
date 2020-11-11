@@ -12,12 +12,16 @@ export const datestringToDate = (date: string): Date | null => {
 
 // Takes Date object and converts to yyyy-MM-dd formatted datestring
 export const dateToDatestring = (date: Date): string => {
-  const result: string = [
-    date.getFullYear(),
-    ("0" + (date.getMonth() + 1)).slice(-2),
-    ("0" + date.getDate()).slice(-2),
-  ].join("-");
-  return result;
+  if (date) {
+    const result: string = [
+      date.getFullYear(),
+      ("0" + (date.getMonth() + 1)).slice(-2),
+      ("0" + date.getDate()).slice(-2),
+    ].join("-");
+    return result;
+  } else {
+    return "";
+  }
 };
 
 // Takes YYYY-MM-DDTHH:MM:SS.000Z and converts to MM/DD/YY HH:MM
