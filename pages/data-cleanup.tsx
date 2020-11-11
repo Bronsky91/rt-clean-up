@@ -675,21 +675,16 @@ export default function DataCleanupPage(props) {
                         dropDownItems={dropdownData.genderTypes}
                         handleChange={handleChange}
                       ></DropDownField>
-
-                      <DateField
-                        label="Date of Birth"
-                        fieldName="dob"
-                        fieldValue={formData.contactRecord?.dob}
-                        handleDateChange={handleDateChange}
-                      ></DateField>
                     </>
                   ) : (
-                    <TextField
-                      label="Company Name"
-                      fieldName="company_name"
-                      fieldValue={formData.contactRecord?.company_name}
-                      handleChange={handleChange}
-                    ></TextField>
+                    <>
+                      <TextField
+                        label="Company Name"
+                        fieldName="company_name"
+                        fieldValue={formData.contactRecord?.company_name}
+                        handleChange={handleChange}
+                      ></TextField>
+                    </>
                   )}
                 </div>
 
@@ -740,14 +735,45 @@ export default function DataCleanupPage(props) {
                     dropDownItems={dropdownData.writingAdvisors}
                     handleChange={handleChange}
                   ></DropDownField>
-
-                  <TextField
-                    label="Tax ID"
-                    fieldName="tax_id"
-                    fieldValue={formData.contactRecord?.tax_id}
-                    handleChange={handleChange}
-                  ></TextField>
                 </div>
+
+                <div className={styles.formColumn}>
+                  {isIndividual(formData) ? (
+                    <>
+                      <TextField
+                        label="Tax ID"
+                        fieldName="tax_id"
+                        fieldValue={formData.contactRecord?.tax_id}
+                        handleChange={handleChange}
+                      ></TextField>
+
+                      <DateField
+                        label="Date of Birth"
+                        fieldName="dob"
+                        fieldValue={formData.contactRecord?.dob}
+                        handleDateChange={handleDateChange}
+                      ></DateField>
+
+                      <DropDownField
+                        label="Marital Status"
+                        fieldName="marital_status_id"
+                        fieldValue={formData.contactRecord?.marital_status_id}
+                        dropDownItems={dropdownData.maritalTypes}
+                        handleChange={handleChange}
+                      ></DropDownField>
+                    </>
+                  ) : (
+                    <>
+                      <TextField
+                        label="Tax ID"
+                        fieldName="tax_id"
+                        fieldValue={formData.contactRecord?.tax_id}
+                        handleChange={handleChange}
+                      ></TextField>
+                    </>
+                  )}
+                </div>
+
                 <div className={styles.formRow}>
                   <div
                     className={`${styles.formColumn} ${styles.buttonColumn}`}
