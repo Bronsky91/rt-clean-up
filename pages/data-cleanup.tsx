@@ -38,6 +38,7 @@ import {
 } from "../interfaces/redtail-contact-update.interface";
 import DashboardPage from ".";
 import { isIndividual } from "../utils/isIndividual";
+import { yyyymmddFromDate } from "../utils/date-conversion";
 
 export default function DataCleanupPage(props) {
   const router = useRouter();
@@ -357,17 +358,11 @@ export default function DataCleanupPage(props) {
   };
 
   const handleDateChange = (date: Date, fieldName: string) => {
-    const formattedDate: string = [
-      date.getFullYear(),
-      ("0" + (date.getMonth() + 1)).slice(-2),
-      ("0" + date.getDate()).slice(-2),
-    ].join("-");
-
     const updatedFormData = {
       ...formData,
       contactRecord: {
         ...formData.contactRecord,
-        [fieldName]: formattedDate,
+        [fieldName]: yyyymmddFromDate(date),
       },
     };
 

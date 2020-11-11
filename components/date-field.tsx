@@ -2,6 +2,7 @@ import styles from "../styles/DataCleanupPage.module.scss";
 import React from "react";
 import DatePicker from "react-datepicker";
 import { getYear, getMonth, parse } from "date-fns";
+import { yyyymmddToDate } from "../utils/date-conversion";
 
 export default function DateField(props) {
   const range = (start, end) => {
@@ -23,20 +24,13 @@ export default function DateField(props) {
     "December",
   ];
 
-  // Redtail works with this date as a yyyy-MM-dd string, so need to convert to Date object
-  const [year, month, day]: string[] = props.fieldValue.split("-");
-  const dateValue =
-    !isNaN(parseInt(year)) && !isNaN(parseInt(month)) && !isNaN(parseInt(day))
-      ? new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
-      : null;
-
   return (
     <div className={styles.formField}>
       <label className={styles.formLabel}>{props.label}</label>
       <DatePicker
         className={styles.formLabelledInput}
         dateFormat="yyyy-MM-dd"
-        selected={dateValue}
+        selected={yyyymmddToDate(props.fieldValue)} // Redtail works with this date as a yyyy-MM-dd string, so need to convert to Date object
         onChange={(date) => props.handleDateChange(date, props.fieldName)}
         renderCustomHeader={({ date, changeYear, changeMonth }) => {
           return (
