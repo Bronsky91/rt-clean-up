@@ -86,7 +86,9 @@ export const createEmptyFormData = (): Readonly<RedtailContactUpdate> =>
 export const createEmptyContactField = {
   contactRecord: (): ContactRecordUpdate => ({
     id: 0,
+    type: "",
     salutation_id: 0,
+    company_name: "",
     first_name: "",
     middle_name: "",
     last_name: "",

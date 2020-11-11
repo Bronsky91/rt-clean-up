@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styles from "../styles/ContactListPanel.module.scss";
 import ContactFilter from "./filter/contact-filter";
 import axios from "axios";
@@ -8,8 +8,6 @@ import {
 } from "../interfaces/redtail-contact-list.interface";
 
 export default function ContactListPanel(props) {
-  const [selectedFilter, updateSelectedFilter] = useState("status_id");
-  const [showFilters, setShowFilters] = useState(false);
   const toggleFilterWindow = (e) => {
     e.preventDefault();
     props.setShowFilters(!props.showFilters);
@@ -191,14 +189,9 @@ export default function ContactListPanel(props) {
           ></ContactFilter>
         ) : null}
       </div>
-      {/* <input
-        className={styles.contactSearch}
-        type="text"
-        placeholder="Search Last Name.."
-      /> */}
       <select
         className={styles.contactSelect}
-        onChange={props.contactSelected}
+        onChange={props.handleContactChange}
         name="contact-list"
         size={props.contactsPerPage}
         value={
@@ -214,14 +207,14 @@ export default function ContactListPanel(props) {
                 )
                 .map((contact, index) => (
                   <option key={index} value={contact.id}>
-                    {contact.id}, {contact.lastName}
+                    {contact.id}, {contact.name}
                   </option>
                 ))
             : ""
           : props.contactList
           ? props.contactList.map((contact, index) => (
               <option key={index} value={contact.id}>
-                {contact.id}, {contact.lastName}
+                {contact.id}, {contact.name}
               </option>
             ))
           : ""}
