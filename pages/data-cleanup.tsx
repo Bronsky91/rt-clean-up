@@ -671,6 +671,14 @@ export default function DataCleanupPage(props) {
                         handleChange={handleChange}
                       ></DropDownField>
 
+                      <DropDownField
+                        label="Marital Status"
+                        fieldName="marital_status_id"
+                        fieldValue={formData.contactRecord?.marital_status_id}
+                        dropDownItems={dropdownData.maritalTypes}
+                        handleChange={handleChange}
+                      ></DropDownField>
+
                       <DateField
                         label="Date of Birth"
                         fieldName="dob"
