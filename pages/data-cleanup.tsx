@@ -774,51 +774,47 @@ export default function DataCleanupPage(props) {
                   )}
                 </div>
 
-                <div className={styles.formRow}>
-                  <div
-                    className={`${styles.formColumn} ${styles.buttonColumn}`}
-                  >
-                    <div className={styles.buttonRow}>
-                      <button
-                        className={styles.contactPrevButton}
-                        onClick={handleContactPrevClick}
-                        disabled={contactPrevDisabled}
-                      />
-                      <div className={styles.contactId}>
-                        {formData.contactRecord.id}
-                      </div>
-                      <button
-                        className={styles.contactNextButton}
-                        onClick={handleContactNextClick}
-                        disabled={contactNextDisabled}
-                      />
+                <div className={`${styles.formColumn} ${styles.buttonColumn}`}>
+                  <div className={styles.buttonRow}>
+                    <button
+                      className={styles.contactPrevButton}
+                      onClick={handleContactPrevClick}
+                      disabled={contactPrevDisabled}
+                    />
+                    <div className={styles.contactId}>
+                      {formData.contactRecord.id}
                     </div>
-                    <div className={styles.timestamp}>
-                      Updated{" "}
-                      {redtailDateToFormatedString(
-                        formData.contactRecord.updated_at
-                      )}
-                    </div>
-                    <div className={styles.savedMsg}>
-                      {isSaved ? "Saved!" : ""}
-                    </div>
+                    <button
+                      className={styles.contactNextButton}
+                      onClick={handleContactNextClick}
+                      disabled={contactNextDisabled}
+                    />
+                  </div>
+                  <div className={styles.timestamp}>
+                    Updated{" "}
+                    {redtailDateToFormatedString(
+                      formData.contactRecord.updated_at
+                    )}
+                  </div>
+                  <div className={styles.savedMsg}>
+                    {isSaved ? "Saved!" : ""}
+                  </div>
 
-                    <div className={styles.saveButtonContainer}>
-                      <button
-                        type="submit"
-                        className={styles.saveButton}
-                        disabled={!formDirty}
-                      >
-                        SAVE
-                      </button>
-                      <button
-                        className={styles.undoButton}
-                        onClick={handleUndo}
-                        disabled={!formDirty}
-                      >
-                        UNDO
-                      </button>
-                    </div>
+                  <div className={styles.saveButtonContainer}>
+                    <button
+                      type="submit"
+                      className={styles.saveButton}
+                      disabled={!formDirty}
+                    >
+                      SAVE
+                    </button>
+                    <button
+                      className={styles.undoButton}
+                      onClick={handleUndo}
+                      disabled={!formDirty}
+                    >
+                      UNDO
+                    </button>
                   </div>
                 </div>
               </div>
