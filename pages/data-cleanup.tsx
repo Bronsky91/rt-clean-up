@@ -84,6 +84,7 @@ export default function DataCleanupPage(props) {
   const [selectedContactID, setSelectedContactID] = useState(0);
   const [isLocalStorageValid, setIsLocalStorageValid] = useState(false);
   const [localStorageApplied, setLocalStorageApplied] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(true);
 
   useEffect(() => {
     // If authenticated, check LocalStorage for Form data, then load contact data in localStorageApplied useEffect hook
@@ -804,7 +805,7 @@ export default function DataCleanupPage(props) {
                     <button
                       type="submit"
                       className={styles.saveButton}
-                      disabled={!formDirty}
+                      disabled={!formDirty || !isFormValid}
                     >
                       SAVE
                     </button>
@@ -873,6 +874,7 @@ export default function DataCleanupPage(props) {
                       handlePhoneChange={handlePhoneChange} // Used by Phone Number input
                       dropdownData={dropdownData}
                       removeContactField={removeContactField}
+                      setIsFormValid={setIsFormValid}
                     ></PhoneFields>
                     <div className={styles.formRowEven}>
                       <button

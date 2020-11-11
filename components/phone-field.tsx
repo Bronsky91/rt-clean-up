@@ -47,6 +47,15 @@ export default function PhoneFields(props) {
                 country={phone.country_code || "us"} // Using "us" instead of 1 here, as 1 does not correctly resolve to US flag when passed a new, empty phone number
                 value={phone.number || ""}
                 onChange={props.handlePhoneChange(index, "phones", phone.id)}
+                isValid={(value, country: any) => {
+                  if (value.length <= country.dialCode?.length) {
+                    props.setIsFormValid(false);
+                    return "Invalid number";
+                  } else {
+                    props.setIsFormValid(true);
+                    return true;
+                  }
+                }}
               />
               <div>
                 <select
