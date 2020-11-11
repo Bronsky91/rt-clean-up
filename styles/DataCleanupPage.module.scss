@@ -357,4 +357,40 @@ $long-field-multiplyer: 1.75;
 .phoneDropdown {
   position: fixed !important;
 }
+
+.contactId {
+  width: 152px;
+  margin-top: 6rem;
+  height: 54px;
+  font-family: SegoeUI;
+  font-size: 41px;
+  font-weight: 600;
+  letter-spacing: 2.87px;
+  text-align: center;
+  color: #4357ab;
+}
+
+.savedMsg {
+  margin: 0 auto;
+  width: 151px;
+  height: 60px;
+  font-family: SegoeUI;
+  font-size: 45px;
+  font-weight: 600;
+  line-height: 1.33;
+  letter-spacing: 3.15px;
+  text-align: center;
+  color: #43ab92;
+  justify-self: center;
+}
+
+.timestamp {
+  margin: 0 auto;
+  height: 21px;
+  font-family: Poppins;
+  font-size: 15px;
+  line-height: 1;
+  text-align: center;
+  color: #8e8e8e;
+}
 // =============================================================

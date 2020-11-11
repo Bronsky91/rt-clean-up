@@ -38,7 +38,10 @@ import {
 } from "../interfaces/redtail-contact-update.interface";
 import DashboardPage from ".";
 import { isIndividual } from "../utils/isIndividual";
-import { dateToDatestring } from "../utils/date-conversion";
+import {
+  dateToDatestring,
+  redtailDateToFormatedString,
+} from "../utils/date-conversion";
 
 export default function DataCleanupPage(props) {
   const router = useRouter();
@@ -61,6 +64,7 @@ export default function DataCleanupPage(props) {
   const [filteredContactList, setFilteredContactList] = useState(
     emptyContactList
   );
+  const [isSaved, setIsSaved] = useState(false);
   const [isFiltered, setIsFiltered] = useState(false);
   const [clearFilter, setClearFilter] = useState(false);
   const [filterPageData, setFilterPageData] = useState(emptyFilterPageData);
@@ -378,7 +382,7 @@ export default function DataCleanupPage(props) {
       ...formData,
       contactRecord: {
         ...formData.contactRecord,
-        [target.name]: target.value.trim(),
+        [target.name]: target.value,
       },
     };
     setFormData(updatedFormData);
@@ -390,7 +394,7 @@ export default function DataCleanupPage(props) {
     selectContact(id);
   };
 
-  const selectContact = (id: number) => {
+  const selectContact = (id: number, saved?: boolean) => {
     setLoadingContact(true);
     setSelectedContactID(id);
     getContactAndPopulateForm(
@@ -400,6 +404,7 @@ export default function DataCleanupPage(props) {
       id
     ).then(() => {
       setLoadingContact(false);
+      setIsSaved(saved);
     });
   };
 
@@ -497,9 +502,7 @@ export default function DataCleanupPage(props) {
             );
           }
           // Reload contact page from Redtail as a data validation measure
-          selectContact(formData.contactRecord.id);
-
-          alert("Contact Saved!");
+          selectContact(formData.contactRecord.id, true); // True means the contact was just saved
         } else {
           alert(
             "ERROR: Looks like something went wrong updating this contact\nPlease check form and try again."
@@ -755,29 +758,40 @@ export default function DataCleanupPage(props) {
                         onClick={handleContactPrevClick}
                         disabled={contactPrevDisabled}
                       />
-
-                      <div className={styles.saveButtonContainer}>
-                        <button
-                          type="submit"
-                          className={styles.saveButton}
-                          disabled={!formDirty}
-                        >
-                          SAVE
-                        </button>
-                        <button
-                          className={styles.undoButton}
-                          onClick={handleUndo}
-                          disabled={!formDirty}
-                        >
-                          UNDO
-                        </button>
+                      <div className={styles.contactId}>
+                        {formData.contactRecord.id}
                       </div>
-
                       <button
                         className={styles.contactNextButton}
                         onClick={handleContactNextClick}
                         disabled={contactNextDisabled}
                       />
+                    </div>
+                    <div className={styles.timestamp}>
+                      Updated{" "}
+                      {redtailDateToFormatedString(
+                        formData.contactRecord.updated_at
+                      )}
+                    </div>
+                    <div className={styles.savedMsg}>
+                      {isSaved ? "Saved!" : ""}
+                    </div>
+
+                    <div className={styles.saveButtonContainer}>
+                      <button
+                        type="submit"
+                        className={styles.saveButton}
+                        disabled={!formDirty}
+                      >
+                        SAVE
+                      </button>
+                      <button
+                        className={styles.undoButton}
+                        onClick={handleUndo}
+                        disabled={!formDirty}
+                      >
+                        UNDO
+                      </button>
                     </div>
                   </div>
                 </div>

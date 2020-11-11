@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 // Takes yyyy-MM-dd formatted datestring and converts to Date object or null if invalid
 export const datestringToDate = (date: string): Date | null => {
   const [year, month, day]: string[] = date.split("-");
@@ -16,4 +18,11 @@ export const dateToDatestring = (date: Date): string => {
     ("0" + date.getDate()).slice(-2),
   ].join("-");
   return result;
+};
+
+// Takes YYYY-MM-DDTHH:MM:SS.000Z and converts to MM/DD/YY HH:MM
+export const redtailDateToFormatedString = (dateString: string): string => {
+  if (!dateString) return "";
+  const date = Date.parse(dateString);
+  return format(date, "Pp");
 };
