@@ -12,6 +12,7 @@ export interface RedtailContactUpdate {
 export interface ContactRecordUpdate {
   id: number;
   type: string;
+  updated_at: string;
   salutation_id: number;
   first_name: string;
   middle_name: string;

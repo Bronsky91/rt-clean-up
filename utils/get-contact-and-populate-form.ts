@@ -27,6 +27,7 @@ export const getContactAndPopulateForm = (
       contactRecord: {
         id: data.id || 0,
         type: data.type || "",
+        updated_at: data.updated_at || "",
         salutation_id: data.salutation_id || 0,
         first_name: data.first_name || "",
         middle_name: data.middle_name || "",
