@@ -40,6 +40,7 @@ export const getContactAndPopulateForm = (
         status_id: data.status_id || 0,
         source_id: data.source_id || 0,
         tax_id: data.tax_id || "",
+        marital_status_id: data.marital_status_id || 0,
         referred_by: data.referred_by || "",
         servicing_advisor_id: data.servicing_advisor_id || 0,
         writing_advisor_id: data.writing_advisor_id || 0,
