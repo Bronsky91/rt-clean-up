@@ -165,5 +165,18 @@ export interface FilterData {
 
 export interface ContactListEntry {
   id: number;
-  lastName: string;
+  name: string;
+}
+
+export interface PageData {
+  currentPage: number;
+  totalPages: number;
+  totalContacts: number;
+}
+
+export interface FilterPageData {
+  currentPage: number;
+  totalPages: number;
+  startIndex: number;
+  endIndex: number;
 }

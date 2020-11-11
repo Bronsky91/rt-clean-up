@@ -9,10 +9,13 @@ import { getContactAndPopulateForm } from "../utils/get-contact-and-populate-for
 import { applyLocalStorage } from "../utils/apply-local-storage";
 import ContactListPanel from "../components/contact-list-panel";
 import {
-  createEmptyContactRefData,
   createEmptyFormData,
   createEmptyDropDownData,
   createEmptyContactField,
+  createEmptyContactList,
+  createEmptyFilterPageData,
+  createEmptyPageData,
+  createEmptyFilterData,
 } from "../utils/create-empty-form-data";
 import { setLocalStorage } from "../utils/set-local-storage";
 import TextField from "../components/text-field";
@@ -21,80 +24,88 @@ import EmailFields from "../components/email-field";
 import PhoneFields from "../components/phone-field";
 import AddressFields from "../components/address-field";
 import DateField from "../components/date-field";
-import { RedtailContactListRec } from "../interfaces/redtail-contact-list.interface";
+import {
+  ContactListEntry,
+  FilterData,
+  FilterPageData,
+  PageData,
+  RedtailContactListRec,
+} from "../interfaces/redtail-contact-list.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
-import { RedtailContactRec } from "../interfaces/redtail-contact-receive.interface";
-import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
+import {
+  ContactTypes,
+  RedtailContactUpdate,
+} from "../interfaces/redtail-contact-update.interface";
 import DashboardPage from ".";
+import { isIndividual } from "../utils/isIndividual";
+
 export default function DataCleanupPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
   const isRedtailAuth = props.rtAuth;
+  const pageInput = useRef(null);
+  const contactsPerPage = 50;
+  const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
+  const emptyDropDowns: Readonly<RedtailSettingsData> = createEmptyDropDownData();
+  const emptyFilterData: Readonly<FilterData[]> = createEmptyFilterData();
+  const emptyFilterPageData: Readonly<FilterPageData> = createEmptyFilterPageData();
+  const emptyPageData: Readonly<PageData> = createEmptyPageData();
+  const emptyContactList: Readonly<
+    ContactListEntry[]
+  > = createEmptyContactList();
+  const [formData, setFormData] = useState(emptyFormData);
+  const [originalFormData, setOriginalFormData] = useState(emptyFormData);
+  const [formDirty, setFormDirty] = useState(false);
+  const [contactList, setContactList] = useState(emptyContactList);
+  const [filteredContactList, setFilteredContactList] = useState(
+    emptyContactList
+  );
+  const [isFiltered, setIsFiltered] = useState(false);
+  const [clearFilter, setClearFilter] = useState(false);
+  const [filterPageData, setFilterPageData] = useState(emptyFilterPageData);
+  const [pageData, setPageData] = useState(emptyPageData);
+  const [pageInputText, setPageInputText] = useState("");
+  const [dropdownData, setDropdownData] = useState(emptyDropDowns);
+  const [loadingPage, setLoadingPage] = useState(true);
+  const [loadingContact, setLoadingContact] = useState(false);
+  const [savingContact, setSavingContact] = useState(false);
+  const [contactPrevDisabled, setContactPrevDisabled] = useState(false);
+  const [contactNextDisabled, setContactNextDisabled] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("status_id");
+  const [filterData, setFilterData] = useState(emptyFilterData);
+  const [appliedFilterData, setAppliedFilterData] = useState(emptyFilterData);
+  const [filterDirty, setFilterDirty] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedContactID, setSelectedContactID] = useState(0);
+  const [isLocalStorageValid, setIsLocalStorageValid] = useState(false);
+  const [localStorageApplied, setLocalStorageApplied] = useState(false);
 
   useEffect(() => {
-    // mounted used to avoid issue outlined here: https://www.debuggr.io/react-update-unmounted-component/
-    let mounted = true;
-
+    // If authenticated, check LocalStorage for Form data, then load contact data in localStorageApplied useEffect hook
     if (isAuth && isRedtailAuth) {
       setLoadingPage(true);
-      // If authenticated, load contact data
-      axios
-        .get(`${process.env.NEXT_PUBLIC_API_URL}/rt/get-contacts`, {
-          withCredentials: true,
-        })
-        .then((res) => {
-          if (mounted) {
-            const list: RedtailContactListRec = res.data;
-            const contacts = list.contacts;
-            const totalCount: number = list.meta.total_records;
-            const pageCount: number = list.meta.total_pages;
 
-            updatePageData({
-              currentPage: 1,
-              totalPages: pageCount,
-              totalContacts: totalCount,
-            });
-
-            const formattedContactList = contacts
-              .map((contact) => {
-                return {
-                  id: contact.id,
-                  lastName: contact.last_name,
-                };
-              })
-              .sort((a, b) => a.id - b.id);
-
-            setContactList(formattedContactList);
-
-            // If contacts returned, select first one
-            if (formattedContactList && formattedContactList.length >= 1) {
-              selectContact(formattedContactList[0].id.toString());
-            }
-          }
-
-          axios
-            .get(`${process.env.NEXT_PUBLIC_API_URL}/rt/dropdowns`, {
-              withCredentials: true,
-            })
-            .then((res) => {
-              if (mounted) {
-                const dropdownData: RedtailSettingsData = res.data;
-                updateDropdownData(dropdownData);
-                setLoadingPage(false);
-              }
-            });
-        });
-
-      // Update Form with LocalStorage if it's available
+      // Update Form from LocalStorage if it's available
       applyLocalStorage(
-        updateOriginalFormData,
-        updateFormData,
-        updateFormDirty
+        setOriginalFormData,
+        setFormData,
+        setContactList,
+        setFilteredContactList,
+        setIsFiltered,
+        setFilterPageData,
+        setPageData,
+        setPageInputText,
+        setContactPrevDisabled,
+        setContactNextDisabled,
+        setSelectedFilter,
+        setFilterData,
+        setAppliedFilterData,
+        setShowFilters,
+        setSelectedContactID,
+        setDropdownData,
+        setIsLocalStorageValid,
+        setLocalStorageApplied
       );
-
-      return () => {
-        mounted = false;
-      };
     } else if (!isRedtailAuth) {
       // If unauthenticated with Redtail, redirect router to dashboard page and clear localStorage
       localStorage.clear();
@@ -106,45 +117,142 @@ export default function DataCleanupPage(props) {
     }
   }, [isAuth, isRedtailAuth]);
 
+  useEffect(() => {
+    // Do not load contacts from Redtail if not actively authenticated
+    if (!isAuth || !isRedtailAuth) {
+      setLoadingPage(false);
+      return;
+    }
+
+    // Likewise, do not load contacts if LocalStorage has not been applied yet
+    if (!localStorageApplied) return;
+
+    // Only load clean slate data from Redtail if valid data was not in Local Storage
+    if (isLocalStorageValid) {
+      setLoadingPage(false);
+    } else {
+      // This 'mounted' boolean used to avoid issue outlined here: https://www.debuggr.io/react-update-unmounted-component/
+      let mounted = true;
+
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_API_URL}/rt/get-contacts?page=${
+            isFiltered ? filterPageData.currentPage : pageData.currentPage
+          }`,
+          {
+            withCredentials: true,
+          }
+        )
+        .then((res) => {
+          if (mounted) {
+            const list: RedtailContactListRec = res.data;
+            const contacts = list.contacts;
+            const totalCount: number = list.meta.total_records;
+            const pageCount: number = list.meta.total_pages;
+
+            setPageData({
+              currentPage: 1,
+              totalPages: pageCount,
+              totalContacts: totalCount,
+            });
+
+            const formattedContactList: ContactListEntry[] = contacts
+              .map((contact) => {
+                return {
+                  id: contact.id,
+                  name:
+                    contact.type === ContactTypes.Individual
+                      ? contact.last_name
+                      : contact.company_name,
+                };
+              })
+              .sort((a, b) => a.id - b.id);
+
+            setContactList(formattedContactList);
+
+            // If contacts returned, select first one
+            if (formattedContactList && formattedContactList.length >= 1) {
+              selectContact(formattedContactList[0].id);
+            }
+          }
+
+          axios
+            .get(`${process.env.NEXT_PUBLIC_API_URL}/rt/dropdowns`, {
+              withCredentials: true,
+            })
+            .then((res) => {
+              if (mounted) {
+                const dropdownData: RedtailSettingsData = res.data;
+                setDropdownData(dropdownData);
+                setLoadingPage(false);
+              }
+            });
+        });
+
+      return () => {
+        mounted = false;
+      };
+    }
+  }, [localStorageApplied]);
+
   // If unathenticated, load login component
   if (!isAuth) return <Login />;
 
   // If unathenticated with Redtail, load Dashboard component
   if (!isRedtailAuth) return <DashboardPage {...props} />;
 
-  const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
-  const emptyDropDowns: Readonly<RedtailSettingsData> = createEmptyDropDownData();
-  const [formData, updateFormData] = useState(emptyFormData);
-  const [originalFormData, updateOriginalFormData] = useState(emptyFormData);
-  const [formDirty, updateFormDirty] = useState(false);
-  const contactsPerPage = 50;
-  const [contactList, setContactList] = useState([]);
-  const [filteredContactList, setFilteredContactList] = useState([]);
-  const [isFiltered, setIsFiltered] = useState(false);
-  const [filterPageData, setFilterPageData] = useState({
-    currentPage: 1,
-    totalPages: 1,
-    startIndex: 0,
-    endIndex: contactsPerPage,
-  });
-  const [pageData, updatePageData] = useState({
-    currentPage: 1,
-    totalPages: 1,
-    totalContacts: 0,
-  });
-  const pageInput = useRef(null);
-  const [pageInputText, setPageInputText] = useState("");
-  const [dropdownData, updateDropdownData] = useState(emptyDropDowns);
-  const [loadingPage, setLoadingPage] = useState(false);
-  const [loadingContact, setLoadingContact] = useState(false);
-  const [savingContact, setSavingContact] = useState(false);
-  const [contactPrevDisabled, setContactPrevDisabled] = useState(false);
-  const [contactNextDisabled, setContactNextDisabled] = useState(false);
+  // Updates formDirty flag every time formData is updated
+  useEffect(() => {
+    setFormDirty(JSON.stringify(originalFormData) !== JSON.stringify(formData));
+  }, [originalFormData, formData]);
 
+  // Updates filterDirty flag every time filterData is updated
+  useEffect(() => {
+    setFilterDirty(
+      JSON.stringify(appliedFilterData) !== JSON.stringify(filterData)
+    );
+  }, [appliedFilterData, filterData]);
   // Saves Form State to Local Storage after each change
   useEffect(() => {
-    setLocalStorage(originalFormData, formData, formDirty);
-  }, [originalFormData, formData, formDirty]);
+    // Only update LocalStorage values after we're done loading from LocalStorage
+    if (localStorageApplied) {
+      setLocalStorage(
+        originalFormData,
+        formData,
+        contactList,
+        filteredContactList,
+        isFiltered,
+        filterPageData,
+        pageData,
+        pageInputText,
+        contactPrevDisabled,
+        contactNextDisabled,
+        selectedFilter,
+        filterData,
+        appliedFilterData,
+        showFilters,
+        selectedContactID,
+        dropdownData
+      );
+    }
+  }, [
+    originalFormData,
+    formData,
+    contactList,
+    filteredContactList,
+    isFiltered,
+    filterPageData,
+    pageData,
+    pageInputText,
+    contactPrevDisabled,
+    contactNextDisabled,
+    selectedFilter,
+    filterData,
+    appliedFilterData,
+    showFilters,
+    selectedContactID,
+    dropdownData,
+  ]);
 
   // When contact changes, re-calculate prev & next contact button disabled state
   useEffect(() => {
@@ -177,19 +285,28 @@ export default function DataCleanupPage(props) {
     const newContactFieldArray = formData[fieldName];
     const removedContactField = newContactFieldArray.splice(index, 1);
 
-    const updatedFormData = {
-      ...formData,
-      [fieldName]: [...newContactFieldArray],
-      contactFieldsToDelete: {
-        ...formData.contactFieldsToDelete,
-        [fieldName]: [
-          ...formData.contactFieldsToDelete[fieldName],
-          removedContactField[0].id,
-        ],
-      },
-    };
-
-    updateFormData(updatedFormData);
+    if (removedContactField[0].id === 0) {
+      // If the deleted contact field was new, splice it from formData
+      const updatedFormData = {
+        ...formData,
+        [fieldName]: [...newContactFieldArray],
+      };
+      setFormData(updatedFormData);
+    } else {
+      // Otherwise, if the deleted contact field came from Redtail, queue it for API deletion on save
+      const updatedFormData = {
+        ...formData,
+        [fieldName]: [...newContactFieldArray],
+        contactFieldsToDelete: {
+          ...formData.contactFieldsToDelete,
+          [fieldName]: [
+            ...formData.contactFieldsToDelete[fieldName],
+            removedContactField[0].id,
+          ],
+        },
+      };
+      setFormData(updatedFormData);
+    }
   };
 
   const addContactField = (fieldName: string) => (e) => {
@@ -203,10 +320,7 @@ export default function DataCleanupPage(props) {
       ],
     };
 
-    updateFormData(updatedFormData);
-    updateFormDirty(
-      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
-    );
+    setFormData(updatedFormData);
   };
 
   // Updates form state for phones, emails, and addresses
@@ -229,29 +343,20 @@ export default function DataCleanupPage(props) {
 
     const updatedFormData = { ...formData, [arrName]: newArr };
 
-    updateFormData(updatedFormData);
-    updateFormDirty(
-      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
-    );
+    setFormData(updatedFormData);
   };
 
-  const handlePhoneChange = (index: number, targetID: string) => (
-    value,
-    country
-  ) => {
+  const handlePhoneChange = (index: number) => (value, country) => {
     const newArr = [...formData["phones"]];
     newArr[index]["number"] = value;
     newArr[index]["country_code"] = country.dialCode;
 
     const updatedFormData = { ...formData, ["phones"]: newArr };
 
-    updateFormData(updatedFormData);
-    updateFormDirty(
-      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
-    );
+    setFormData(updatedFormData);
   };
 
-  const handleDateChange = (date: any, fieldName) => {
+  const handleDateChange = (date: any, fieldName: string) => {
     const updatedFormData = {
       ...formData,
       contactRecord: {
@@ -260,10 +365,7 @@ export default function DataCleanupPage(props) {
       },
     };
 
-    updateFormData(updatedFormData);
-    updateFormDirty(
-      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
-    );
+    setFormData(updatedFormData);
   };
 
   const handleChange = (e) => {
@@ -277,34 +379,21 @@ export default function DataCleanupPage(props) {
         [target.name]: target.value.trim(),
       },
     };
-    updateFormData(updatedFormData);
-    updateFormDirty(
-      JSON.stringify(originalFormData) !== JSON.stringify(updatedFormData)
-    );
+    setFormData(updatedFormData);
   };
 
-  const contactSelected = (e) => {
+  const handleContactChange = (e) => {
     e.preventDefault();
-    setLoadingContact(true);
-
-    const id = e.target.value;
-    getContactAndPopulateForm(
-      updateOriginalFormData,
-      updateFormData,
-      updateFormDirty,
-      formData,
-      id
-    ).then(() => {
-      setLoadingContact(false);
-    });
+    const id: number = Number(e.target.value);
+    selectContact(id);
   };
 
-  const selectContact = (id: string) => {
+  const selectContact = (id: number) => {
     setLoadingContact(true);
+    setSelectedContactID(id);
     getContactAndPopulateForm(
-      updateOriginalFormData,
-      updateFormData,
-      updateFormDirty,
+      setOriginalFormData,
+      setFormData,
       formData,
       id
     ).then(() => {
@@ -328,9 +417,7 @@ export default function DataCleanupPage(props) {
       });
       // After loading page, select contact
       if (filteredContactList && filteredContactList[startIndex]) {
-        selectContact(
-          filteredContactList[startIndex + selectContactIndex].id.toString()
-        );
+        selectContact(filteredContactList[startIndex + selectContactIndex].id);
       }
       setLoadingPage(false);
     } else {
@@ -347,17 +434,17 @@ export default function DataCleanupPage(props) {
           const totalCount: number = list.meta.total_records;
           const pageCount: number = list.meta.total_pages;
 
-          updatePageData({
+          setPageData({
             currentPage: updatedPage,
             totalPages: pageCount,
             totalContacts: totalCount,
           });
 
-          const formattedContactList = contacts
+          const formattedContactList: ContactListEntry[] = contacts
             .map((contact) => {
               return {
                 id: contact.id,
-                lastName: contact.last_name,
+                name: contact.last_name,
               };
             })
             .sort((a, b) => a.id - b.id);
@@ -365,9 +452,7 @@ export default function DataCleanupPage(props) {
           setContactList(formattedContactList);
           // Select contact after they are returned
           if (formattedContactList && formattedContactList.length >= 1) {
-            selectContact(
-              formattedContactList[selectContactIndex].id.toString()
-            );
+            selectContact(formattedContactList[selectContactIndex].id);
           }
           setLoadingPage(false);
         });
@@ -376,8 +461,7 @@ export default function DataCleanupPage(props) {
 
   const handleUndo = (e) => {
     e.preventDefault();
-    updateFormData(originalFormData);
-    updateFormDirty(false);
+    setFormData(originalFormData);
   };
 
   const handleSubmit = (e) => {
@@ -411,7 +495,7 @@ export default function DataCleanupPage(props) {
             );
           }
           // Reload contact page from Redtail as a data validation measure
-          selectContact(formData.contactRecord.id.toString());
+          selectContact(formData.contactRecord.id);
 
           alert("Contact Saved!");
         } else {
@@ -500,19 +584,20 @@ export default function DataCleanupPage(props) {
     >
       <div className={styles.container}>
         <ContactListPanel
-          formData={formData}
           contactsPerPage={contactsPerPage}
-          contactSelected={contactSelected}
+          handleContactChange={handleContactChange}
           contactList={contactList}
-          setContactList={setContactList}
           filteredContactList={filteredContactList}
           setFilteredContactList={setFilteredContactList}
           isFiltered={isFiltered}
           setIsFiltered={setIsFiltered}
+          clearFilter={clearFilter}
+          setClearFilter={setClearFilter}
+          setAppliedFilterData={setAppliedFilterData}
           filterPageData={filterPageData}
           setFilterPageData={setFilterPageData}
+          filterDirty={filterDirty}
           pageData={pageData}
-          updatePageData={updatePageData}
           changePage={changePage}
           pageInput={pageInput}
           pageInputText={pageInputText}
@@ -520,6 +605,13 @@ export default function DataCleanupPage(props) {
           dropdownData={dropdownData}
           setLoadingPage={setLoadingPage}
           selectContact={selectContact}
+          selectedFilter={selectedFilter}
+          setSelectedFilter={setSelectedFilter}
+          filterData={filterData}
+          setFilterData={setFilterData}
+          showFilters={showFilters}
+          setShowFilters={setShowFilters}
+          selectedContactID={selectedContactID}
         ></ContactListPanel>
         <LoadingOverlay active={savingContact} spinner text="Saving Contact">
           <LoadingOverlay
@@ -534,56 +626,66 @@ export default function DataCleanupPage(props) {
             >
               <div className={styles.formRow}>
                 <div className={styles.formColumn}>
-                  <DropDownField
-                    label="Salutation"
-                    fieldName="salutation_id"
-                    fieldValue={formData.contactRecord?.salutation_id}
-                    dropDownItems={dropdownData.salutations}
-                    handleChange={handleChange}
-                  ></DropDownField>
+                  {isIndividual(formData) ? (
+                    <div>
+                      <DropDownField
+                        label="Salutation"
+                        fieldName="salutation_id"
+                        fieldValue={formData.contactRecord?.salutation_id}
+                        dropDownItems={dropdownData.salutations}
+                        handleChange={handleChange}
+                      ></DropDownField>
 
-                  <TextField
-                    label="First Name"
-                    fieldName="first_name"
-                    fieldValue={formData.contactRecord?.first_name}
-                    handleChange={handleChange}
-                  ></TextField>
+                      <TextField
+                        label="First Name"
+                        fieldName="first_name"
+                        fieldValue={formData.contactRecord?.first_name}
+                        handleChange={handleChange}
+                      ></TextField>
+                      <TextField
+                        label="Middle Name"
+                        fieldName="middle_name"
+                        fieldValue={formData.contactRecord?.middle_name}
+                        handleChange={handleChange}
+                      ></TextField>
 
-                  <TextField
-                    label="Middle Name"
-                    fieldName="middle_name"
-                    fieldValue={formData.contactRecord?.middle_name}
-                    handleChange={handleChange}
-                  ></TextField>
+                      <TextField
+                        label="Last Name"
+                        fieldName="last_name"
+                        fieldValue={formData.contactRecord?.last_name}
+                        handleChange={handleChange}
+                      ></TextField>
 
-                  <TextField
-                    label="Last Name"
-                    fieldName="last_name"
-                    fieldValue={formData.contactRecord?.last_name}
-                    handleChange={handleChange}
-                  ></TextField>
+                      <TextField
+                        label="Nickname"
+                        fieldName="nickname"
+                        fieldValue={formData.contactRecord?.nickname}
+                        handleChange={handleChange}
+                      ></TextField>
 
-                  <TextField
-                    label="Nickname"
-                    fieldName="nickname"
-                    fieldValue={formData.contactRecord?.nickname}
-                    handleChange={handleChange}
-                  ></TextField>
+                      <DropDownField
+                        label="Gender"
+                        fieldName="gender_id"
+                        fieldValue={formData.contactRecord?.gender_id}
+                        dropDownItems={dropdownData.genderTypes}
+                        handleChange={handleChange}
+                      ></DropDownField>
 
-                  <DropDownField
-                    label="Gender"
-                    fieldName="gender_id"
-                    fieldValue={formData.contactRecord?.gender_id}
-                    dropDownItems={dropdownData.genderTypes}
-                    handleChange={handleChange}
-                  ></DropDownField>
-
-                  <DateField
-                    label="Date of Birth"
-                    fieldName="dob"
-                    fieldValue={formData.contactRecord?.dob}
-                    handleDateChange={handleDateChange}
-                  ></DateField>
+                      <DateField
+                        label="Date of Birth"
+                        fieldName="dob"
+                        fieldValue={formData.contactRecord?.dob}
+                        handleDateChange={handleDateChange}
+                      ></DateField>
+                    </div>
+                  ) : (
+                    <TextField
+                      label="Company Name"
+                      fieldName="company_name"
+                      fieldValue={formData.contactRecord?.company_name}
+                      handleChange={handleChange}
+                    ></TextField>
+                  )}
                 </div>
 
                 <div className={styles.formColumn}>
@@ -646,12 +748,17 @@ export default function DataCleanupPage(props) {
                       />
 
                       <div className={styles.saveButtonContainer}>
-                        <button type="submit" className={styles.saveButton}>
+                        <button
+                          type="submit"
+                          className={styles.saveButton}
+                          disabled={!formDirty}
+                        >
                           SAVE
                         </button>
                         <button
                           className={styles.undoButton}
                           onClick={handleUndo}
+                          disabled={!formDirty}
                         >
                           UNDO
                         </button>

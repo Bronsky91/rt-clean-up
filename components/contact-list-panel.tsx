@@ -1,23 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styles from "../styles/ContactListPanel.module.scss";
 import ContactFilter from "./filter/contact-filter";
 import axios from "axios";
 import {
   ContactListEntry,
-  FilterData,
   RedtailSearchParam,
 } from "../interfaces/redtail-contact-list.interface";
-import { createEmptyFilterData } from "../utils/create-empty-form-data";
 
 export default function ContactListPanel(props) {
-  const emptyFilterData: Readonly<FilterData[]> = createEmptyFilterData();
-  const [selectedFilter, updateSelectedFilter] = useState("status_id");
-  const [filterData, updateFilterData] = useState(emptyFilterData);
-  const [showFilters, setShowFilters] = useState(false);
-
   const toggleFilterWindow = (e) => {
     e.preventDefault();
-    setShowFilters(!showFilters);
+    props.setShowFilters(!props.showFilters);
   };
 
   const handlePageInput = (e) => {
@@ -111,10 +104,10 @@ export default function ContactListPanel(props) {
     );
   };
 
-  const handleFilter = (filterData: FilterData[]) => {
+  const handleFilter = () => {
     props.setLoadingPage(true);
 
-    const mappedParams = filterData.map((f) => {
+    const mappedParams = props.filterData.map((f) => {
       if (f.selectedIds.length > 0)
         return { [f.filter]: f.selectedIds.map(Number) };
     });
@@ -139,7 +132,8 @@ export default function ContactListPanel(props) {
           endIndex: props.contactsPerPage,
         });
         props.setIsFiltered(true);
-        setShowFilters(false);
+        props.setShowFilters(false);
+        props.setAppliedFilterData(props.filterData);
         props.pageInput.current.value = "1";
         props.setPageInputText("1");
 
@@ -152,6 +146,9 @@ export default function ContactListPanel(props) {
   };
 
   const handleClear = () => {
+    props.setFilterData(
+      props.filterData.map((f) => ({ ...f, selectedIds: [] }))
+    );
     props.setFilterPageData({
       currentPage: 1,
       totalPages: 1,
@@ -160,49 +157,45 @@ export default function ContactListPanel(props) {
     });
     props.setFilteredContactList([]);
     props.setIsFiltered(false);
-    setShowFilters(false);
+    props.setClearFilter(true);
+    props.setShowFilters(false);
   };
 
-  // Change page back to 1 after isFilter is set to false
+  // Change page back to 1 after filter is cleared and state has updated to reflect this
   useEffect(() => {
-    if (!props.isFiltered) {
+    if (!props.isFiltered && props.clearFilter) {
+      props.setClearFilter(false);
       props.changePage(1);
     }
-  }, [props.isFiltered]);
+  }, [props.isFiltered, props.clearFilter]);
 
   return (
     <div className={styles.contactsPanel}>
       <div className={styles.contactsTopRow}>
         <label className={styles.contactsTitle}>Contacts</label>
         <button className={styles.filterButton} onClick={toggleFilterWindow} />
-        {showFilters ? (
+        {props.showFilters ? (
           <ContactFilter
             dropdownData={props.dropdownData}
             handleFilter={handleFilter}
             handleClear={handleClear}
             isFiltered={props.isFiltered}
-            updateSelectedFilter={updateSelectedFilter}
-            selectedFilter={selectedFilter}
-            updateFilterData={updateFilterData}
-            filterData={filterData}
-            setShowFilters={setShowFilters}
+            setSelectedFilter={props.setSelectedFilter}
+            selectedFilter={props.selectedFilter}
+            setFilterData={props.setFilterData}
+            filterData={props.filterData}
+            setShowFilters={props.setShowFilters}
+            filterDirty={props.filterDirty}
           ></ContactFilter>
         ) : null}
       </div>
-      {/* <input
-        className={styles.contactSearch}
-        type="text"
-        placeholder="Search Last Name.."
-      /> */}
       <select
         className={styles.contactSelect}
-        onChange={props.contactSelected}
+        onChange={props.handleContactChange}
         name="contact-list"
         size={props.contactsPerPage}
         value={
-          props.formData.contactRecord.id === 0
-            ? undefined
-            : props.formData.contactRecord.id
+          props.selectedContactID === 0 ? undefined : props.selectedContactID
         }
       >
         {props.isFiltered
@@ -214,14 +207,14 @@ export default function ContactListPanel(props) {
                 )
                 .map((contact, index) => (
                   <option key={index} value={contact.id}>
-                    {contact.id}, {contact.lastName}
+                    {contact.id}, {contact.name}
                   </option>
                 ))
             : ""
           : props.contactList
           ? props.contactList.map((contact, index) => (
               <option key={index} value={contact.id}>
-                {contact.id}, {contact.lastName}
+                {contact.id}, {contact.name}
               </option>
             ))
           : ""}
@@ -253,8 +246,8 @@ export default function ContactListPanel(props) {
             style={{
               width: (props.pageInputText.length + 2).toString() + "rem",
             }}
-          />{" "}
-          of{" "}
+          />
+          {" of "}
           {props.isFiltered
             ? props.filterPageData.totalPages.toString() + " "
             : props.pageData.totalPages.toString() + " "}
