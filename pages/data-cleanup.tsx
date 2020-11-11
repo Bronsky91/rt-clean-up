@@ -627,7 +627,7 @@ export default function DataCleanupPage(props) {
               <div className={styles.formRow}>
                 <div className={styles.formColumn}>
                   {isIndividual(formData) ? (
-                    <div>
+                    <>
                       <DropDownField
                         label="Salutation"
                         fieldName="salutation_id"
@@ -677,7 +677,7 @@ export default function DataCleanupPage(props) {
                         fieldValue={formData.contactRecord?.dob}
                         handleDateChange={handleDateChange}
                       ></DateField>
-                    </div>
+                    </>
                   ) : (
                     <TextField
                       label="Company Name"
@@ -690,18 +690,18 @@ export default function DataCleanupPage(props) {
 
                 <div className={styles.formColumn}>
                   <DropDownField
-                    label="Category"
-                    fieldName="category_id"
-                    fieldValue={formData.contactRecord?.category_id}
-                    dropDownItems={dropdownData.category_id}
-                    handleChange={handleChange}
-                  ></DropDownField>
-
-                  <DropDownField
                     label="Status"
                     fieldName="status_id"
                     fieldValue={formData.contactRecord?.status_id}
                     dropDownItems={dropdownData.status_id}
+                    handleChange={handleChange}
+                  ></DropDownField>
+
+                  <DropDownField
+                    label="Category"
+                    fieldName="category_id"
+                    fieldValue={formData.contactRecord?.category_id}
+                    dropDownItems={dropdownData.category_id}
                     handleChange={handleChange}
                   ></DropDownField>
 
@@ -714,9 +714,9 @@ export default function DataCleanupPage(props) {
                   ></DropDownField>
 
                   <TextField
-                    label="Tax ID"
-                    fieldName="tax_id"
-                    fieldValue={formData.contactRecord?.tax_id}
+                    label="Referred By"
+                    fieldName="referred_by"
+                    fieldValue={formData.contactRecord?.referred_by}
                     handleChange={handleChange}
                   ></TextField>
 
@@ -735,6 +735,13 @@ export default function DataCleanupPage(props) {
                     dropDownItems={dropdownData.writingAdvisors}
                     handleChange={handleChange}
                   ></DropDownField>
+
+                  <TextField
+                    label="Tax ID"
+                    fieldName="tax_id"
+                    fieldValue={formData.contactRecord?.tax_id}
+                    handleChange={handleChange}
+                  ></TextField>
                 </div>
                 <div className={styles.formRow}>
                   <div
