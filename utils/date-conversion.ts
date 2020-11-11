@@ -1,4 +1,5 @@
-export const yyyymmddToDate = (date: string): Date | null => {
+// Takes yyyy-MM-dd formatted datestring and converts to Date object or null if invalid
+export const datestringToDate = (date: string): Date | null => {
   const [year, month, day]: string[] = date.split("-");
   const result =
     !isNaN(parseInt(year)) && !isNaN(parseInt(month)) && !isNaN(parseInt(day))
@@ -7,7 +8,8 @@ export const yyyymmddToDate = (date: string): Date | null => {
   return result;
 };
 
-export const yyyymmddFromDate = (date: Date): string => {
+// Takes Date object and converts to yyyy-MM-dd formatted datestring
+export const dateToDatestring = (date: Date): string => {
   const result: string = [
     date.getFullYear(),
     ("0" + (date.getMonth() + 1)).slice(-2),
