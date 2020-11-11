@@ -1,16 +1,41 @@
-import { PhoneUpdate } from "../interfaces/redtail-contact-update.interface";
+import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import PhoneInput from "react-phone-input-2";
 import styles from "../styles/DataCleanupPage.module.scss";
+import { createEmptyFormData } from "../utils/create-empty-form-data";
+import { useEffect, useRef } from "react";
 
 export default function PhoneFields(props) {
-  const phones: PhoneUpdate[] = props.phones;
+  const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
+  const parentRef = useRef(null);
+  const prevContactRef = useRef(emptyFormData);
+  const contact: RedtailContactUpdate = props.contact;
   const dropdownData: RedtailSettingsData = props.dropdownData;
 
+  useEffect(() => {
+    prevContactRef.current = contact;
+  });
+  const prevContactState = prevContactRef.current;
+
+  // If child row is added, scroll to bottom
+  useEffect(() => {
+    if (
+      contact &&
+      prevContactState &&
+      contact.contactRecord?.id === prevContactState.contactRecord?.id &&
+      contact.phones?.length > prevContactState.phones?.length
+    ) {
+      const scrollHeight = parentRef.current.scrollHeight;
+      const height = parentRef.current.clientHeight;
+      const maxScrollTop = scrollHeight - height;
+      parentRef.current.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+    }
+  }, [contact]);
+
   return (
-    <div className={styles.formColumnScroll}>
-      {phones
-        ? phones.map((phone, index) => (
+    <div ref={parentRef} className={styles.formColumnScroll}>
+      {contact && contact.phones
+        ? contact.phones.map((phone, index) => (
             <div className={styles.formRow} key={phone.key}>
               <PhoneInput
                 containerClass={styles.phoneContainer}

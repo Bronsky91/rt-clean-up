@@ -1,15 +1,40 @@
-import { EmailUpdate } from "../interfaces/redtail-contact-update.interface";
+import { useEffect, useRef } from "react";
+import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
+import { createEmptyFormData } from "../utils/create-empty-form-data";
 
 export default function EmailFields(props) {
-  const emails: EmailUpdate[] = props.emails;
+  const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
+  const parentRef = useRef(null);
+  const prevContactRef = useRef(emptyFormData);
+  const contact: RedtailContactUpdate = props.contact;
   const dropdownData: RedtailSettingsData = props.dropdownData;
 
+  useEffect(() => {
+    prevContactRef.current = contact;
+  });
+  const prevContactState = prevContactRef.current;
+
+  // If child row is added, scroll to bottom
+  useEffect(() => {
+    if (
+      contact &&
+      prevContactState &&
+      contact.contactRecord?.id === prevContactState.contactRecord?.id &&
+      contact.emails?.length > prevContactState.emails?.length
+    ) {
+      const scrollHeight = parentRef.current.scrollHeight;
+      const height = parentRef.current.clientHeight;
+      const maxScrollTop = scrollHeight - height;
+      parentRef.current.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+    }
+  }, [contact]);
+
   return (
-    <div className={styles.formColumnScroll}>
-      {emails
-        ? emails.map((email, index) => (
+    <div ref={parentRef} className={styles.formColumnScroll}>
+      {contact && contact.emails
+        ? contact.emails.map((email, index) => (
             <div className={styles.formRow} key={email.key}>
               <input
                 className={styles.formSoloInputLong}
