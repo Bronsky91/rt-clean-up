@@ -356,12 +356,18 @@ export default function DataCleanupPage(props) {
     setFormData(updatedFormData);
   };
 
-  const handleDateChange = (date: any, fieldName: string) => {
+  const handleDateChange = (date: Date, fieldName: string) => {
+    const formattedDate: string = [
+      date.getFullYear(),
+      ("0" + (date.getMonth() + 1)).slice(-2),
+      ("0" + date.getDate()).slice(-2),
+    ].join("-");
+
     const updatedFormData = {
       ...formData,
       contactRecord: {
         ...formData.contactRecord,
-        [fieldName]: date,
+        [fieldName]: formattedDate,
       },
     };
 

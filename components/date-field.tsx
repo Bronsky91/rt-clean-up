@@ -23,15 +23,19 @@ export default function DateField(props) {
     "December",
   ];
 
-  // LocalStorage saves the date as a string so need to convert back to Date object
-  const dateValue = props.fieldValue ? new Date(props.fieldValue) : null;
+  // Redtail works with this date as a yyyy-MM-dd string, so need to convert to Date object
+  const [year, month, day]: string[] = props.fieldValue.split("-");
+  const dateValue =
+    !isNaN(parseInt(year)) && !isNaN(parseInt(month)) && !isNaN(parseInt(day))
+      ? new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+      : null;
 
   return (
     <div className={styles.formField}>
       <label className={styles.formLabel}>{props.label}</label>
       <DatePicker
         className={styles.formLabelledInput}
-        dateFormat="MM/dd/yyyy"
+        dateFormat="yyyy-MM-dd"
         selected={dateValue}
         onChange={(date) => props.handleDateChange(date, props.fieldName)}
         renderCustomHeader={({ date, changeYear, changeMonth }) => {
