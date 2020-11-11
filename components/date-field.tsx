@@ -2,6 +2,7 @@ import styles from "../styles/DataCleanupPage.module.scss";
 import React from "react";
 import DatePicker from "react-datepicker";
 import { getYear, getMonth, parse } from "date-fns";
+import { datestringToDate } from "../utils/date-conversion";
 
 export default function DateField(props) {
   const range = (start, end) => {
@@ -23,16 +24,13 @@ export default function DateField(props) {
     "December",
   ];
 
-  // LocalStorage saves the date as a string so need to convert back to Date object
-  const dateValue = props.fieldValue ? new Date(props.fieldValue) : null;
-
   return (
     <div className={styles.formField}>
       <label className={styles.formLabel}>{props.label}</label>
       <DatePicker
         className={styles.formLabelledInput}
-        dateFormat="MM/dd/yyyy"
-        selected={dateValue}
+        dateFormat="yyyy-MM-dd"
+        selected={datestringToDate(props.fieldValue)} // Redtail works with this date as a yyyy-MM-dd string, so need to convert to Date object
         onChange={(date) => props.handleDateChange(date, props.fieldName)}
         renderCustomHeader={({ date, changeYear, changeMonth }) => {
           return (

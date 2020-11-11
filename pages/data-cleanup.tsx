@@ -38,6 +38,7 @@ import {
 } from "../interfaces/redtail-contact-update.interface";
 import DashboardPage from ".";
 import { isIndividual } from "../utils/isIndividual";
+import { dateToDatestring } from "../utils/date-conversion";
 
 export default function DataCleanupPage(props) {
   const router = useRouter();
@@ -357,12 +358,12 @@ export default function DataCleanupPage(props) {
     setFormData(updatedFormData);
   };
 
-  const handleDateChange = (date: any, fieldName: string) => {
+  const handleDateChange = (date: Date, fieldName: string) => {
     const updatedFormData = {
       ...formData,
       contactRecord: {
         ...formData.contactRecord,
-        [fieldName]: date,
+        [fieldName]: dateToDatestring(date), // Convert from datepicker Date object to Redtail yyyy-MM-dd datestring
       },
     };
 
