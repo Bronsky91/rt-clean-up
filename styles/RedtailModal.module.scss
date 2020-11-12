@@ -67,6 +67,7 @@
 
 .connectButton {
   width: 129px;
+  display: block;
   height: 32.8px;
   box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
   background-color: #6fa1c6;
@@ -97,4 +98,8 @@
 
 .redButton:hover {
   cursor: pointer;
+}
+
+.spinner {
+  margin: 0 auto;
 }
