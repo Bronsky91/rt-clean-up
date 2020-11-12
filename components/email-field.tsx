@@ -3,6 +3,7 @@ import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.inter
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
 import { createEmptyFormData } from "../utils/create-empty-form-data";
+import { emailSchema } from "../utils/form-validation";
 
 export default function EmailFields(props) {
   const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
@@ -34,50 +35,62 @@ export default function EmailFields(props) {
   return (
     <div ref={parentRef} className={styles.formColumnScroll}>
       {contact && contact.emails
-        ? contact.emails.map((email, index) => (
-            <div className={styles.formRow} key={email.key}>
-              <input
-                className={styles.formSoloInputLong}
-                type="text"
-                name="address"
-                value={email.address || ""}
-                onChange={props.handleArrChange(index, "emails", email.id)}
-              />
-
-              <div>
-                <select
-                  className={styles.formSoloInputShort}
-                  onChange={props.handleArrChange(index, "emails", email.id)}
-                  name="email_type"
-                  value={email.email_type}
-                >
-                  {dropdownData && dropdownData.emailTypes ? (
-                    dropdownData.emailTypes.map((emailType, index) => (
-                      <option key={index} value={emailType.id || 0}>
-                        {emailType.name || ""}
-                      </option>
-                    ))
+        ? contact.emails.map((email, index) => {
+            const validAddress: boolean = emailSchema.isValidSync(email);
+            return (
+              <div className={styles.formRow} key={email.key}>
+                <div className={styles.invalidInputContainer}>
+                  {validAddress ? (
+                    ""
                   ) : (
-                    <option value={0}></option>
+                    <div className={styles.invalidInputMessage}>Not valid</div>
                   )}
-                </select>
-              </div>
+                  <input
+                    className={`${styles.long} ${
+                      validAddress ? "" : styles.invalidInput
+                    }`}
+                    type="text"
+                    name="address"
+                    value={email.address || ""}
+                    onChange={props.handleArrChange(index, "emails", email.id)}
+                  />
+                </div>
 
-              <div className={styles.formRowEven}>
-                <input
-                  className={styles.formRadio}
-                  type="radio"
-                  name="is_primary_email"
-                  checked={email.is_primary}
-                  onChange={props.handleArrChange(index, "emails", email.id)}
-                />
-                <button
-                  className={styles.deleteButton}
-                  onClick={props.removeContactField("emails", index)}
-                />
+                <div>
+                  <select
+                    className={`${styles.margined} ${styles.short}`}
+                    onChange={props.handleArrChange(index, "emails", email.id)}
+                    name="email_type"
+                    value={email.email_type}
+                  >
+                    {dropdownData && dropdownData.emailTypes ? (
+                      dropdownData.emailTypes.map((emailType, index) => (
+                        <option key={index} value={emailType.id || 0}>
+                          {emailType.name || ""}
+                        </option>
+                      ))
+                    ) : (
+                      <option value={0}></option>
+                    )}
+                  </select>
+                </div>
+
+                <div className={styles.formRowEven}>
+                  <input
+                    className={styles.radioInput}
+                    type="radio"
+                    name="is_primary_email"
+                    checked={email.is_primary}
+                    onChange={props.handleArrChange(index, "emails", email.id)}
+                  />
+                  <button
+                    className={styles.deleteButton}
+                    onClick={props.removeContactField("emails", index)}
+                  />
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         : ""}
     </div>
   );

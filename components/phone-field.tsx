@@ -4,6 +4,7 @@ import PhoneInput from "react-phone-input-2";
 import styles from "../styles/DataCleanupPage.module.scss";
 import { createEmptyFormData } from "../utils/create-empty-form-data";
 import { useEffect, useRef } from "react";
+import { isPhoneValid } from "../utils/form-validation";
 
 export default function PhoneFields(props) {
   const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
@@ -47,10 +48,17 @@ export default function PhoneFields(props) {
                 country={phone.country_code || "us"} // Using "us" instead of 1 here, as 1 does not correctly resolve to US flag when passed a new, empty phone number
                 value={phone.number || ""}
                 onChange={props.handlePhoneChange(index, "phones", phone.id)}
+                isValid={(value, country: any) => {
+                  if (isPhoneValid(value, country?.dialCode)) {
+                    return true;
+                  } else {
+                    return "Not valid";
+                  }
+                }}
               />
               <div>
                 <select
-                  className={styles.formSoloInputShort}
+                  className={`${styles.margined} ${styles.short}`}
                   onChange={props.handleArrChange(index, "phones", phone.id)}
                   name="phone_type"
                   value={phone.phone_type}
@@ -70,7 +78,7 @@ export default function PhoneFields(props) {
               </div>
               <div className={styles.formRowEven}>
                 <input
-                  className={styles.formRadio}
+                  className={styles.radioInput}
                   type="radio"
                   name="is_primary_phone"
                   value=""

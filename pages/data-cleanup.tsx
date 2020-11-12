@@ -42,6 +42,16 @@ import {
   dateToDatestring,
   redtailDateToFormatedString,
 } from "../utils/date-conversion";
+import {
+  addressSchema,
+  contactRecordSchema,
+  emailSchema,
+  isAllAddressValid,
+  isAllEmailValid,
+  isAllPhoneValid,
+  isPhoneInvalid,
+  isPhoneValid,
+} from "../utils/form-validation";
 
 export default function DataCleanupPage(props) {
   const router = useRouter();
@@ -84,6 +94,7 @@ export default function DataCleanupPage(props) {
   const [selectedContactID, setSelectedContactID] = useState(0);
   const [isLocalStorageValid, setIsLocalStorageValid] = useState(false);
   const [localStorageApplied, setLocalStorageApplied] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(true);
 
   useEffect(() => {
     // If authenticated, check LocalStorage for Form data, then load contact data in localStorageApplied useEffect hook
@@ -211,6 +222,11 @@ export default function DataCleanupPage(props) {
     setFormDirty(JSON.stringify(originalFormData) !== JSON.stringify(formData));
   }, [originalFormData, formData]);
 
+  // When form is dirtied reset saved message
+  useEffect(() => {
+    if (formDirty) setIsSaved(false);
+  }, [formDirty]);
+
   // Updates filterDirty flag every time filterData is updated
   useEffect(() => {
     setFilterDirty(
@@ -259,6 +275,26 @@ export default function DataCleanupPage(props) {
     selectedContactID,
     dropdownData,
   ]);
+
+  // When formData changes, re-run validity checks
+  useEffect(() => {
+    let allValid = true;
+    if (formData) {
+      if (formData.contactRecord) {
+        allValid = contactRecordSchema.isValidSync(formData.contactRecord);
+      }
+      if (formData.emails && allValid) {
+        allValid = isAllEmailValid(formData.emails);
+      }
+      if (formData.addresses && allValid) {
+        allValid = isAllAddressValid(formData.addresses);
+      }
+      if (formData.phones && allValid) {
+        allValid = isAllPhoneValid(formData.phones);
+      }
+    }
+    setIsFormValid(allValid);
+  }, [formData]);
 
   // When contact changes, re-calculate prev & next contact button disabled state
   useEffect(() => {
@@ -774,51 +810,47 @@ export default function DataCleanupPage(props) {
                   )}
                 </div>
 
-                <div className={styles.formRow}>
-                  <div
-                    className={`${styles.formColumn} ${styles.buttonColumn}`}
-                  >
-                    <div className={styles.buttonRow}>
-                      <button
-                        className={styles.contactPrevButton}
-                        onClick={handleContactPrevClick}
-                        disabled={contactPrevDisabled}
-                      />
-                      <div className={styles.contactId}>
-                        {formData.contactRecord.id}
-                      </div>
-                      <button
-                        className={styles.contactNextButton}
-                        onClick={handleContactNextClick}
-                        disabled={contactNextDisabled}
-                      />
+                <div className={`${styles.formColumn} ${styles.buttonColumn}`}>
+                  <div className={styles.buttonRow}>
+                    <button
+                      className={styles.contactPrevButton}
+                      onClick={handleContactPrevClick}
+                      disabled={contactPrevDisabled}
+                    />
+                    <div className={styles.contactId}>
+                      {formData.contactRecord.id}
                     </div>
-                    <div className={styles.timestamp}>
-                      Updated{" "}
-                      {redtailDateToFormatedString(
-                        formData.contactRecord.updated_at
-                      )}
-                    </div>
-                    <div className={styles.savedMsg}>
-                      {isSaved ? "Saved!" : ""}
-                    </div>
+                    <button
+                      className={styles.contactNextButton}
+                      onClick={handleContactNextClick}
+                      disabled={contactNextDisabled}
+                    />
+                  </div>
+                  <div className={styles.timestamp}>
+                    Updated{" "}
+                    {redtailDateToFormatedString(
+                      formData.contactRecord.updated_at
+                    )}
+                  </div>
+                  <div className={styles.savedMsg}>
+                    {isSaved ? "Saved!" : ""}
+                  </div>
 
-                    <div className={styles.saveButtonContainer}>
-                      <button
-                        type="submit"
-                        className={styles.saveButton}
-                        disabled={!formDirty}
-                      >
-                        SAVE
-                      </button>
-                      <button
-                        className={styles.undoButton}
-                        onClick={handleUndo}
-                        disabled={!formDirty}
-                      >
-                        UNDO
-                      </button>
-                    </div>
+                  <div className={styles.saveButtonContainer}>
+                    <button
+                      type="submit"
+                      className={styles.saveButton}
+                      disabled={!formDirty || !isFormValid}
+                    >
+                      SAVE
+                    </button>
+                    <button
+                      className={styles.undoButton}
+                      onClick={handleUndo}
+                      disabled={!formDirty}
+                    >
+                      UNDO
+                    </button>
                   </div>
                 </div>
               </div>
@@ -826,18 +858,30 @@ export default function DataCleanupPage(props) {
                 <div className={styles.formRow}>
                   <div className={styles.formColumn}>
                     <div className={styles.formRow}>
-                      <div className={styles.formHeaderLong}>
-                        <label className={styles.formHeaderLabelLong}>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.long}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.long}`}
+                        >
                           Email Address
                         </label>
                       </div>
-                      <div className={styles.formHeaderShort}>
-                        <label className={styles.formHeaderLabelShort}>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.short}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.short}`}
+                        >
                           Type
                         </label>
                       </div>
-                      <div className={styles.formHeader}>
-                        <label className={styles.formHeaderLabel}>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.medium}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.medium}`}
+                        >
                           Primary?
                         </label>
                       </div>
@@ -857,18 +901,32 @@ export default function DataCleanupPage(props) {
                   </div>
                   <div className={styles.formColumn}>
                     <div className={styles.formRow}>
-                      <div className={styles.formHeaderLong}>
-                        <label className={styles.formHeaderLabelLong}>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.long}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.long}`}
+                        >
                           Phone Number
                         </label>
                       </div>
-                      <div className={styles.formHeaderShort}>
-                        <label className={styles.formHeaderLabelShort}>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.short}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.short}`}
+                        >
                           Type
                         </label>
                       </div>
-                      <div className={styles.formHeader}>
-                        <label className={styles.formLabel}>Primary?</label>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.medium}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.medium}`}
+                        >
+                          Primary?
+                        </label>
                       </div>
                     </div>
                     <PhoneFields
@@ -891,32 +949,60 @@ export default function DataCleanupPage(props) {
               <div className={styles.formRow}>
                 <div className={styles.formColumn}>
                   <div className={styles.formRow}>
-                    <div className={styles.formHeaderLong}>
-                      <label className={styles.formHeaderLabelLong}>
+                    <div className={`${styles.floatingHeader} ${styles.long}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.long}`}
+                      >
                         Street Address
                       </label>
                     </div>
-                    <div className={styles.formHeaderLong}>
-                      <label className={styles.formHeaderLabelLong}>
+                    <div className={`${styles.floatingHeader} ${styles.long}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.long}`}
+                      >
                         Secondary Address
                       </label>
                     </div>
-                    <div className={styles.formHeader}>
-                      <label className={styles.formHeaderLabel}>City</label>
+                    <div
+                      className={`${styles.floatingHeader} ${styles.medium}`}
+                    >
+                      <label
+                        className={`${styles.floatingLabel} ${styles.medium}`}
+                      >
+                        City
+                      </label>
                     </div>
-                    <div className={styles.formHeaderShort}>
-                      <label className={styles.formHeaderLabelShort}>
+                    <div className={`${styles.floatingHeader} ${styles.short}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.short}`}
+                      >
                         State
                       </label>
                     </div>
-                    <div className={styles.formHeader}>
-                      <label className={styles.formHeaderLabel}>Zip</label>
+                    <div
+                      className={`${styles.floatingHeader} ${styles.medium}`}
+                    >
+                      <label
+                        className={`${styles.floatingLabel} ${styles.medium}`}
+                      >
+                        Zip
+                      </label>
                     </div>
-                    <div className={styles.formHeader}>
-                      <label className={styles.formHeaderLabel}>Type</label>
+                    <div className={`${styles.floatingHeader} ${styles.short}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.short}`}
+                      >
+                        Type
+                      </label>
                     </div>
-                    <div className={styles.formHeader}>
-                      <label className={styles.formHeaderLabel}>Primary?</label>
+                    <div
+                      className={`${styles.floatingHeader} ${styles.medium}`}
+                    >
+                      <label
+                        className={`${styles.floatingLabel} ${styles.medium}`}
+                      >
+                        Primary?
+                      </label>
                     </div>
                   </div>
                   <AddressFields

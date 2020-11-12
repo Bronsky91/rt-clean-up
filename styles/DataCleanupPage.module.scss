@@ -12,6 +12,107 @@ $long-field-multiplyer: 1.75;
   margin-top: 2em;
 }
 
+.margined {
+  margin: 0.2rem;
+}
+
+.short {
+  height: $field-height;
+  width: $solo-field-width / $short-field-divider;
+  min-width: $solo-field-width / $short-field-divider;
+  max-width: $solo-field-width / $short-field-divider;
+}
+
+.medium {
+  height: $field-height;
+  width: $solo-field-width;
+  min-width: $solo-field-width;
+  max-width: $solo-field-width;
+}
+
+.long {
+  height: $field-height;
+  width: $solo-field-width * $long-field-multiplyer;
+  min-width: $solo-field-width * $long-field-multiplyer;
+  max-width: $solo-field-width * $long-field-multiplyer;
+}
+
+.mergedField {
+  background-color: #4357ab;
+  width: 32rem;
+  height: $field-height;
+}
+
+.mergedLabel {
+  color: white;
+  width: 12rem;
+  height: $field-height;
+  display: inline-block;
+  text-align: left;
+  padding-left: 0.5rem;
+  font-size: 1.4rem;
+  line-height: 250%;
+}
+
+.mergedInput {
+  width: 20rem;
+  height: $field-height;
+  position: relative;
+}
+
+.floatingHeader {
+  background-color: #4357ab;
+  margin: 0.2rem;
+}
+
+.floatingLabel {
+  color: white;
+  height: $field-height;
+  display: inline-block;
+  text-align: left;
+  padding-left: 0.5rem;
+  font-size: 1.4rem;
+  line-height: 250%;
+}
+
+.radioInput {
+  flex: 1 1 $radio-size;
+  width: $radio-size;
+  max-width: $radio-size;
+  height: $radio-size;
+  max-height: $radio-size;
+}
+
+.invalidInputContainer {
+  margin: 0.2rem;
+  position: relative;
+  width: 100%;
+}
+
+.invalidDropdownContainer {
+  position: relative;
+  width: 100%;
+}
+
+.dropdownOption {
+  background-color: white;
+}
+
+.invalidInput {
+  background-color: #faf0f0;
+}
+
+.invalidInputMessage {
+  position: absolute;
+  z-index: 1;
+  font-size: 13px;
+  right: 0px;
+  top: -4px;
+  background: #fff;
+  padding: 0 2px;
+  color: #de0000;
+}
+
 .pageTitle {
   margin: 0.6rem 0 0.6rem 1.8rem; // t r b l
   width: 100%;
@@ -28,7 +129,7 @@ $long-field-multiplyer: 1.75;
 }
 
 .buttonColumn {
-  margin-left: 20em !important;
+  margin-left: 12em !important;
   justify-content: center;
 }
 
@@ -175,126 +276,6 @@ $long-field-multiplyer: 1.75;
   background-color: thistle;
 }
 
-.formField {
-  background-color: #4357ab;
-  width: 32rem;
-  height: $field-height;
-  margin: 0.2rem;
-}
-
-.formLabelledInput {
-  width: 20rem;
-  height: $field-height;
-  position: relative;
-}
-
-.formLabel {
-  color: white;
-  width: 12rem;
-  height: $field-height;
-  display: inline-block;
-  text-align: left;
-  padding-left: 0.5rem;
-  font-size: 1.4rem;
-  line-height: 250%;
-}
-
-.formHeaderLabel {
-  color: white;
-  height: $field-height;
-  display: inline-block;
-  text-align: left;
-  padding-left: 0.5rem;
-  font-size: 1.4rem;
-  line-height: 250%;
-  width: $solo-field-width;
-  min-width: $solo-field-width;
-  max-width: $solo-field-width;
-}
-
-.formHeaderLabelShort {
-  color: white;
-  height: $field-height;
-  display: inline-block;
-  text-align: left;
-  padding-left: 0.5rem;
-  font-size: 1.4rem;
-  line-height: 250%;
-  width: $solo-field-width / $short-field-divider;
-  min-width: $solo-field-width / $short-field-divider;
-  max-width: $solo-field-width / $short-field-divider;
-}
-
-.formHeaderLabelLong {
-  color: white;
-  height: $field-height;
-  display: inline-block;
-  text-align: left;
-  padding-left: 0.5rem;
-  font-size: 1.4rem;
-  line-height: 250%;
-  width: $solo-field-width * $long-field-multiplyer;
-  min-width: $solo-field-width * $long-field-multiplyer;
-  max-width: $solo-field-width * $long-field-multiplyer;
-}
-
-.formHeader {
-  background-color: #4357ab;
-  margin: 0.2rem;
-  height: $field-height;
-  width: $solo-field-width;
-}
-
-.formHeaderShort {
-  background-color: #4357ab;
-  margin: 0.2rem;
-  height: $field-height;
-  width: $solo-field-width / $short-field-divider;
-  min-width: $solo-field-width / $short-field-divider;
-  max-width: $solo-field-width / $short-field-divider;
-}
-
-.formHeaderLong {
-  background-color: #4357ab;
-  margin: 0.2rem;
-  height: $field-height;
-  width: $solo-field-width * $long-field-multiplyer;
-  min-width: $solo-field-width * $long-field-multiplyer;
-  max-width: $solo-field-width * $long-field-multiplyer;
-}
-
-.formSoloInput {
-  margin: 0.2rem;
-  height: $field-height;
-  width: $solo-field-width;
-  min-width: $solo-field-width;
-  max-width: $solo-field-width;
-}
-
-.formSoloInputShort {
-  margin: 0.2rem;
-  height: $field-height;
-  width: $solo-field-width / $short-field-divider;
-  min-width: $solo-field-width / $short-field-divider;
-  max-width: $solo-field-width / $short-field-divider;
-}
-
-.formSoloInputLong {
-  margin: 0.2rem;
-  height: $field-height;
-  width: $solo-field-width * $long-field-multiplyer;
-  min-width: $solo-field-width * $long-field-multiplyer;
-  max-width: $solo-field-width * $long-field-multiplyer;
-}
-
-.formRadio {
-  flex: 1 1 $radio-size;
-  width: $radio-size;
-  max-width: $radio-size;
-  height: $radio-size;
-  max-height: $radio-size;
-}
-
 .formColumn {
   display: flex;
   flex-flow: column nowrap;
@@ -357,6 +338,7 @@ $long-field-multiplyer: 1.75;
 .phoneDropdown {
   position: fixed !important;
 }
+// =============================================================
 
 .contactId {
   width: 152px;
@@ -393,4 +375,3 @@ $long-field-multiplyer: 1.75;
   text-align: center;
   color: #8e8e8e;
 }
-// =============================================================

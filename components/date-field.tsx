@@ -25,10 +25,10 @@ export default function DateField(props) {
   ];
 
   return (
-    <div className={styles.formField}>
-      <label className={styles.formLabel}>{props.label}</label>
+    <div className={`${styles.mergedField} ${styles.margined}`}>
+      <label className={styles.mergedLabel}>{props.label}</label>
       <DatePicker
-        className={styles.formLabelledInput}
+        className={styles.mergedInput}
         dateFormat="yyyy-MM-dd"
         selected={datestringToDate(props.fieldValue)} // Redtail works with this date as a yyyy-MM-dd string, so need to convert to Date object
         onChange={(date) => props.handleDateChange(date, props.fieldName)}

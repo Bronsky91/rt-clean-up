@@ -4,6 +4,12 @@ import { StateAbbr } from "../interfaces/redtail-settings.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
 import { createEmptyFormData } from "../utils/create-empty-form-data";
+import {
+  citySchema,
+  stateSchema,
+  streetAddressSchema,
+  zipSchema,
+} from "../utils/form-validation";
 
 export default function AddressFields(props) {
   const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
@@ -89,96 +95,162 @@ export default function AddressFields(props) {
   return (
     <div ref={parentRef} className={styles.formColumnScroll}>
       {contact && contact.addresses
-        ? contact.addresses.map((address, index) => (
-            <div className={styles.formRow} key={address.key}>
-              <input
-                className={styles.formSoloInputLong}
-                type="text"
-                name="street_address"
-                value={address.street_address || ""}
-                onChange={props.handleArrChange(index, "addresses", address.id)}
-              />
-              <input
-                className={styles.formSoloInputLong}
-                type="text"
-                name="secondary_address"
-                value={address.secondary_address || ""}
-                onChange={props.handleArrChange(index, "addresses", address.id)}
-              />
-              <input
-                className={styles.formSoloInput}
-                type="text"
-                name="city"
-                value={address.city || ""}
-                onChange={props.handleArrChange(index, "addresses", address.id)}
-              />
-              <div>
-                <select
-                  className={styles.formSoloInputShort}
-                  onChange={props.handleArrChange(
-                    index,
-                    "addresses",
-                    address.id
-                  )}
-                  name="state"
-                  value={address.state || ""}
-                >
-                  {states.map((obj, index) => (
-                    <option key={index} value={obj.short}>
-                      {obj.short}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <input
-                className={styles.formSoloInput}
-                type="text"
-                name="zip"
-                value={address.zip || ""}
-                onChange={props.handleArrChange(index, "addresses", address.id)}
-              />
-              <div>
-                <select
-                  className={styles.formSoloInput}
-                  onChange={props.handleArrChange(
-                    index,
-                    "addresses",
-                    address.id
-                  )}
-                  name="address_type"
-                  value={address.address_type}
-                >
-                  {dropdownData && dropdownData.addressTypes ? (
-                    dropdownData.addressTypes.map((addressType, index) => (
-                      <option key={index} value={addressType.id || 0}>
-                        {addressType.name || ""}
-                      </option>
-                    ))
+        ? contact.addresses.map((address, index) => {
+            const validStreetAddress: boolean = streetAddressSchema.isValidSync(
+              address
+            );
+            const validCity: boolean = citySchema.isValidSync(address);
+            const validState: boolean = stateSchema.isValidSync(address);
+            const validZip: boolean = zipSchema.isValidSync(address);
+            return (
+              <div className={styles.formRow} key={address.key}>
+                <div className={styles.invalidInputContainer}>
+                  {validStreetAddress ? (
+                    ""
                   ) : (
-                    <option value={0}></option>
+                    <div className={styles.invalidInputMessage}>Not valid</div>
                   )}
-                </select>
-              </div>
-              <div className={styles.formRowEven}>
+                  <input
+                    className={`${styles.long} ${
+                      validStreetAddress ? "" : styles.invalidInput
+                    }`}
+                    type="text"
+                    name="street_address"
+                    value={address.street_address || ""}
+                    onChange={props.handleArrChange(
+                      index,
+                      "addresses",
+                      address.id
+                    )}
+                  />
+                </div>
                 <input
-                  className={styles.formRadio}
-                  type="radio"
-                  name="is_primary_address"
-                  value=""
-                  checked={address.is_primary}
+                  className={`${styles.margined} ${styles.long}`}
+                  type="text"
+                  name="secondary_address"
+                  value={address.secondary_address || ""}
                   onChange={props.handleArrChange(
                     index,
                     "addresses",
                     address.id
                   )}
                 />
-                <button
-                  className={styles.deleteButton}
-                  onClick={props.removeContactField("addresses", index)}
-                />
+                <div className={styles.invalidInputContainer}>
+                  {validCity ? (
+                    ""
+                  ) : (
+                    <div className={styles.invalidInputMessage}>Not valid</div>
+                  )}
+                  <input
+                    className={`${styles.medium} ${
+                      validCity ? "" : styles.invalidInput
+                    }`}
+                    type="text"
+                    name="city"
+                    value={address.city || ""}
+                    onChange={props.handleArrChange(
+                      index,
+                      "addresses",
+                      address.id
+                    )}
+                  />
+                </div>
+                <div>
+                  <div className={styles.invalidInputContainer}>
+                    {validState ? (
+                      ""
+                    ) : (
+                      <div className={styles.invalidInputMessage}>
+                        Not valid
+                      </div>
+                    )}
+                    <select
+                      className={`${styles.short} ${
+                        validState ? "" : styles.invalidInput
+                      }`}
+                      onChange={props.handleArrChange(
+                        index,
+                        "addresses",
+                        address.id
+                      )}
+                      name="state"
+                      value={address.state || ""}
+                    >
+                      {states.map((obj, index) => (
+                        <option
+                          key={index}
+                          value={obj.short}
+                          className={styles.dropdownOption}
+                        >
+                          {obj.short}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div className={styles.invalidInputContainer}>
+                  {validZip ? (
+                    ""
+                  ) : (
+                    <div className={styles.invalidInputMessage}>Not valid</div>
+                  )}
+                  <input
+                    className={`${styles.medium} ${
+                      validZip ? "" : styles.invalidInput
+                    }`}
+                    type="text"
+                    name="zip"
+                    value={address.zip || ""}
+                    onChange={props.handleArrChange(
+                      index,
+                      "addresses",
+                      address.id
+                    )}
+                  />
+                </div>
+                <div>
+                  <select
+                    className={`${styles.margined} ${styles.short}`}
+                    onChange={props.handleArrChange(
+                      index,
+                      "addresses",
+                      address.id
+                    )}
+                    name="address_type"
+                    value={address.address_type}
+                  >
+                    {dropdownData && dropdownData.addressTypes ? (
+                      dropdownData.addressTypes.map((addressType, index) => (
+                        <option key={index} value={addressType.id || 0}>
+                          {addressType.name || ""}
+                        </option>
+                      ))
+                    ) : (
+                      <option value={0}></option>
+                    )}
+                  </select>
+                </div>
+                <div className={styles.formRowEven}>
+                  <input
+                    className={styles.radioInput}
+                    type="radio"
+                    name="is_primary_address"
+                    value=""
+                    checked={address.is_primary}
+                    onChange={props.handleArrChange(
+                      index,
+                      "addresses",
+                      address.id
+                    )}
+                  />
+                  <button
+                    className={styles.deleteButton}
+                    onClick={props.removeContactField("addresses", index)}
+                  />
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         : ""}
     </div>
   );
