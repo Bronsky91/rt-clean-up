@@ -67,6 +67,7 @@
 
 .connectButton {
   width: 129px;
+  display: block;
   height: 32.8px;
   box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
   background-color: #6fa1c6;
@@ -79,4 +80,26 @@
 
 .connectButton:hover {
   cursor: pointer;
+}
+
+.redButton {
+  width: 245.3px;
+  height: 48px;
+  margin: 0 auto;
+  padding: 9.4px 46.3px 8.6px 46px;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+  background-color: #ae3636;
+  font-family: SegoeUI;
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  color: #fff6f6;
+}
+
+.redButton:hover {
+  cursor: pointer;
+}
+
+.spinner {
+  margin: 0 auto;
 }
