@@ -774,15 +774,22 @@ export default function DataCleanupPage(props) {
                 </div>
 
                 <div className={styles.formColumn}>
+                  <TextField
+                    label="Tax ID"
+                    fieldName="tax_id"
+                    fieldValue={formData.contactRecord?.tax_id}
+                    handleChange={handleChange}
+                  ></TextField>
+
+                  <DateField
+                    label="Client Since"
+                    fieldName="client_since"
+                    fieldValue={formData.contactRecord?.client_since}
+                    handleDateChange={handleDateChange}
+                  ></DateField>
+
                   {isIndividual(formData) ? (
                     <>
-                      <TextField
-                        label="Tax ID"
-                        fieldName="tax_id"
-                        fieldValue={formData.contactRecord?.tax_id}
-                        handleChange={handleChange}
-                      ></TextField>
-
                       <DateField
                         label="Date of Birth"
                         fieldName="dob"
@@ -798,16 +805,7 @@ export default function DataCleanupPage(props) {
                         handleChange={handleChange}
                       ></DropDownField>
                     </>
-                  ) : (
-                    <>
-                      <TextField
-                        label="Tax ID"
-                        fieldName="tax_id"
-                        fieldValue={formData.contactRecord?.tax_id}
-                        handleChange={handleChange}
-                      ></TextField>
-                    </>
-                  )}
+                  ) : null}
                 </div>
 
                 <div className={`${styles.formColumn} ${styles.buttonColumn}`}>
