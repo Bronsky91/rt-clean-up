@@ -96,6 +96,7 @@ export const createEmptyContactField = {
     nickname: "",
     gender_id: 0,
     dob: "",
+    client_since: "",
     category_id: 0,
     status_id: 0,
     source_id: 0,
