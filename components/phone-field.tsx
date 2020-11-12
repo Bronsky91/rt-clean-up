@@ -4,6 +4,7 @@ import PhoneInput from "react-phone-input-2";
 import styles from "../styles/DataCleanupPage.module.scss";
 import { createEmptyFormData } from "../utils/create-empty-form-data";
 import { useEffect, useRef } from "react";
+import { isPhoneValid } from "../utils/form-validation";
 
 export default function PhoneFields(props) {
   const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
@@ -48,10 +49,10 @@ export default function PhoneFields(props) {
                 value={phone.number || ""}
                 onChange={props.handlePhoneChange(index, "phones", phone.id)}
                 isValid={(value, country: any) => {
-                  if (value.length <= country.dialCode?.length) {
-                    return "Not valid";
-                  } else {
+                  if (isPhoneValid(value, country?.dialCode)) {
                     return true;
+                  } else {
+                    return "Not valid";
                   }
                 }}
               />

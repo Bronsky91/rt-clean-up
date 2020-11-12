@@ -2,7 +2,7 @@ import styles from "../styles/DataCleanupPage.module.scss";
 
 export default function DropDownField(props) {
   return (
-    <div className={styles.mergedField}>
+    <div className={`${styles.mergedField} ${styles.margined}`}>
       <label className={styles.mergedLabel}>{props.label}</label>
       <select
         className={styles.mergedInput}

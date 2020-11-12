@@ -25,7 +25,7 @@ export default function DateField(props) {
   ];
 
   return (
-    <div className={styles.mergedField}>
+    <div className={`${styles.mergedField} ${styles.margined}`}>
       <label className={styles.mergedLabel}>{props.label}</label>
       <DatePicker
         className={styles.mergedInput}

@@ -42,7 +42,13 @@ import {
   dateToDatestring,
   redtailDateToFormatedString,
 } from "../utils/date-conversion";
-import { addressSchema, emailSchema } from "../utils/form-validation";
+import {
+  addressSchema,
+  contactRecordSchema,
+  emailSchema,
+  isPhoneInvalid,
+  isPhoneValid,
+} from "../utils/form-validation";
 
 export default function DataCleanupPage(props) {
   const router = useRouter();
@@ -213,6 +219,11 @@ export default function DataCleanupPage(props) {
     setFormDirty(JSON.stringify(originalFormData) !== JSON.stringify(formData));
   }, [originalFormData, formData]);
 
+  // When form is dirtied reset saved message
+  useEffect(() => {
+    if (formDirty) setIsSaved(false);
+  }, [formDirty]);
+
   // Updates filterDirty flag every time filterData is updated
   useEffect(() => {
     setFilterDirty(
@@ -266,6 +277,11 @@ export default function DataCleanupPage(props) {
   useEffect(() => {
     let allValid = true;
     if (formData) {
+      if (formData.contactRecord) {
+        if (!contactRecordSchema.isValidSync(formData.contactRecord)) {
+          allValid = false;
+        }
+      }
       if (formData.emails && allValid) {
         for (const email of formData.emails) {
           if (!emailSchema.isValidSync(email)) {
@@ -274,17 +290,17 @@ export default function DataCleanupPage(props) {
           }
         }
       }
-      if (formData.phones && allValid) {
-        for (const phone of formData.phones) {
-          if (phone.number.length <= phone.country_code.toString().length) {
+      if (formData.addresses && allValid) {
+        for (const address of formData.addresses) {
+          if (!addressSchema.isValidSync(address)) {
             allValid = false;
             break;
           }
         }
       }
-      if (formData.addresses && allValid) {
-        for (const address of formData.addresses) {
-          if (!addressSchema.isValidSync(address)) {
+      if (formData.phones && allValid) {
+        for (const phone of formData.phones) {
+          if (isPhoneInvalid(phone)) {
             allValid = false;
             break;
           }
