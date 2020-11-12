@@ -42,7 +42,7 @@ import {
   dateToDatestring,
   redtailDateToFormatedString,
 } from "../utils/date-conversion";
-import { emailSchema } from "../utils/form-validation";
+import { addressSchema, emailSchema } from "../utils/form-validation";
 
 export default function DataCleanupPage(props) {
   const router = useRouter();
@@ -277,6 +277,14 @@ export default function DataCleanupPage(props) {
       if (formData.phones && allValid) {
         for (const phone of formData.phones) {
           if (phone.number.length <= phone.country_code.toString().length) {
+            allValid = false;
+            break;
+          }
+        }
+      }
+      if (formData.addresses && allValid) {
+        for (const address of formData.addresses) {
+          if (!addressSchema.isValidSync(address)) {
             allValid = false;
             break;
           }

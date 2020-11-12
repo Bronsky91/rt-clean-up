@@ -36,16 +36,14 @@ export default function EmailFields(props) {
     <div ref={parentRef} className={styles.formColumnScroll}>
       {contact && contact.emails
         ? contact.emails.map((email, index) => {
-            const validAddress = emailSchema.isValidSync(email);
+            const validAddress: boolean = emailSchema.isValidSync(email);
             return (
               <div className={styles.formRow} key={email.key}>
                 <div className={styles.invalidInputContainer}>
                   {validAddress ? (
                     ""
                   ) : (
-                    <div className={styles.invalidInputMessage}>
-                      Invalid email
-                    </div>
+                    <div className={styles.invalidInputMessage}>Not valid</div>
                   )}
                   <input
                     className={`${styles.long} ${

@@ -49,7 +49,7 @@ export default function PhoneFields(props) {
                 onChange={props.handlePhoneChange(index, "phones", phone.id)}
                 isValid={(value, country: any) => {
                   if (value.length <= country.dialCode?.length) {
-                    return "Invalid number";
+                    return "Not valid";
                   } else {
                     return true;
                   }

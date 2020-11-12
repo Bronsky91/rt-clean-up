@@ -90,6 +90,15 @@ $long-field-multiplyer: 1.75;
   width: 100%;
 }
 
+.invalidDropdownContainer {
+  position: relative;
+  width: 100%;
+}
+
+.dropdownOption {
+  background-color: white;
+}
+
 .invalidInput {
   background-color: #faf0f0;
 }
