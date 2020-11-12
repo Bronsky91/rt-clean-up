@@ -46,6 +46,9 @@ import {
   addressSchema,
   contactRecordSchema,
   emailSchema,
+  isAllAddressValid,
+  isAllEmailValid,
+  isAllPhoneValid,
   isPhoneInvalid,
   isPhoneValid,
 } from "../utils/form-validation";
@@ -278,33 +281,16 @@ export default function DataCleanupPage(props) {
     let allValid = true;
     if (formData) {
       if (formData.contactRecord) {
-        if (!contactRecordSchema.isValidSync(formData.contactRecord)) {
-          allValid = false;
-        }
+        allValid = contactRecordSchema.isValidSync(formData.contactRecord);
       }
       if (formData.emails && allValid) {
-        for (const email of formData.emails) {
-          if (!emailSchema.isValidSync(email)) {
-            allValid = false;
-            break;
-          }
-        }
+        allValid = isAllEmailValid(formData.emails);
       }
       if (formData.addresses && allValid) {
-        for (const address of formData.addresses) {
-          if (!addressSchema.isValidSync(address)) {
-            allValid = false;
-            break;
-          }
-        }
+        allValid = isAllAddressValid(formData.addresses);
       }
       if (formData.phones && allValid) {
-        for (const phone of formData.phones) {
-          if (isPhoneInvalid(phone)) {
-            allValid = false;
-            break;
-          }
-        }
+        allValid = isAllPhoneValid(formData.phones);
       }
     }
     setIsFormValid(allValid);

@@ -1,5 +1,9 @@
 import * as yup from "yup";
-import { PhoneUpdate } from "../interfaces/redtail-contact-update.interface";
+import {
+  AddressUpdate,
+  EmailUpdate,
+  PhoneUpdate,
+} from "../interfaces/redtail-contact-update.interface";
 
 export const contactRecordSchema = yup.object().shape({
   last_name: yup.string().min(1).required(),
@@ -54,3 +58,30 @@ export const isPhoneInvalid = (phone: PhoneUpdate): boolean =>
     phone.country_code.toString().length > 0 &&
     phone.number.length > phone.country_code.toString().length
   );
+
+export const isAllEmailValid = (emails: EmailUpdate[]): boolean => {
+  for (const email of emails) {
+    if (!emailSchema.isValidSync(email)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+export const isAllAddressValid = (addresses: AddressUpdate[]): boolean => {
+  for (const address of addresses) {
+    if (!addressSchema.isValidSync(address)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+export const isAllPhoneValid = (phones: PhoneUpdate[]): boolean => {
+  for (const phone of phones) {
+    if (isPhoneInvalid(phone)) {
+      return false;
+    }
+  }
+  return true;
+};
