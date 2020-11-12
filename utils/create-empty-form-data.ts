@@ -47,7 +47,7 @@ export const createEmptyContactRefData = (): Readonly<RedtailContactRec> =>
     tax_id: null,
     dob: "",
     death_date: null,
-    client_since: string,
+    client_since: "",
     client_termination_date: null,
     marital_status_id: 0,
     marital_status: "",
