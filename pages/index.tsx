@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import RedtailAuthModal from "../components/redtail-auth-modal";
+import RedtailAuthModal from "../components/modals/redtail-auth-modal";
 import PageLayout from "../layouts/page-layout";
 import styles from "../styles/DashboardPage.module.scss";
 import Login from "./login";

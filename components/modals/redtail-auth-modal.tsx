@@ -1,18 +1,18 @@
 import Axios from "axios";
-import { useRouter } from "next/router";
+import Loader from "react-loader-spinner";
 import { useState } from "react";
 import Modal from "react-modal";
-import styles from "../styles/RedtailAuth.module.scss";
+import styles from "../../styles/RedtailModal.module.scss";
 
 export default function RedtailAuthModal(props) {
-  const router = useRouter();
-
   const initialFormData = Object.freeze({
     username: "",
     password: "",
   });
 
   const [formData, setFormData] = useState(initialFormData);
+  const [loadingPage, setLoadingPage] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const handleChange = (event) => {
     const target = event.target;
@@ -25,6 +25,7 @@ export default function RedtailAuthModal(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoadingPage(true);
 
     Axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/users/redtail-auth`,
@@ -33,8 +34,13 @@ export default function RedtailAuthModal(props) {
     )
       .then((res) => {
         props.closeModal();
+        setLoadingPage(false);
+        setIsError(false);
       })
-      .catch((reason) => alert("Auth failed"));
+      .catch((reason) => {
+        setIsError(true);
+        setLoadingPage(false);
+      });
   };
 
   const customStyles = {
@@ -71,31 +77,47 @@ export default function RedtailAuthModal(props) {
           <img src="redtail-logo.png" className={styles.redtailLogo}></img>
           <h1 className={styles.title}>Sign In</h1>
         </div>
-        <div className={styles.subtext}>Connect your to Redtail Database</div>
-        <div className={styles.inputContainer}>
-          <input
-            type="text"
-            placeholder="Username"
-            className={styles.textInput}
-            name="username"
-            onChange={handleChange}
-            value={formData.username}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className={styles.textInput}
-            name="password"
-            onChange={handleChange}
-            value={formData.password}
-          />
+        <div className={styles.subtext}>
+          {isError ? "Unable to Connect to Redtail, Try again" : ""}
         </div>
-        <input
-          type="submit"
-          value="Connect"
-          onClick={handleSubmit}
-          className={styles.connectButton}
-        />
+        <form onSubmit={handleSubmit}>
+          <div className={styles.inputContainer}>
+            {loadingPage ? (
+              <div className={styles.spinner}>
+                <Loader
+                  type="Rings"
+                  color="#ae3636"
+                  height={100}
+                  width={100}
+                ></Loader>
+              </div>
+            ) : (
+              <>
+                <input
+                  type="text"
+                  placeholder="Username"
+                  className={styles.textInput}
+                  name="username"
+                  onChange={handleChange}
+                  value={formData.username}
+                />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  className={styles.textInput}
+                  name="password"
+                  onChange={handleChange}
+                  value={formData.password}
+                />
+              </>
+            )}
+          </div>
+          <input
+            type="submit"
+            value="Connect"
+            className={styles.connectButton}
+          />
+        </form>
       </div>
     </Modal>
   );
