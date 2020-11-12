@@ -2,11 +2,9 @@ import Axios from "axios";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Modal from "react-modal";
-import styles from "../styles/RedtailAuth.module.scss";
+import styles from "../../styles/RedtailModal.module.scss";
 
 export default function RedtailAuthModal(props) {
-  const router = useRouter();
-
   const initialFormData = Object.freeze({
     username: "",
     password: "",
@@ -71,7 +69,7 @@ export default function RedtailAuthModal(props) {
           <img src="redtail-logo.png" className={styles.redtailLogo}></img>
           <h1 className={styles.title}>Sign In</h1>
         </div>
-        <div className={styles.subtext}>Connect your to Redtail Database</div>
+        <div className={styles.subtext}>Connect to your Redtail Database</div>
         <div className={styles.inputContainer}>
           <input
             type="text"

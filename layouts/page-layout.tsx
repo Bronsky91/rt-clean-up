@@ -2,23 +2,19 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import styles from "../styles/PageLayout.module.scss";
-import { useState } from "react";
-import RedtailAuthModal from "../components/redtail-auth-modal";
+import { useEffect, useState } from "react";
+import RedtailAuthModal from "../components/modals/redtail-auth-modal";
 import Axios from "axios";
+import RedtailSettingsModal from "../components/modals/redtail-settings-modal";
 
 export default function PageLayout({ children }) {
   const router = useRouter();
 
-  const [modalIsOpen, setIsOpen] = useState(false);
+  const [authModalIsOpen, setAuthModalIsOpen] = useState(false);
+  const [settingsModalIsOpen, setSettingsModalIsOpen] = useState(false);
   const [isRedtailAuth, setRedtailAuth] = useState(children.props.rtAuth);
 
-  const openModal = () => {
-    setIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsOpen(false);
-
+  const checkRedtailAuth = () => {
     Axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/rt-auth-check`, {
       withCredentials: true,
     })
@@ -28,10 +24,37 @@ export default function PageLayout({ children }) {
       .catch(() => setRedtailAuth(false));
   };
 
+  const openAuthModal = () => {
+    setAuthModalIsOpen(true);
+  };
+
+  const closeAuthModal = () => {
+    setAuthModalIsOpen(false);
+    checkRedtailAuth();
+  };
+
+  const openSettingsModal = () => {
+    setSettingsModalIsOpen(true);
+  };
+
+  const closeSettingsModal = (switchAuth: boolean) => {
+    setSettingsModalIsOpen(false);
+    checkRedtailAuth();
+
+    if (switchAuth) {
+      setAuthModalIsOpen(true);
+    }
+  };
+
   const cleanupClickHandler = (e) => {
     localStorage.clear();
-    if (!isRedtailAuth) openModal();
+    if (!isRedtailAuth) openAuthModal();
   };
+
+  useEffect(() => {
+    localStorage.clear();
+    router.push("/");
+  }, [isRedtailAuth]);
 
   return (
     <div className={styles.container}>
@@ -88,19 +111,11 @@ export default function PageLayout({ children }) {
                 )}
               </a>
             </Link>
-            {/* <Link href="/import-data">
-              <a
-                className={
-                  router.pathname === "/import-data"
-                    ? styles.active
-                    : styles.inactive
-                }
-              >
-                IMPORT DATA
-              </a>
-            </Link> */}
           </div>
-          <div className={styles.redtailConnectContainer} onClick={openModal}>
+          <div
+            className={styles.redtailConnectContainer}
+            onClick={isRedtailAuth ? openSettingsModal : openAuthModal}
+          >
             <img
               className={styles.redtailConnectImg}
               src={isRedtailAuth ? "redtail-logo-fill.png" : "redtail-logo.png"}
@@ -116,10 +131,16 @@ export default function PageLayout({ children }) {
         </nav>
         <main className={styles.main}>{children}</main>
       </div>
+
       <RedtailAuthModal
-        modalIsOpen={modalIsOpen}
-        closeModal={closeModal}
+        modalIsOpen={authModalIsOpen}
+        closeModal={closeAuthModal}
       ></RedtailAuthModal>
+
+      <RedtailSettingsModal
+        modalIsOpen={settingsModalIsOpen}
+        closeModal={closeSettingsModal}
+      ></RedtailSettingsModal>
     </div>
   );
 }
