@@ -47,6 +47,9 @@ a {
   background: #555;
 }
 
+// Override default react-phone-input-2 styling
 .react-tel-input .invalid-number-message {
+  left: auto !important;
+  right: 0px !important;
   top: -4px !important;
 }

@@ -92,21 +92,21 @@ export default function AddressFields(props) {
         ? contact.addresses.map((address, index) => (
             <div className={styles.formRow} key={address.key}>
               <input
-                className={styles.formSoloInputLong}
+                className={`${styles.margined} ${styles.long}`}
                 type="text"
                 name="street_address"
                 value={address.street_address || ""}
                 onChange={props.handleArrChange(index, "addresses", address.id)}
               />
               <input
-                className={styles.formSoloInputLong}
+                className={`${styles.margined} ${styles.long}`}
                 type="text"
                 name="secondary_address"
                 value={address.secondary_address || ""}
                 onChange={props.handleArrChange(index, "addresses", address.id)}
               />
               <input
-                className={styles.formSoloInput}
+                className={`${styles.margined} ${styles.medium}`}
                 type="text"
                 name="city"
                 value={address.city || ""}
@@ -114,7 +114,7 @@ export default function AddressFields(props) {
               />
               <div>
                 <select
-                  className={styles.formSoloInputShort}
+                  className={`${styles.margined} ${styles.short}`}
                   onChange={props.handleArrChange(
                     index,
                     "addresses",
@@ -131,7 +131,7 @@ export default function AddressFields(props) {
                 </select>
               </div>
               <input
-                className={styles.formSoloInput}
+                className={`${styles.margined} ${styles.medium}`}
                 type="text"
                 name="zip"
                 value={address.zip || ""}
@@ -139,7 +139,7 @@ export default function AddressFields(props) {
               />
               <div>
                 <select
-                  className={styles.formSoloInput}
+                  className={`${styles.margined} ${styles.short}`}
                   onChange={props.handleArrChange(
                     index,
                     "addresses",
@@ -161,7 +161,7 @@ export default function AddressFields(props) {
               </div>
               <div className={styles.formRowEven}>
                 <input
-                  className={styles.formRadio}
+                  className={styles.radioInput}
                   type="radio"
                   name="is_primary_address"
                   value=""

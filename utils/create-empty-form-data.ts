@@ -87,6 +87,7 @@ export const createEmptyContactField = {
   contactRecord: (): ContactRecordUpdate => ({
     id: 0,
     type: "",
+    updated_at: "",
     salutation_id: 0,
     company_name: "",
     first_name: "",

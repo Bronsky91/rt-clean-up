@@ -42,6 +42,7 @@ import {
   dateToDatestring,
   redtailDateToFormatedString,
 } from "../utils/date-conversion";
+import { emailSchema } from "../utils/form-validation";
 
 export default function DataCleanupPage(props) {
   const router = useRouter();
@@ -260,6 +261,30 @@ export default function DataCleanupPage(props) {
     selectedContactID,
     dropdownData,
   ]);
+
+  // When formData changes, re-run validity checks
+  useEffect(() => {
+    let allValid = true;
+    if (formData) {
+      if (formData.emails && allValid) {
+        for (const email of formData.emails) {
+          if (!emailSchema.isValidSync(email)) {
+            allValid = false;
+            break;
+          }
+        }
+      }
+      if (formData.phones && allValid) {
+        for (const phone of formData.phones) {
+          if (phone.number.length <= phone.country_code.toString().length) {
+            allValid = false;
+            break;
+          }
+        }
+      }
+    }
+    setIsFormValid(allValid);
+  }, [formData]);
 
   // When contact changes, re-calculate prev & next contact button disabled state
   useEffect(() => {
@@ -823,18 +848,30 @@ export default function DataCleanupPage(props) {
                 <div className={styles.formRow}>
                   <div className={styles.formColumn}>
                     <div className={styles.formRow}>
-                      <div className={styles.formHeaderLong}>
-                        <label className={styles.formHeaderLabelLong}>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.long}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.long}`}
+                        >
                           Email Address
                         </label>
                       </div>
-                      <div className={styles.formHeaderShort}>
-                        <label className={styles.formHeaderLabelShort}>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.short}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.short}`}
+                        >
                           Type
                         </label>
                       </div>
-                      <div className={styles.formHeader}>
-                        <label className={styles.formHeaderLabel}>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.medium}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.medium}`}
+                        >
                           Primary?
                         </label>
                       </div>
@@ -854,18 +891,32 @@ export default function DataCleanupPage(props) {
                   </div>
                   <div className={styles.formColumn}>
                     <div className={styles.formRow}>
-                      <div className={styles.formHeaderLong}>
-                        <label className={styles.formHeaderLabelLong}>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.long}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.long}`}
+                        >
                           Phone Number
                         </label>
                       </div>
-                      <div className={styles.formHeaderShort}>
-                        <label className={styles.formHeaderLabelShort}>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.short}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.short}`}
+                        >
                           Type
                         </label>
                       </div>
-                      <div className={styles.formHeader}>
-                        <label className={styles.formLabel}>Primary?</label>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.medium}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.medium}`}
+                        >
+                          Primary?
+                        </label>
                       </div>
                     </div>
                     <PhoneFields
@@ -874,7 +925,6 @@ export default function DataCleanupPage(props) {
                       handlePhoneChange={handlePhoneChange} // Used by Phone Number input
                       dropdownData={dropdownData}
                       removeContactField={removeContactField}
-                      setIsFormValid={setIsFormValid}
                     ></PhoneFields>
                     <div className={styles.formRowEven}>
                       <button
@@ -889,32 +939,60 @@ export default function DataCleanupPage(props) {
               <div className={styles.formRow}>
                 <div className={styles.formColumn}>
                   <div className={styles.formRow}>
-                    <div className={styles.formHeaderLong}>
-                      <label className={styles.formHeaderLabelLong}>
+                    <div className={`${styles.floatingHeader} ${styles.long}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.long}`}
+                      >
                         Street Address
                       </label>
                     </div>
-                    <div className={styles.formHeaderLong}>
-                      <label className={styles.formHeaderLabelLong}>
+                    <div className={`${styles.floatingHeader} ${styles.long}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.long}`}
+                      >
                         Secondary Address
                       </label>
                     </div>
-                    <div className={styles.formHeader}>
-                      <label className={styles.formHeaderLabel}>City</label>
+                    <div
+                      className={`${styles.floatingHeader} ${styles.medium}`}
+                    >
+                      <label
+                        className={`${styles.floatingLabel} ${styles.medium}`}
+                      >
+                        City
+                      </label>
                     </div>
-                    <div className={styles.formHeaderShort}>
-                      <label className={styles.formHeaderLabelShort}>
+                    <div className={`${styles.floatingHeader} ${styles.short}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.short}`}
+                      >
                         State
                       </label>
                     </div>
-                    <div className={styles.formHeader}>
-                      <label className={styles.formHeaderLabel}>Zip</label>
+                    <div
+                      className={`${styles.floatingHeader} ${styles.medium}`}
+                    >
+                      <label
+                        className={`${styles.floatingLabel} ${styles.medium}`}
+                      >
+                        Zip
+                      </label>
                     </div>
-                    <div className={styles.formHeader}>
-                      <label className={styles.formHeaderLabel}>Type</label>
+                    <div className={`${styles.floatingHeader} ${styles.short}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.short}`}
+                      >
+                        Type
+                      </label>
                     </div>
-                    <div className={styles.formHeader}>
-                      <label className={styles.formHeaderLabel}>Primary?</label>
+                    <div
+                      className={`${styles.floatingHeader} ${styles.medium}`}
+                    >
+                      <label
+                        className={`${styles.floatingLabel} ${styles.medium}`}
+                      >
+                        Primary?
+                      </label>
                     </div>
                   </div>
                   <AddressFields

@@ -49,17 +49,15 @@ export default function PhoneFields(props) {
                 onChange={props.handlePhoneChange(index, "phones", phone.id)}
                 isValid={(value, country: any) => {
                   if (value.length <= country.dialCode?.length) {
-                    props.setIsFormValid(false);
                     return "Invalid number";
                   } else {
-                    props.setIsFormValid(true);
                     return true;
                   }
                 }}
               />
               <div>
                 <select
-                  className={styles.formSoloInputShort}
+                  className={`${styles.margined} ${styles.short}`}
                   onChange={props.handleArrChange(index, "phones", phone.id)}
                   name="phone_type"
                   value={phone.phone_type}
@@ -79,7 +77,7 @@ export default function PhoneFields(props) {
               </div>
               <div className={styles.formRowEven}>
                 <input
-                  className={styles.formRadio}
+                  className={styles.radioInput}
                   type="radio"
                   name="is_primary_phone"
                   value=""
