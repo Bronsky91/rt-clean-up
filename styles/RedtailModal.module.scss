@@ -103,3 +103,28 @@
 .spinner {
   margin: 0 auto;
 }
+
+.navInterceptButtonContainer {
+  display: flex;
+  flex-direction: row;
+  flex: 1 0 100%;
+}
+
+.h1 {
+  flex-direction: row;
+  flex: 1 0 100%;
+  margin: 2rem;
+  justify-content: center;
+  justify-items: center;
+  justify-self: center;
+  font-family: SegoeUI;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.36;
+  letter-spacing: 0.154rem;
+  color: #3f4f7a;
+}
+
+.warning {
+  color: #cc7000;
+}

@@ -1,17 +1,20 @@
+import Axios from "axios";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import styles from "../styles/PageLayout.module.scss";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import RedtailAuthModal from "../components/modals/redtail-auth-modal";
-import Axios from "axios";
 import RedtailSettingsModal from "../components/modals/redtail-settings-modal";
+import NavInterceptModal from "../components/modals/nav-intercept-modal";
 
 export default function PageLayout({ children }) {
   const router = useRouter();
 
   const [authModalIsOpen, setAuthModalIsOpen] = useState(false);
   const [settingsModalIsOpen, setSettingsModalIsOpen] = useState(false);
+  const [navInterceptModalIsOpen, setNavInterceptModalIsOpen] = useState(false);
+  const [interceptedRoute, setInterceptedRoute] = useState("/");
   const [isRedtailAuth, setRedtailAuth] = useState(children.props.rtAuth);
 
   const checkRedtailAuth = () => {
@@ -46,6 +49,14 @@ export default function PageLayout({ children }) {
     }
   };
 
+  const openNavInterceptModal = () => {
+    setNavInterceptModalIsOpen(true);
+  };
+
+  const closeNavInterceptModal = () => {
+    setNavInterceptModalIsOpen(false);
+  };
+
   const cleanupClickHandler = (e) => {
     localStorage.clear();
     if (!isRedtailAuth) openAuthModal();
@@ -55,6 +66,15 @@ export default function PageLayout({ children }) {
     localStorage.clear();
     router.push("/");
   }, [isRedtailAuth]);
+
+  const handleNavClick = (route) => (e) => {
+    if (children.props.isFormDirty) {
+      e.preventDefault();
+      console.log("Setting intercepted route to: " + route);
+      setInterceptedRoute(route);
+      openNavInterceptModal();
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -86,6 +106,7 @@ export default function PageLayout({ children }) {
                 className={
                   router.pathname === "/" ? styles.active : styles.inactive
                 }
+                onClick={handleNavClick("/")}
               >
                 {router.pathname !== "/" ? (
                   <img src="/dashboard-icon.png" />
@@ -141,6 +162,12 @@ export default function PageLayout({ children }) {
         modalIsOpen={settingsModalIsOpen}
         closeModal={closeSettingsModal}
       ></RedtailSettingsModal>
+
+      <NavInterceptModal
+        modalIsOpen={navInterceptModalIsOpen}
+        closeModal={closeNavInterceptModal}
+        interceptedRoute={interceptedRoute}
+      ></NavInterceptModal>
     </div>
   );
 }
