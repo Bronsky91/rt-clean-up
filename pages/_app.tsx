@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/globals.scss";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
@@ -8,10 +8,17 @@ import Cookies from "js-cookie";
 
 export default function MyApp({ Component, pageProps }) {
   const Layout = Component.Layout ? Component.Layout : React.Fragment;
+  const [isFormDirty, setIsFormDirty] = useState(false);
+
+  const updatedPageProps = {
+    ...pageProps,
+    isFormDirty: isFormDirty,
+    setIsFormDirty: setIsFormDirty,
+  };
 
   return (
     <Layout>
-      <Component {...pageProps} />
+      <Component {...updatedPageProps} />
     </Layout>
   );
 }

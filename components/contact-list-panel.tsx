@@ -185,7 +185,7 @@ export default function ContactListPanel(props) {
             setFilterData={props.setFilterData}
             filterData={props.filterData}
             setShowFilters={props.setShowFilters}
-            filterDirty={props.filterDirty}
+            isFilterDirty={props.isFilterDirty}
           ></ContactFilter>
         ) : null}
       </div>

@@ -127,7 +127,7 @@ export default function ContactFilter(props) {
             <button
               className={styles.filterButton}
               onClick={handleApply}
-              disabled={!props.filterDirty}
+              disabled={!props.isFilterDirty}
             >
               Apply
             </button>

@@ -43,14 +43,10 @@ import {
   redtailDateToFormatedString,
 } from "../utils/date-conversion";
 import {
-  addressSchema,
   contactRecordSchema,
-  emailSchema,
   isAllAddressValid,
   isAllEmailValid,
   isAllPhoneValid,
-  isPhoneInvalid,
-  isPhoneValid,
 } from "../utils/form-validation";
 
 export default function DataCleanupPage(props) {
@@ -69,7 +65,6 @@ export default function DataCleanupPage(props) {
   > = createEmptyContactList();
   const [formData, setFormData] = useState(emptyFormData);
   const [originalFormData, setOriginalFormData] = useState(emptyFormData);
-  const [formDirty, setFormDirty] = useState(false);
   const [contactList, setContactList] = useState(emptyContactList);
   const [filteredContactList, setFilteredContactList] = useState(
     emptyContactList
@@ -89,7 +84,7 @@ export default function DataCleanupPage(props) {
   const [selectedFilter, setSelectedFilter] = useState("status_id");
   const [filterData, setFilterData] = useState(emptyFilterData);
   const [appliedFilterData, setAppliedFilterData] = useState(emptyFilterData);
-  const [filterDirty, setFilterDirty] = useState(false);
+  const [isFilterDirty, setIsFilterDirty] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [selectedContactID, setSelectedContactID] = useState(0);
   const [isLocalStorageValid, setIsLocalStorageValid] = useState(false);
@@ -217,19 +212,19 @@ export default function DataCleanupPage(props) {
   // If unathenticated with Redtail, load Dashboard component
   if (!isRedtailAuth) return <DashboardPage {...props} />;
 
-  // Updates formDirty flag every time formData is updated
+  // Updates form dirty flag every time form data changes
   useEffect(() => {
-    setFormDirty(JSON.stringify(originalFormData) !== JSON.stringify(formData));
+    const dirty: boolean =
+      JSON.stringify(originalFormData) !== JSON.stringify(formData);
+    props.setIsFormDirty(dirty);
+
+    // When form is dirtied reset saved message
+    if (dirty) setIsSaved(false);
   }, [originalFormData, formData]);
 
-  // When form is dirtied reset saved message
+  // Updates filter dirty flag every time filter data is updated
   useEffect(() => {
-    if (formDirty) setIsSaved(false);
-  }, [formDirty]);
-
-  // Updates filterDirty flag every time filterData is updated
-  useEffect(() => {
-    setFilterDirty(
+    setIsFilterDirty(
       JSON.stringify(appliedFilterData) !== JSON.stringify(filterData)
     );
   }, [appliedFilterData, filterData]);
@@ -637,7 +632,7 @@ export default function DataCleanupPage(props) {
           setAppliedFilterData={setAppliedFilterData}
           filterPageData={filterPageData}
           setFilterPageData={setFilterPageData}
-          filterDirty={filterDirty}
+          isFilterDirty={isFilterDirty}
           pageData={pageData}
           changePage={changePage}
           pageInput={pageInput}
@@ -840,14 +835,14 @@ export default function DataCleanupPage(props) {
                     <button
                       type="submit"
                       className={styles.saveButton}
-                      disabled={!formDirty || !isFormValid}
+                      disabled={!props.isFormDirty || !isFormValid}
                     >
                       SAVE
                     </button>
                     <button
                       className={styles.undoButton}
                       onClick={handleUndo}
-                      disabled={!formDirty}
+                      disabled={!props.isFormDirty}
                     >
                       UNDO
                     </button>
