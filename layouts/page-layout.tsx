@@ -61,6 +61,11 @@ export default function PageLayout({ children }) {
     }
   };
 
+  useEffect(() => {
+    localStorage.clear();
+    router.push("/");
+  }, [isRedtailAuth]);
+
   return (
     <div className={styles.container}>
       <Head>
