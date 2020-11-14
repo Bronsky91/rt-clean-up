@@ -15,17 +15,8 @@ export default function PageLayout({ children }) {
   const [settingsModalIsOpen, setSettingsModalIsOpen] = useState(false);
   const [navInterceptModalIsOpen, setNavInterceptModalIsOpen] = useState(false);
   const [interceptedRoute, setInterceptedRoute] = useState("/");
-  const [isRedtailAuth, setRedtailAuth] = useState(children.props.rtAuth);
 
-  const checkRedtailAuth = () => {
-    Axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/rt-auth-check`, {
-      withCredentials: true,
-    })
-      .then((res) => {
-        setRedtailAuth(res.data.rtAuth);
-      })
-      .catch(() => setRedtailAuth(false));
-  };
+  const isRedtailAuth = children.props.isRedtailAuth;
 
   const openAuthModal = () => {
     setAuthModalIsOpen(true);
@@ -33,7 +24,7 @@ export default function PageLayout({ children }) {
 
   const closeAuthModal = () => {
     setAuthModalIsOpen(false);
-    checkRedtailAuth();
+    children.props.checkRedtailAuth();
   };
 
   const openSettingsModal = () => {
@@ -42,7 +33,7 @@ export default function PageLayout({ children }) {
 
   const closeSettingsModal = (switchAuth: boolean) => {
     setSettingsModalIsOpen(false);
-    checkRedtailAuth();
+    children.props.checkRedtailAuth();
 
     if (switchAuth) {
       setAuthModalIsOpen(true);
@@ -62,15 +53,9 @@ export default function PageLayout({ children }) {
     if (!isRedtailAuth) openAuthModal();
   };
 
-  useEffect(() => {
-    localStorage.clear();
-    router.push("/");
-  }, [isRedtailAuth]);
-
   const handleNavClick = (route) => (e) => {
     if (children.props.isFormDirty) {
       e.preventDefault();
-      console.log("Setting intercepted route to: " + route);
       setInterceptedRoute(route);
       openNavInterceptModal();
     }

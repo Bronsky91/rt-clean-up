@@ -5,15 +5,29 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import "react-phone-input-2/lib/style.css";
 import cookie from "cookie";
 import Cookies from "js-cookie";
+import Axios from "axios";
 
 export default function MyApp({ Component, pageProps }) {
   const Layout = Component.Layout ? Component.Layout : React.Fragment;
   const [isFormDirty, setIsFormDirty] = useState(false);
+  const [isRedtailAuth, setRedtailAuth] = useState(pageProps.rtAuth);
+
+  const checkRedtailAuth = () => {
+    Axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/rt-auth-check`, {
+      withCredentials: true,
+    })
+      .then((res) => {
+        setRedtailAuth(res.data.rtAuth);
+      })
+      .catch(() => setRedtailAuth(false));
+  };
 
   const updatedPageProps = {
     ...pageProps,
     isFormDirty: isFormDirty,
     setIsFormDirty: setIsFormDirty,
+    isRedtailAuth: isRedtailAuth,
+    checkRedtailAuth: checkRedtailAuth,
   };
 
   return (

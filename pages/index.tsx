@@ -1,3 +1,4 @@
+import Axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -9,9 +10,9 @@ import Login from "./login";
 export default function DashboardPage(props) {
   const router = useRouter();
   const isAuth = props.isAuth;
+  const isRedtailAuth = props.isRedtailAuth;
 
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [isRedtailAuth, setRedtailAuth] = useState(props.rtAuth);
 
   const openModal = () => {
     setIsOpen(true);
@@ -19,8 +20,7 @@ export default function DashboardPage(props) {
 
   const closeModal = () => {
     setIsOpen(false);
-
-    router.reload();
+    props.checkRedtailAuth();
   };
 
   useEffect(() => {
