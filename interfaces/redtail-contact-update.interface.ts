@@ -35,6 +35,7 @@ export interface ContactRecordUpdate {
 export interface AddressUpdate {
   key?: string;
   id?: number;
+  custom_type_title: string;
   street_address: string;
   secondary_address: string;
   city: string;

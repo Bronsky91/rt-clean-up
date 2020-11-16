@@ -51,6 +51,7 @@ export const getContactAndPopulateForm = (
             key: uuid(),
             id: obj.id ? obj.id : 0,
             street_address: obj.street_address || "",
+            custom_type_title: obj.custom_type_title || "",
             secondary_address: obj.secondary_address || "",
             city: obj.city || "",
             state: obj.state || "",

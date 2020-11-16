@@ -364,10 +364,13 @@ export default function DataCleanupPage(props) {
   const handleArrChange = (
     index: number,
     arrName: string,
-    targetID: number
+    targetID: number,
+    value?: string
   ) => (e) => {
     const targetName: string = e.target.name;
+    const targetValue: string = value !== undefined ? value : e.target.value;
     const newArr = [...formData[arrName]];
+
     if (targetName.startsWith("is_primary")) {
       const checked: boolean = e.target.checked;
       newArr[index]["is_primary"] = checked;
@@ -375,7 +378,7 @@ export default function DataCleanupPage(props) {
         if (item.id !== targetID) item["is_primary"] = !checked;
       }
     } else {
-      newArr[index][targetName] = e.target.value;
+      newArr[index][targetName] = targetValue;
     }
 
     const updatedFormData = { ...formData, [arrName]: newArr };
@@ -942,6 +945,13 @@ export default function DataCleanupPage(props) {
               <div className={styles.formRow}>
                 <div className={styles.formColumn}>
                   <div className={styles.formRow}>
+                    <div className={`${styles.floatingHeader} ${styles.short}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.short}`}
+                      >
+                        Title
+                      </label>
+                    </div>
                     <div className={`${styles.floatingHeader} ${styles.long}`}>
                       <label
                         className={`${styles.floatingLabel} ${styles.long}`}

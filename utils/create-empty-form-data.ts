@@ -110,6 +110,7 @@ export const createEmptyContactField = {
     key: uuid(),
     id: 0,
     street_address: "",
+    custom_type_title: "",
     secondary_address: "",
     city: "",
     state: "",
