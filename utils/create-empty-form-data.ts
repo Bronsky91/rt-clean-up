@@ -121,6 +121,7 @@ export const createEmptyContactField = {
   emails: (): EmailUpdate => ({
     key: uuid(),
     id: 0,
+    custom_type_title: "",
     address: "",
     email_type: 1,
     is_primary: false,
@@ -128,6 +129,7 @@ export const createEmptyContactField = {
   phones: (): PhoneUpdate => ({
     key: uuid(),
     id: 0,
+    custom_type_title: "",
     country_code: null,
     number: "",
     phone_type: 1,
@@ -136,6 +138,7 @@ export const createEmptyContactField = {
   urls: (): UrlUpdate => ({
     key: uuid(),
     id: 0,
+    custom_type_title: "",
     address: "",
     url_type: 1,
   }),

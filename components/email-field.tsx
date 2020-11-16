@@ -39,6 +39,16 @@ export default function EmailFields(props) {
             const validAddress: boolean = emailSchema.isValidSync(email);
             return (
               <div className={styles.formRow} key={email.key}>
+                <input
+                  className={`${styles.short} ${
+                    validAddress ? "" : styles.invalidInput
+                  }`}
+                  type="text"
+                  name="custom_type_title"
+                  value={email.custom_type_title || ""}
+                  onChange={props.handleArrChange(index, "emails", email.id)}
+                  onFocus={props.handleArrChange(index, "emails", email.id, "")}
+                />
                 <div className={styles.invalidInputContainer}>
                   {validAddress ? (
                     ""

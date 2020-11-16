@@ -64,6 +64,7 @@ export const getContactAndPopulateForm = (
         ? data.emails.map((obj: EmailRec) => ({
             key: uuid(),
             id: obj.id || 0,
+            custom_type_title: obj.custom_type_title || "",
             address: obj.address || "",
             email_type: obj.email_type || 0,
             is_primary: obj.is_primary || false,
@@ -73,6 +74,7 @@ export const getContactAndPopulateForm = (
         ? data.phones.map((obj: PhoneRec) => ({
             key: uuid(),
             id: obj.id || 0,
+            custom_type_title: obj.custom_type_title || "",
             country_code: obj.country_code || 1,
             number:
               obj.country_code && obj.number
@@ -86,6 +88,7 @@ export const getContactAndPopulateForm = (
         ? data.urls.map((obj: UrlRec) => ({
             key: uuid(),
             id: obj.id || 0,
+            custom_type_title: obj.custom_type_title || "",
             address: obj.address || "",
             url_type: obj.url_type || 0,
           }))
