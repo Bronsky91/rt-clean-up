@@ -40,9 +40,7 @@ export default function EmailFields(props) {
             return (
               <div className={styles.formRow} key={email.key}>
                 <input
-                  className={`${styles.short} ${
-                    validAddress ? "" : styles.invalidInput
-                  }`}
+                  className={`${styles.margined} ${styles.short}`}
                   type="text"
                   name="custom_type_title"
                   value={email.custom_type_title || ""}

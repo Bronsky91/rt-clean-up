@@ -907,6 +907,15 @@ export default function DataCleanupPage(props) {
                   <div className={styles.formColumn}>
                     <div className={styles.formRow}>
                       <div
+                        className={`${styles.floatingHeader} ${styles.short}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.short}`}
+                        >
+                          Title
+                        </label>
+                      </div>
+                      <div
                         className={`${styles.floatingHeader} ${styles.long}`}
                       >
                         <label

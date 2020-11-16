@@ -38,6 +38,14 @@ export default function PhoneFields(props) {
       {contact && contact.phones
         ? contact.phones.map((phone, index) => (
             <div className={styles.formRow} key={phone.key}>
+              <input
+                className={`${styles.margined} ${styles.short}`}
+                type="text"
+                name="custom_type_title"
+                value={phone.custom_type_title}
+                onChange={props.handleArrChange(index, "phones", phone.id)}
+                onFocus={props.handleArrChange(index, "phones", phone.id, "")}
+              />
               <PhoneInput
                 containerClass={styles.phoneContainer}
                 buttonClass={styles.phoneButton}
