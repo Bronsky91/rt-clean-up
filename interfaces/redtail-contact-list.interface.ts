@@ -13,7 +13,7 @@ export interface ContactsEntity {
   nickname?: string | null;
   suffix_id?: null;
   suffix?: null;
-  job_title?: string | null;
+  job_title?: string;
   favorite: boolean;
   deleted: boolean;
   created_at: string;

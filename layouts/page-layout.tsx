@@ -62,8 +62,10 @@ export default function PageLayout({ children }) {
   };
 
   useEffect(() => {
-    localStorage.clear();
-    router.push("/");
+    if (!isRedtailAuth) {
+      localStorage.clear();
+      router.push("/");
+    }
   }, [isRedtailAuth]);
 
   return (
