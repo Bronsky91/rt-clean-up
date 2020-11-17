@@ -39,6 +39,17 @@ export default function EmailFields(props) {
             const validAddress: boolean = emailSchema.isValidSync(email);
             return (
               <div className={styles.formRow} key={email.key}>
+                <div
+                  className={`${styles.margined} ${styles.centered} ${styles.short}`}
+                >
+                  <input
+                    className={styles.radioInput}
+                    type="radio"
+                    name="is_primary_email"
+                    checked={email.is_primary}
+                    onChange={props.handleArrChange(index, "emails", email.id)}
+                  />
+                </div>
                 <input
                   className={`${styles.margined} ${styles.short}`}
                   type="text"
@@ -63,7 +74,6 @@ export default function EmailFields(props) {
                     onChange={props.handleArrChange(index, "emails", email.id)}
                   />
                 </div>
-
                 <div>
                   <select
                     className={`${styles.margined} ${styles.short}`}
@@ -82,15 +92,9 @@ export default function EmailFields(props) {
                     )}
                   </select>
                 </div>
-
-                <div className={styles.formRowEven}>
-                  <input
-                    className={styles.radioInput}
-                    type="radio"
-                    name="is_primary_email"
-                    checked={email.is_primary}
-                    onChange={props.handleArrChange(index, "emails", email.id)}
-                  />
+                <div
+                  className={`${styles.margined} ${styles.centered} ${styles.extraShort}`}
+                >
                   <button
                     className={styles.deleteButton}
                     onClick={props.removeContactField("emails", index)}

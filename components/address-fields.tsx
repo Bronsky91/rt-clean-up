@@ -104,6 +104,22 @@ export default function AddressFields(props) {
             const validZip: boolean = zipSchema.isValidSync(address);
             return (
               <div className={styles.formRow} key={address.key}>
+                <div
+                  className={`${styles.margined} ${styles.centered} ${styles.short}`}
+                >
+                  <input
+                    className={styles.radioInput}
+                    type="radio"
+                    name="is_primary_address"
+                    value=""
+                    checked={address.is_primary}
+                    onChange={props.handleArrChange(
+                      index,
+                      "addresses",
+                      address.id
+                    )}
+                  />
+                </div>
                 <input
                   className={`${styles.margined} ${styles.short}`}
                   type="text"
@@ -247,19 +263,9 @@ export default function AddressFields(props) {
                     )}
                   </select>
                 </div>
-                <div className={styles.formRowEven}>
-                  <input
-                    className={styles.radioInput}
-                    type="radio"
-                    name="is_primary_address"
-                    value=""
-                    checked={address.is_primary}
-                    onChange={props.handleArrChange(
-                      index,
-                      "addresses",
-                      address.id
-                    )}
-                  />
+                <div
+                  className={`${styles.margined} ${styles.centered} ${styles.extraShort}`}
+                >
                   <button
                     className={styles.deleteButton}
                     onClick={props.removeContactField("addresses", index)}

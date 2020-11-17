@@ -2,9 +2,12 @@ $field-height: 4rem;
 $radio-size: 2.2rem;
 $add-icon-size: 3.5rem;
 $delete-icon-size: 2.2rem;
-$solo-field-width: 13rem;
-$short-field-divider: 2;
-$long-field-multiplyer: 1.75;
+$extraShort: 4rem;
+$short: 6rem;
+$smedium: 8rem;
+$medium: 14rem;
+$long: 22rem;
+$extraLong: 25rem;
 
 .container {
   display: flex;
@@ -16,25 +19,61 @@ $long-field-multiplyer: 1.75;
   margin: 0.2rem;
 }
 
+.extraShort {
+  height: $field-height;
+  width: $extraShort;
+  min-width: $extraShort;
+  max-width: $extraShort;
+}
+
 .short {
   height: $field-height;
-  width: $solo-field-width / $short-field-divider;
-  min-width: $solo-field-width / $short-field-divider;
-  max-width: $solo-field-width / $short-field-divider;
+  width: $short;
+  min-width: $short;
+  max-width: $short;
+}
+
+.smedium {
+  height: $field-height;
+  width: $smedium;
+  min-width: $smedium;
+  max-width: $smedium;
 }
 
 .medium {
   height: $field-height;
-  width: $solo-field-width;
-  min-width: $solo-field-width;
-  max-width: $solo-field-width;
+  width: $medium;
+  min-width: $medium;
+  max-width: $medium;
 }
 
 .long {
   height: $field-height;
-  width: $solo-field-width * $long-field-multiplyer;
-  min-width: $solo-field-width * $long-field-multiplyer;
-  max-width: $solo-field-width * $long-field-multiplyer;
+  width: $long;
+  min-width: $long;
+  max-width: $long;
+}
+
+.extraLong {
+  height: $field-height;
+  width: $extraLong;
+  min-width: $extraLong;
+  max-width: $extraLong;
+}
+
+.centered {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  align-content: center;
+  justify-content: space-evenly;
+}
+
+.aligned {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  align-content: center;
 }
 
 .mergedField {
@@ -61,18 +100,26 @@ $long-field-multiplyer: 1.75;
 }
 
 .floatingHeader {
+  display: flex;
+  justify-content: center;
+  height: $field-height;
   background-color: #4357ab;
   margin: 0.2rem;
 }
 
 .floatingLabel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.h2 {
   color: white;
-  height: $field-height;
-  display: inline-block;
-  text-align: left;
   padding-left: 0.5rem;
   font-size: 1.4rem;
   line-height: 250%;
+  font-weight: normal;
 }
 
 .radioInput {
@@ -100,6 +147,11 @@ $long-field-multiplyer: 1.75;
 
 .invalidInput {
   background-color: #faf0f0;
+  border: 1px solid rgb(118, 118, 118) !important;
+  border-radius: 0 !important;
+  &:hover {
+    border: 1px solid rgb(59, 59, 59) !important;
+  }
 }
 
 .invalidInputMessage {
@@ -220,6 +272,15 @@ $long-field-multiplyer: 1.75;
   }
 }
 
+.deleteIcon {
+  width: $delete-icon-size * 0.75;
+  min-width: $delete-icon-size * 0.75;
+  max-width: $delete-icon-size * 0.75;
+  height: $delete-icon-size * 0.75;
+  min-height: $delete-icon-size * 0.75;
+  max-height: $delete-icon-size * 0.75;
+}
+
 .deleteButton {
   flex: 1 1 $delete-icon-size;
   width: $delete-icon-size;
@@ -304,6 +365,11 @@ $long-field-multiplyer: 1.75;
   max-height: ($field-height * 3) + 1rem;
 }
 
+.inputGroup {
+  //padding: 0.5rem;
+  //box-shadow: 0 0.3rem 0.6rem 0 rgba(0, 0, 0, 0.05);
+}
+
 // Note: Phone classes marked !important to overwrite react-phone-input-2 default CSS
 // =============================================================
 .phoneContainer {
@@ -312,9 +378,9 @@ $long-field-multiplyer: 1.75;
 
 .phoneInput {
   height: $field-height !important;
-  width: $solo-field-width * $long-field-multiplyer !important;
-  min-width: $solo-field-width * $long-field-multiplyer !important;
-  max-width: $solo-field-width * $long-field-multiplyer !important;
+  width: $long !important;
+  min-width: $long !important;
+  max-width: $long !important;
   border: 1px solid rgb(118, 118, 118) !important;
   border-radius: 0 !important;
   &:hover {
@@ -325,9 +391,9 @@ $long-field-multiplyer: 1.75;
 .phoneButton {
   margin-right: 0 !important;
   height: $field-height !important;
-  width: $solo-field-width * $long-field-multiplyer * 0.2 !important;
-  min-width: $solo-field-width * $long-field-multiplyer * 0.2 !important;
-  max-width: $solo-field-width * $long-field-multiplyer * 0.2 !important;
+  width: $long * 0.2 !important;
+  min-width: $long * 0.2 !important;
+  max-width: $long * 0.2 !important;
   border: 1px solid rgb(118, 118, 118) !important;
   border-radius: 0 !important;
   &:hover {

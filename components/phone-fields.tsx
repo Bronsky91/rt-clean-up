@@ -38,6 +38,18 @@ export default function PhoneFields(props) {
       {contact && contact.phones
         ? contact.phones.map((phone, index) => (
             <div className={styles.formRow} key={phone.key}>
+              <div
+                className={`${styles.margined} ${styles.centered} ${styles.short}`}
+              >
+                <input
+                  className={styles.radioInput}
+                  type="radio"
+                  name="is_primary_phone"
+                  value=""
+                  checked={phone.is_primary}
+                  onChange={props.handleArrChange(index, "phones", phone.id)}
+                />
+              </div>
               <input
                 className={`${styles.margined} ${styles.short}`}
                 type="text"
@@ -84,15 +96,9 @@ export default function PhoneFields(props) {
                   )}
                 </select>
               </div>
-              <div className={styles.formRowEven}>
-                <input
-                  className={styles.radioInput}
-                  type="radio"
-                  name="is_primary_phone"
-                  value=""
-                  checked={phone.is_primary}
-                  onChange={props.handleArrChange(index, "phones", phone.id)}
-                />
+              <div
+                className={`${styles.margined} ${styles.centered} ${styles.extraShort}`}
+              >
                 <button
                   className={styles.deleteButton}
                   onClick={props.removeContactField("phones", index)}

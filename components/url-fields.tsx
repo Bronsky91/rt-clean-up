@@ -83,7 +83,9 @@ export default function UrlFields(props) {
                   </select>
                 </div>
 
-                <div className={styles.formRowEven}>
+                <div
+                  className={`${styles.margined} ${styles.centered} ${styles.extraShort}`}
+                >
                   <button
                     className={styles.deleteButton}
                     onClick={props.removeContactField("urls", index)}

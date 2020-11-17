@@ -669,146 +669,148 @@ export default function DataCleanupPage(props) {
               onSubmit={handleSubmit}
             >
               <div className={styles.formRow}>
-                <div className={styles.formColumn}>
-                  {isIndividual(formData) ? (
-                    <>
-                      <DropDownField
-                        label="Salutation"
-                        fieldName="salutation_id"
-                        fieldValue={formData.contactRecord?.salutation_id}
-                        dropDownItems={dropdownData.salutations}
-                        handleChange={handleChange}
-                      ></DropDownField>
+                <div className={`${styles.formRow} ${styles.inputGroup}`}>
+                  <div className={styles.formColumn}>
+                    {isIndividual(formData) ? (
+                      <>
+                        <DropDownField
+                          label="Salutation"
+                          fieldName="salutation_id"
+                          fieldValue={formData.contactRecord?.salutation_id}
+                          dropDownItems={dropdownData.salutations}
+                          handleChange={handleChange}
+                        ></DropDownField>
 
-                      <TextField
-                        label="First Name"
-                        fieldName="first_name"
-                        fieldValue={formData.contactRecord?.first_name}
-                        handleChange={handleChange}
-                      ></TextField>
-                      <TextField
-                        label="Middle Name"
-                        fieldName="middle_name"
-                        fieldValue={formData.contactRecord?.middle_name}
-                        handleChange={handleChange}
-                      ></TextField>
+                        <TextField
+                          label="First Name"
+                          fieldName="first_name"
+                          fieldValue={formData.contactRecord?.first_name}
+                          handleChange={handleChange}
+                        ></TextField>
+                        <TextField
+                          label="Middle Name"
+                          fieldName="middle_name"
+                          fieldValue={formData.contactRecord?.middle_name}
+                          handleChange={handleChange}
+                        ></TextField>
 
-                      <TextField
-                        label="Last Name"
-                        fieldName="last_name"
-                        fieldValue={formData.contactRecord?.last_name}
-                        handleChange={handleChange}
-                      ></TextField>
+                        <TextField
+                          label="Last Name"
+                          fieldName="last_name"
+                          fieldValue={formData.contactRecord?.last_name}
+                          handleChange={handleChange}
+                        ></TextField>
 
-                      <TextField
-                        label="Nickname"
-                        fieldName="nickname"
-                        fieldValue={formData.contactRecord?.nickname}
-                        handleChange={handleChange}
-                      ></TextField>
+                        <TextField
+                          label="Nickname"
+                          fieldName="nickname"
+                          fieldValue={formData.contactRecord?.nickname}
+                          handleChange={handleChange}
+                        ></TextField>
 
-                      <DropDownField
-                        label="Gender"
-                        fieldName="gender_id"
-                        fieldValue={formData.contactRecord?.gender_id}
-                        dropDownItems={dropdownData.genderTypes}
-                        handleChange={handleChange}
-                      ></DropDownField>
-                    </>
-                  ) : (
-                    <>
-                      <TextField
-                        label="Company Name"
-                        fieldName="company_name"
-                        fieldValue={formData.contactRecord?.company_name}
-                        handleChange={handleChange}
-                      ></TextField>
-                    </>
-                  )}
-                </div>
+                        <DropDownField
+                          label="Gender"
+                          fieldName="gender_id"
+                          fieldValue={formData.contactRecord?.gender_id}
+                          dropDownItems={dropdownData.genderTypes}
+                          handleChange={handleChange}
+                        ></DropDownField>
+                      </>
+                    ) : (
+                      <>
+                        <TextField
+                          label="Company Name"
+                          fieldName="company_name"
+                          fieldValue={formData.contactRecord?.company_name}
+                          handleChange={handleChange}
+                        ></TextField>
+                      </>
+                    )}
+                  </div>
 
-                <div className={styles.formColumn}>
-                  <DropDownField
-                    label="Status"
-                    fieldName="status_id"
-                    fieldValue={formData.contactRecord?.status_id}
-                    dropDownItems={dropdownData.status_id}
-                    handleChange={handleChange}
-                  ></DropDownField>
+                  <div className={styles.formColumn}>
+                    <DropDownField
+                      label="Status"
+                      fieldName="status_id"
+                      fieldValue={formData.contactRecord?.status_id}
+                      dropDownItems={dropdownData.status_id}
+                      handleChange={handleChange}
+                    ></DropDownField>
 
-                  <DropDownField
-                    label="Category"
-                    fieldName="category_id"
-                    fieldValue={formData.contactRecord?.category_id}
-                    dropDownItems={dropdownData.category_id}
-                    handleChange={handleChange}
-                  ></DropDownField>
+                    <DropDownField
+                      label="Category"
+                      fieldName="category_id"
+                      fieldValue={formData.contactRecord?.category_id}
+                      dropDownItems={dropdownData.category_id}
+                      handleChange={handleChange}
+                    ></DropDownField>
 
-                  <DropDownField
-                    label="Source"
-                    fieldName="source_id"
-                    fieldValue={formData.contactRecord?.source_id}
-                    dropDownItems={dropdownData.source_id}
-                    handleChange={handleChange}
-                  ></DropDownField>
+                    <DropDownField
+                      label="Source"
+                      fieldName="source_id"
+                      fieldValue={formData.contactRecord?.source_id}
+                      dropDownItems={dropdownData.source_id}
+                      handleChange={handleChange}
+                    ></DropDownField>
 
-                  <TextField
-                    label="Referred By"
-                    fieldName="referred_by"
-                    fieldValue={formData.contactRecord?.referred_by}
-                    handleChange={handleChange}
-                  ></TextField>
+                    <TextField
+                      label="Referred By"
+                      fieldName="referred_by"
+                      fieldValue={formData.contactRecord?.referred_by}
+                      handleChange={handleChange}
+                    ></TextField>
 
-                  <DropDownField
-                    label="Servicing Advisor"
-                    fieldName="servicing_advisor_id"
-                    fieldValue={formData.contactRecord?.servicing_advisor_id}
-                    dropDownItems={dropdownData.servicingAdvisors}
-                    handleChange={handleChange}
-                  ></DropDownField>
+                    <DropDownField
+                      label="Servicing Advisor"
+                      fieldName="servicing_advisor_id"
+                      fieldValue={formData.contactRecord?.servicing_advisor_id}
+                      dropDownItems={dropdownData.servicingAdvisors}
+                      handleChange={handleChange}
+                    ></DropDownField>
 
-                  <DropDownField
-                    label="Writing Advisor"
-                    fieldName="writing_advisor_id"
-                    fieldValue={formData.contactRecord?.writing_advisor_id}
-                    dropDownItems={dropdownData.writingAdvisors}
-                    handleChange={handleChange}
-                  ></DropDownField>
-                </div>
+                    <DropDownField
+                      label="Writing Advisor"
+                      fieldName="writing_advisor_id"
+                      fieldValue={formData.contactRecord?.writing_advisor_id}
+                      dropDownItems={dropdownData.writingAdvisors}
+                      handleChange={handleChange}
+                    ></DropDownField>
+                  </div>
 
-                <div className={styles.formColumn}>
-                  <TextField
-                    label="Tax ID"
-                    fieldName="tax_id"
-                    fieldValue={formData.contactRecord?.tax_id}
-                    handleChange={handleChange}
-                  ></TextField>
+                  <div className={styles.formColumn}>
+                    <TextField
+                      label="Tax ID"
+                      fieldName="tax_id"
+                      fieldValue={formData.contactRecord?.tax_id}
+                      handleChange={handleChange}
+                    ></TextField>
 
-                  <DateField
-                    label="Client Since"
-                    fieldName="client_since"
-                    fieldValue={formData.contactRecord?.client_since}
-                    handleDateChange={handleDateChange}
-                  ></DateField>
+                    <DateField
+                      label="Client Since"
+                      fieldName="client_since"
+                      fieldValue={formData.contactRecord?.client_since}
+                      handleDateChange={handleDateChange}
+                    ></DateField>
 
-                  {isIndividual(formData) ? (
-                    <>
-                      <DateField
-                        label="Date of Birth"
-                        fieldName="dob"
-                        fieldValue={formData.contactRecord?.dob}
-                        handleDateChange={handleDateChange}
-                      ></DateField>
+                    {isIndividual(formData) ? (
+                      <>
+                        <DateField
+                          label="Date of Birth"
+                          fieldName="dob"
+                          fieldValue={formData.contactRecord?.dob}
+                          handleDateChange={handleDateChange}
+                        ></DateField>
 
-                      <DropDownField
-                        label="Marital Status"
-                        fieldName="marital_status_id"
-                        fieldValue={formData.contactRecord?.marital_status_id}
-                        dropDownItems={dropdownData.maritalTypes}
-                        handleChange={handleChange}
-                      ></DropDownField>
-                    </>
-                  ) : null}
+                        <DropDownField
+                          label="Marital Status"
+                          fieldName="marital_status_id"
+                          fieldValue={formData.contactRecord?.marital_status_id}
+                          dropDownItems={dropdownData.maritalTypes}
+                          handleChange={handleChange}
+                        ></DropDownField>
+                      </>
+                    ) : null}
+                  </div>
                 </div>
 
                 <div className={`${styles.formColumn} ${styles.buttonColumn}`}>
@@ -857,7 +859,7 @@ export default function DataCleanupPage(props) {
               </div>
               <div className={styles.formRow}>
                 <div className={styles.formRow}>
-                  <div className={styles.formColumn}>
+                  <div className={`${styles.formColumn} ${styles.inputGroup}`}>
                     <div className={styles.formRow}>
                       <div
                         className={`${styles.floatingHeader} ${styles.short}`}
@@ -865,7 +867,16 @@ export default function DataCleanupPage(props) {
                         <label
                           className={`${styles.floatingLabel} ${styles.short}`}
                         >
-                          Title
+                          <h2 className={styles.h2}>Primary</h2>
+                        </label>
+                      </div>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.short}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.short}`}
+                        >
+                          <h2 className={styles.h2}>Title</h2>
                         </label>
                       </div>
                       <div
@@ -874,7 +885,7 @@ export default function DataCleanupPage(props) {
                         <label
                           className={`${styles.floatingLabel} ${styles.long}`}
                         >
-                          Phone Number
+                          <h2 className={styles.h2}>Phone Number</h2>
                         </label>
                       </div>
                       <div
@@ -883,17 +894,16 @@ export default function DataCleanupPage(props) {
                         <label
                           className={`${styles.floatingLabel} ${styles.short}`}
                         >
-                          Type
+                          <h2 className={styles.h2}>Type</h2>
                         </label>
                       </div>
                       <div
-                        className={`${styles.floatingHeader} ${styles.medium}`}
+                        className={`${styles.floatingHeader} ${styles.centered} ${styles.extraShort}`}
                       >
-                        <label
-                          className={`${styles.floatingLabel} ${styles.medium}`}
-                        >
-                          Primary?
-                        </label>
+                        <img
+                          src="/delete-icon.png"
+                          className={styles.deleteIcon}
+                        />
                       </div>
                     </div>
                     <PhoneFields
@@ -910,7 +920,7 @@ export default function DataCleanupPage(props) {
                       />
                     </div>
                   </div>
-                  <div className={styles.formColumn}>
+                  <div className={`${styles.formColumn} ${styles.inputGroup}`}>
                     <div className={styles.formRow}>
                       <div
                         className={`${styles.floatingHeader} ${styles.short}`}
@@ -918,7 +928,16 @@ export default function DataCleanupPage(props) {
                         <label
                           className={`${styles.floatingLabel} ${styles.short}`}
                         >
-                          Title
+                          <h2 className={styles.h2}>Primary</h2>
+                        </label>
+                      </div>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.short}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.short}`}
+                        >
+                          <h2 className={styles.h2}>Title</h2>
                         </label>
                       </div>
                       <div
@@ -927,7 +946,7 @@ export default function DataCleanupPage(props) {
                         <label
                           className={`${styles.floatingLabel} ${styles.long}`}
                         >
-                          Email Address
+                          <h2 className={styles.h2}>Email Address</h2>
                         </label>
                       </div>
                       <div
@@ -936,17 +955,16 @@ export default function DataCleanupPage(props) {
                         <label
                           className={`${styles.floatingLabel} ${styles.short}`}
                         >
-                          Type
+                          <h2 className={styles.h2}>Type</h2>
                         </label>
                       </div>
                       <div
-                        className={`${styles.floatingHeader} ${styles.medium}`}
+                        className={`${styles.floatingHeader} ${styles.centered} ${styles.extraShort}`}
                       >
-                        <label
-                          className={`${styles.floatingLabel} ${styles.medium}`}
-                        >
-                          Primary?
-                        </label>
+                        <img
+                          src="/delete-icon.png"
+                          className={styles.deleteIcon}
+                        />
                       </div>
                     </div>
                     <EmailFields
@@ -962,7 +980,7 @@ export default function DataCleanupPage(props) {
                       />
                     </div>
                   </div>
-                  <div className={styles.formColumn}>
+                  <div className={`${styles.formColumn} ${styles.inputGroup}`}>
                     <div className={styles.formRow}>
                       <div
                         className={`${styles.floatingHeader} ${styles.short}`}
@@ -970,7 +988,7 @@ export default function DataCleanupPage(props) {
                         <label
                           className={`${styles.floatingLabel} ${styles.short}`}
                         >
-                          Title
+                          <h2 className={styles.h2}>Title</h2>
                         </label>
                       </div>
                       <div
@@ -979,7 +997,7 @@ export default function DataCleanupPage(props) {
                         <label
                           className={`${styles.floatingLabel} ${styles.long}`}
                         >
-                          Website
+                          <h2 className={styles.h2}>Website</h2>
                         </label>
                       </div>
                       <div
@@ -988,12 +1006,17 @@ export default function DataCleanupPage(props) {
                         <label
                           className={`${styles.floatingLabel} ${styles.short}`}
                         >
-                          Type
+                          <h2 className={styles.h2}>Type</h2>
                         </label>
                       </div>
                       <div
-                        className={`${styles.floatingHeader} ${styles.short}`}
-                      ></div>
+                        className={`${styles.floatingHeader} ${styles.centered} ${styles.extraShort}`}
+                      >
+                        <img
+                          src="/delete-icon.png"
+                          className={styles.deleteIcon}
+                        />
+                      </div>
                     </div>
                     <UrlFields
                       contact={formData}
@@ -1012,43 +1035,34 @@ export default function DataCleanupPage(props) {
               </div>
 
               <div className={styles.formRow}>
-                <div className={styles.formColumn}>
+                <div className={`${styles.formColumn} ${styles.inputGroup}`}>
                   <div className={styles.formRow}>
                     <div className={`${styles.floatingHeader} ${styles.short}`}>
                       <label
                         className={`${styles.floatingLabel} ${styles.short}`}
                       >
-                        Title
-                      </label>
-                    </div>
-                    <div className={`${styles.floatingHeader} ${styles.long}`}>
-                      <label
-                        className={`${styles.floatingLabel} ${styles.long}`}
-                      >
-                        Street Address
-                      </label>
-                    </div>
-                    <div className={`${styles.floatingHeader} ${styles.long}`}>
-                      <label
-                        className={`${styles.floatingLabel} ${styles.long}`}
-                      >
-                        Secondary Address
-                      </label>
-                    </div>
-                    <div
-                      className={`${styles.floatingHeader} ${styles.medium}`}
-                    >
-                      <label
-                        className={`${styles.floatingLabel} ${styles.medium}`}
-                      >
-                        City
+                        <h2 className={styles.h2}>Primary</h2>
                       </label>
                     </div>
                     <div className={`${styles.floatingHeader} ${styles.short}`}>
                       <label
                         className={`${styles.floatingLabel} ${styles.short}`}
                       >
-                        State
+                        <h2 className={styles.h2}>Title</h2>
+                      </label>
+                    </div>
+                    <div className={`${styles.floatingHeader} ${styles.long}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.long}`}
+                      >
+                        <h2 className={styles.h2}>Street Address</h2>
+                      </label>
+                    </div>
+                    <div className={`${styles.floatingHeader} ${styles.long}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.long}`}
+                      >
+                        <h2 className={styles.h2}>Secondary Address</h2>
                       </label>
                     </div>
                     <div
@@ -1057,14 +1071,14 @@ export default function DataCleanupPage(props) {
                       <label
                         className={`${styles.floatingLabel} ${styles.medium}`}
                       >
-                        Zip
+                        <h2 className={styles.h2}>City</h2>
                       </label>
                     </div>
                     <div className={`${styles.floatingHeader} ${styles.short}`}>
                       <label
                         className={`${styles.floatingLabel} ${styles.short}`}
                       >
-                        Type
+                        <h2 className={styles.h2}>State</h2>
                       </label>
                     </div>
                     <div
@@ -1073,8 +1087,23 @@ export default function DataCleanupPage(props) {
                       <label
                         className={`${styles.floatingLabel} ${styles.medium}`}
                       >
-                        Primary?
+                        <h2 className={styles.h2}>Zip</h2>
                       </label>
+                    </div>
+                    <div className={`${styles.floatingHeader} ${styles.short}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.short}`}
+                      >
+                        <h2 className={styles.h2}>Type</h2>
+                      </label>
+                    </div>
+                    <div
+                      className={`${styles.floatingHeader} ${styles.centered} ${styles.extraShort}`}
+                    >
+                      <img
+                        src="/delete-icon.png"
+                        className={styles.deleteIcon}
+                      />
                     </div>
                   </div>
                   <AddressFields
