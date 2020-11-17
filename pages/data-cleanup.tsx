@@ -568,9 +568,6 @@ export default function DataCleanupPage(props) {
         "ERROR: Looks like something went wrong updating this contact.\nPlease check form and try again."
       );
     }
-    /* .then(async (res) => {
-        
-      });*/
   };
 
   const contactPrevLoad = () => {
