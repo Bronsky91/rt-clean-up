@@ -104,6 +104,23 @@ export default function AddressFields(props) {
             const validZip: boolean = zipSchema.isValidSync(address);
             return (
               <div className={styles.formRow} key={address.key}>
+                <input
+                  className={`${styles.margined} ${styles.short}`}
+                  type="text"
+                  name="custom_type_title"
+                  value={address.custom_type_title || ""}
+                  onChange={props.handleArrChange(
+                    index,
+                    "addresses",
+                    address.id
+                  )}
+                  onFocus={props.handleArrChange(
+                    index,
+                    "addresses",
+                    address.id,
+                    ""
+                  )}
+                />
                 <div className={styles.invalidInputContainer}>
                   {validStreetAddress ? (
                     ""

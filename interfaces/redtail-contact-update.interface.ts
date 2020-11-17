@@ -35,6 +35,7 @@ export interface ContactRecordUpdate {
 export interface AddressUpdate {
   key?: string;
   id?: number;
+  custom_type_title: string;
   street_address: string;
   secondary_address: string;
   city: string;
@@ -47,6 +48,7 @@ export interface AddressUpdate {
 export interface EmailUpdate {
   key?: string;
   id?: number;
+  custom_type_title: string;
   address: string;
   email_type: number;
   is_primary: boolean;
@@ -55,6 +57,7 @@ export interface EmailUpdate {
 export interface PhoneUpdate {
   key?: string;
   id?: number;
+  custom_type_title: string;
   country_code: number;
   number: string;
   phone_type: number;
@@ -64,6 +67,7 @@ export interface PhoneUpdate {
 export interface UrlUpdate {
   key?: string;
   id?: number;
+  custom_type_title: string;
   address: string;
   url_type: number;
 }
