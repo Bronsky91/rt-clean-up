@@ -829,14 +829,15 @@ export default function DataCleanupPage(props) {
                       disabled={contactNextDisabled}
                     />
                   </div>
-                  <div className={styles.timestamp}>
-                    Updated{" "}
+                  <div
+                    className={`${styles.timestamp} ${
+                      isSaved ? styles.saved : ""
+                    }`}
+                  >
+                    {isSaved ? "Saved " : "Updated "}
                     {redtailDateToFormatedString(
                       formData.contactRecord.updated_at
                     )}
-                  </div>
-                  <div className={styles.savedMsg}>
-                    {isSaved ? "Saved!" : ""}
                   </div>
 
                   <div className={styles.saveButtonContainer}>
