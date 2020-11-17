@@ -1099,25 +1099,27 @@ export default function DataCleanupPage(props) {
                         <h2 className={styles.h2}>Title</h2>
                       </label>
                     </div>
-                    <div className={`${styles.floatingHeader} ${styles.long}`}>
+                    <div
+                      className={`${styles.floatingHeader} ${styles.extraLong}`}
+                    >
                       <label
-                        className={`${styles.floatingLabel} ${styles.long}`}
+                        className={`${styles.floatingLabel} ${styles.extraLong}`}
                       >
                         <h2 className={styles.h2}>Street Address</h2>
                       </label>
                     </div>
-                    <div className={`${styles.floatingHeader} ${styles.long}`}>
+                    <div
+                      className={`${styles.floatingHeader} ${styles.extraLong}`}
+                    >
                       <label
-                        className={`${styles.floatingLabel} ${styles.long}`}
+                        className={`${styles.floatingLabel} ${styles.extraLong}`}
                       >
                         <h2 className={styles.h2}>Secondary Address</h2>
                       </label>
                     </div>
-                    <div
-                      className={`${styles.floatingHeader} ${styles.medium}`}
-                    >
+                    <div className={`${styles.floatingHeader} ${styles.long}`}>
                       <label
-                        className={`${styles.floatingLabel} ${styles.medium}`}
+                        className={`${styles.floatingLabel} ${styles.long}`}
                       >
                         <h2 className={styles.h2}>City</h2>
                       </label>

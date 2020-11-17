@@ -146,7 +146,7 @@ export default function AddressFields(props) {
                     <div className={styles.invalidInputMessage}>Not valid</div>
                   )}
                   <input
-                    className={`${styles.long} ${
+                    className={`${styles.extraLong} ${
                       validStreetAddress ? "" : styles.invalidInput
                     }`}
                     type="text"
@@ -160,7 +160,7 @@ export default function AddressFields(props) {
                   />
                 </div>
                 <input
-                  className={`${styles.thinMargin} ${styles.long}`}
+                  className={`${styles.thinMargin} ${styles.extraLong}`}
                   type="text"
                   name="secondary_address"
                   value={address.secondary_address || ""}
@@ -179,7 +179,7 @@ export default function AddressFields(props) {
                     <div className={styles.invalidInputMessage}>Not valid</div>
                   )}
                   <input
-                    className={`${styles.medium} ${
+                    className={`${styles.long} ${
                       validCity ? "" : styles.invalidInput
                     }`}
                     type="text"

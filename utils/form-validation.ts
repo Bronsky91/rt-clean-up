@@ -39,7 +39,7 @@ export const stateSchema = yup.object().shape({
 });
 
 export const zipSchema = yup.object().shape({
-  zip: yup.string().min(5).matches(/^\d+$/).required(),
+  zip: yup.string().min(5).max(5).matches(/^\d+$/).required(),
 });
 
 export const emailSchema = yup.object().shape({
