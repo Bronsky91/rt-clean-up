@@ -105,7 +105,7 @@ export default function AddressFields(props) {
             return (
               <div className={styles.formRow} key={address.key}>
                 <div
-                  className={`${styles.margined} ${styles.centered} ${styles.short}`}
+                  className={`${styles.thinMargin} ${styles.centered} ${styles.short}`}
                 >
                   <input
                     className={styles.radioInput}
@@ -121,7 +121,7 @@ export default function AddressFields(props) {
                   />
                 </div>
                 <input
-                  className={`${styles.margined} ${styles.short}`}
+                  className={`${styles.thinMargin} ${styles.short}`}
                   type="text"
                   name="custom_type_title"
                   value={address.custom_type_title || ""}
@@ -137,7 +137,9 @@ export default function AddressFields(props) {
                     ""
                   )}
                 />
-                <div className={styles.invalidInputContainer}>
+                <div
+                  className={`${styles.invalidInputContainer} ${styles.thinMargin}`}
+                >
                   {validStreetAddress ? (
                     ""
                   ) : (
@@ -158,7 +160,7 @@ export default function AddressFields(props) {
                   />
                 </div>
                 <input
-                  className={`${styles.margined} ${styles.long}`}
+                  className={`${styles.thinMargin} ${styles.long}`}
                   type="text"
                   name="secondary_address"
                   value={address.secondary_address || ""}
@@ -168,7 +170,9 @@ export default function AddressFields(props) {
                     address.id
                   )}
                 />
-                <div className={styles.invalidInputContainer}>
+                <div
+                  className={`${styles.invalidInputContainer} ${styles.thinMargin}`}
+                >
                   {validCity ? (
                     ""
                   ) : (
@@ -189,7 +193,9 @@ export default function AddressFields(props) {
                   />
                 </div>
                 <div>
-                  <div className={styles.invalidInputContainer}>
+                  <div
+                    className={`${styles.invalidInputContainer} ${styles.thinMargin}`}
+                  >
                     {validState ? (
                       ""
                     ) : (
@@ -221,7 +227,9 @@ export default function AddressFields(props) {
                     </select>
                   </div>
                 </div>
-                <div className={styles.invalidInputContainer}>
+                <div
+                  className={`${styles.invalidInputContainer} ${styles.thinMargin}`}
+                >
                   {validZip ? (
                     ""
                   ) : (
@@ -243,7 +251,7 @@ export default function AddressFields(props) {
                 </div>
                 <div>
                   <select
-                    className={`${styles.margined} ${styles.short}`}
+                    className={`${styles.thinMargin} ${styles.short}`}
                     onChange={props.handleArrChange(
                       index,
                       "addresses",
@@ -264,7 +272,7 @@ export default function AddressFields(props) {
                   </select>
                 </div>
                 <div
-                  className={`${styles.margined} ${styles.centered} ${styles.extraShort}`}
+                  className={`${styles.thinMargin} ${styles.centered} ${styles.extraShort}`}
                 >
                   <button
                     className={styles.deleteButton}

@@ -40,7 +40,7 @@ export default function EmailFields(props) {
             return (
               <div className={styles.formRow} key={email.key}>
                 <div
-                  className={`${styles.margined} ${styles.centered} ${styles.short}`}
+                  className={`${styles.thinMargin} ${styles.centered} ${styles.short}`}
                 >
                   <input
                     className={styles.radioInput}
@@ -51,14 +51,16 @@ export default function EmailFields(props) {
                   />
                 </div>
                 <input
-                  className={`${styles.margined} ${styles.short}`}
+                  className={`${styles.thinMargin} ${styles.short}`}
                   type="text"
                   name="custom_type_title"
                   value={email.custom_type_title || ""}
                   onChange={props.handleArrChange(index, "emails", email.id)}
                   onFocus={props.handleArrChange(index, "emails", email.id, "")}
                 />
-                <div className={styles.invalidInputContainer}>
+                <div
+                  className={`${styles.invalidInputContainer} ${styles.thinMargin}`}
+                >
                   {validAddress ? (
                     ""
                   ) : (
@@ -76,7 +78,7 @@ export default function EmailFields(props) {
                 </div>
                 <div>
                   <select
-                    className={`${styles.margined} ${styles.short}`}
+                    className={`${styles.thinMargin} ${styles.short}`}
                     onChange={props.handleArrChange(index, "emails", email.id)}
                     name="email_type"
                     value={email.email_type}
@@ -93,7 +95,7 @@ export default function EmailFields(props) {
                   </select>
                 </div>
                 <div
-                  className={`${styles.margined} ${styles.centered} ${styles.extraShort}`}
+                  className={`${styles.thinMargin} ${styles.centered} ${styles.extraShort}`}
                 >
                   <button
                     className={styles.deleteButton}

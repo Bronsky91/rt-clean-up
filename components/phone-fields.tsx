@@ -39,7 +39,7 @@ export default function PhoneFields(props) {
         ? contact.phones.map((phone, index) => (
             <div className={styles.formRow} key={phone.key}>
               <div
-                className={`${styles.margined} ${styles.centered} ${styles.short}`}
+                className={`${styles.thinMargin} ${styles.centered} ${styles.short}`}
               >
                 <input
                   className={styles.radioInput}
@@ -51,7 +51,7 @@ export default function PhoneFields(props) {
                 />
               </div>
               <input
-                className={`${styles.margined} ${styles.short}`}
+                className={`${styles.thinMargin} ${styles.short}`}
                 type="text"
                 name="custom_type_title"
                 value={phone.custom_type_title}
@@ -78,7 +78,7 @@ export default function PhoneFields(props) {
               />
               <div>
                 <select
-                  className={`${styles.margined} ${styles.short}`}
+                  className={`${styles.thinMargin} ${styles.short}`}
                   onChange={props.handleArrChange(index, "phones", phone.id)}
                   name="phone_type"
                   value={phone.phone_type}
@@ -97,7 +97,7 @@ export default function PhoneFields(props) {
                 </select>
               </div>
               <div
-                className={`${styles.margined} ${styles.centered} ${styles.extraShort}`}
+                className={`${styles.thinMargin} ${styles.centered} ${styles.extraShort}`}
               >
                 <button
                   className={styles.deleteButton}

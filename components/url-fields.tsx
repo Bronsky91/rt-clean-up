@@ -40,14 +40,16 @@ export default function UrlFields(props) {
             return (
               <div className={styles.formRow} key={url.key}>
                 <input
-                  className={`${styles.margined} ${styles.short}`}
+                  className={`${styles.thinMargin} ${styles.short}`}
                   type="text"
                   name="custom_type_title"
                   value={url.custom_type_title || ""}
                   onChange={props.handleArrChange(index, "urls", url.id)}
                   onFocus={props.handleArrChange(index, "urls", url.id, "")}
                 />
-                <div className={styles.invalidInputContainer}>
+                <div
+                  className={`${styles.invalidInputContainer} ${styles.thinMargin}`}
+                >
                   {validAddress ? (
                     ""
                   ) : (
@@ -66,7 +68,7 @@ export default function UrlFields(props) {
 
                 <div>
                   <select
-                    className={`${styles.margined} ${styles.short}`}
+                    className={`${styles.thinMargin} ${styles.short}`}
                     onChange={props.handleArrChange(index, "urls", url.id)}
                     name="url_type"
                     value={url.url_type}
@@ -84,7 +86,7 @@ export default function UrlFields(props) {
                 </div>
 
                 <div
-                  className={`${styles.margined} ${styles.centered} ${styles.extraShort}`}
+                  className={`${styles.thinMargin} ${styles.centered} ${styles.extraShort}`}
                 >
                   <button
                     className={styles.deleteButton}

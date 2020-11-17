@@ -1,4 +1,6 @@
-$field-height: 4rem;
+$field-height: 3.5rem;
+$thickMargin: 0.4rem 0.1rem;
+$thinMargin: 0.2rem 0.1rem;
 $radio-size: 2.2rem;
 $add-icon-size: 3.5rem;
 $delete-icon-size: 2.2rem;
@@ -15,8 +17,12 @@ $extraLong: 25rem;
   margin-top: 2em;
 }
 
-.margined {
-  margin: 0.2rem;
+.thinMargin {
+  margin: $thinMargin;
+}
+
+.thickMargin {
+  margin: $thickMargin;
 }
 
 .extraShort {
@@ -104,7 +110,7 @@ $extraLong: 25rem;
   justify-content: center;
   height: $field-height;
   background-color: #4357ab;
-  margin: 0.2rem;
+  margin: $thickMargin;
 }
 
 .floatingLabel {
@@ -131,7 +137,6 @@ $extraLong: 25rem;
 }
 
 .invalidInputContainer {
-  margin: 0.2rem;
   position: relative;
   width: 100%;
 }
@@ -343,7 +348,7 @@ $extraLong: 25rem;
   display: flex;
   flex-flow: column nowrap;
   margin: 0.6rem 0 0.6rem 1.8rem; // t r b l
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.9);
   width: 80vw;
   height: 84vh;
 }
@@ -366,7 +371,7 @@ $extraLong: 25rem;
 .formColumn {
   display: flex;
   flex-flow: column nowrap;
-  margin: 0.5rem;
+  margin: 1rem;
 }
 
 .formRow {
@@ -399,7 +404,7 @@ $extraLong: 25rem;
 // Note: Phone classes marked !important to overwrite react-phone-input-2 default CSS
 // =============================================================
 .phoneContainer {
-  margin: 0.2rem !important;
+  margin: ($thinMargin) !important;
 }
 
 .phoneInput {

@@ -12,7 +12,7 @@ export default function TextField(props) {
     : false;
 
   return (
-    <div className={styles.invalidInputContainer}>
+    <div className={`${styles.invalidInputContainer} ${styles.thickMargin}`}>
       {(isTaxID && !validTaxID) || (isLastname && !validLastname) ? (
         <div className={styles.invalidInputMessage}>Not valid</div>
       ) : (
