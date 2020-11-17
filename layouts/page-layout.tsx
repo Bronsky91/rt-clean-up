@@ -7,11 +7,13 @@ import { useEffect, useState } from "react";
 import RedtailAuthModal from "../components/modals/redtail-auth-modal";
 import RedtailSettingsModal from "../components/modals/redtail-settings-modal";
 import NavInterceptModal from "../components/modals/nav-intercept-modal";
+import SettingsModal from "../components/modals/settings-modal";
 
 export default function PageLayout({ children }) {
   const router = useRouter();
 
   const [authModalIsOpen, setAuthModalIsOpen] = useState(false);
+  const [rtSettingsModalIsOpen, setRtSettingsModalIsOpen] = useState(false);
   const [settingsModalIsOpen, setSettingsModalIsOpen] = useState(false);
   const [navInterceptModalIsOpen, setNavInterceptModalIsOpen] = useState(false);
   const [interceptedRoute, setInterceptedRoute] = useState("/");
@@ -27,17 +29,25 @@ export default function PageLayout({ children }) {
     children.props.checkRedtailAuth();
   };
 
-  const openSettingsModal = () => {
-    setSettingsModalIsOpen(true);
+  const openRtSettingsModal = () => {
+    setRtSettingsModalIsOpen(true);
   };
 
-  const closeSettingsModal = (switchAuth: boolean) => {
-    setSettingsModalIsOpen(false);
+  const closeRtSettingsModal = (switchAuth: boolean) => {
+    setRtSettingsModalIsOpen(false);
     children.props.checkRedtailAuth();
 
     if (switchAuth) {
       setAuthModalIsOpen(true);
     }
+  };
+
+  const openSettingsModal = () => {
+    setSettingsModalIsOpen(true);
+  };
+
+  const closeSettingsModal = () => {
+    setSettingsModalIsOpen(false);
   };
 
   const openNavInterceptModal = () => {
@@ -83,6 +93,9 @@ export default function PageLayout({ children }) {
           <img src="/linkpoint-logo.png" alt="LinkPoint Solutions Logo" />
         </div>
         <div className={styles.h1}>RedTail Clean Up Tool</div>
+        <div onClick={openSettingsModal} className={styles.hover}>
+          <img src="/settings.png" />
+        </div>
       </header>
       <div className={styles.wrapper}>
         <nav
@@ -127,7 +140,7 @@ export default function PageLayout({ children }) {
           </div>
           <div
             className={styles.redtailConnectContainer}
-            onClick={isRedtailAuth ? openSettingsModal : openAuthModal}
+            onClick={isRedtailAuth ? openRtSettingsModal : openAuthModal}
           >
             <img
               className={styles.redtailConnectImg}
@@ -151,9 +164,14 @@ export default function PageLayout({ children }) {
       ></RedtailAuthModal>
 
       <RedtailSettingsModal
+        modalIsOpen={rtSettingsModalIsOpen}
+        closeModal={closeRtSettingsModal}
+      ></RedtailSettingsModal>
+
+      <SettingsModal
         modalIsOpen={settingsModalIsOpen}
         closeModal={closeSettingsModal}
-      ></RedtailSettingsModal>
+      ></SettingsModal>
 
       <NavInterceptModal
         modalIsOpen={navInterceptModalIsOpen}

@@ -1,37 +1,31 @@
-import Axios from "axios";
 import { useState } from "react";
 import Modal from "react-modal";
 import styles from "../../styles/RedtailModal.module.scss";
 import Loader from "react-loader-spinner";
 import { delay } from "../../utils/delay";
+import Axios from "axios";
+import { useRouter } from "next/router";
 
-export default function RedtailSettingsModal(props) {
+export default function SettingsModal(props) {
+  const router = useRouter();
   const [loadingPage, setLoadingPage] = useState(false);
 
-  const redtailLogout = () => {
-    Axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/redtail-logout`, {
+  const signOut = async () => {
+    Axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/logout`, {
       withCredentials: true,
     });
     // Adding delay so the logout process isn't so quick and jarring to the user
-    return delay(1000);
+    await delay(1000);
+    router.reload();
   };
 
   const handleClose = (e) => {
     props.closeModal(false);
   };
 
-  const handleSwitchClick = (e) => {
-    setLoadingPage(true);
-    redtailLogout().then(() => {
-      setLoadingPage(false);
-      // True is Switching Account
-      props.closeModal(true);
-    });
-  };
-
   const handleLogoutClick = (e) => {
     setLoadingPage(true);
-    redtailLogout().then(() => {
+    signOut().then(() => {
       setLoadingPage(false);
       props.closeModal(false);
     });
@@ -55,7 +49,7 @@ export default function RedtailSettingsModal(props) {
     <Modal
       isOpen={props.modalIsOpen}
       style={customStyles}
-      contentLabel="Redtail Settings"
+      contentLabel="Settings"
       ariaHideApp={false}
     >
       <div className={styles.container}>
@@ -68,27 +62,27 @@ export default function RedtailSettingsModal(props) {
             className={styles.close}
           ></input>
         </div>
-        <div className={styles.signIn}>
-          <img src="redtail-logo.png" className={styles.redtailLogo}></img>
-          <h1 className={styles.title}>Redtail Settings</h1>
+        <div className={styles.settingsSignIn}>
+          <div className={styles.settingsTitle}>CleanUp Tool</div>
+          <div className={styles.settingsSubTitle}>Settings</div>
         </div>
         <div className={styles.inputContainer}>
           {loadingPage ? (
             <div className={styles.spinner}>
               <Loader
                 type="Rings"
-                color="#ae3636"
+                color="#4859a4"
                 height={100}
                 width={100}
               ></Loader>
             </div>
           ) : (
             <>
-              <div className={styles.redButton} onClick={handleSwitchClick}>
-                Switch Account
+              <div className={styles.blueButton} onClick={handleLogoutClick}>
+                Logout
               </div>
-              <div className={styles.redButton} onClick={handleLogoutClick}>
-                Log Out
+              <div onClick={handleClose} className={styles.backButton}>
+                Back
               </div>
             </>
           )}
