@@ -34,6 +34,7 @@ export const getContactAndPopulateForm = (
         last_name: data.last_name || "",
         nickname: data.nickname || "",
         company_name: data.company_name || "",
+        job_title: data.job_title || "",
         gender_id: data.gender_id || 0,
         dob: data.dob || "",
         client_since: data.client_since || "",

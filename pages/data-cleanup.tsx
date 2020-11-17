@@ -802,6 +802,13 @@ export default function DataCleanupPage(props) {
                         dropDownItems={dropdownData.maritalTypes}
                         handleChange={handleChange}
                       ></DropDownField>
+
+                      <TextField
+                        label="Job Title"
+                        fieldName="job_title"
+                        fieldValue={formData.contactRecord?.job_title}
+                        handleChange={handleChange}
+                      ></TextField>
                     </>
                   ) : null}
                 </div>

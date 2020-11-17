@@ -90,6 +90,7 @@ export const createEmptyContactField = {
     updated_at: "",
     salutation_id: 0,
     company_name: "",
+    job_title: "",
     first_name: "",
     middle_name: "",
     last_name: "",
