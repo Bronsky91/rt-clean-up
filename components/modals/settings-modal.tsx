@@ -1,19 +1,22 @@
-import Axios from "axios";
 import { useState } from "react";
 import Modal from "react-modal";
 import styles from "../../styles/RedtailModal.module.scss";
 import Loader from "react-loader-spinner";
 import { delay } from "../../utils/delay";
+import Axios from "axios";
+import { useRouter } from "next/router";
 
 export default function SettingsModal(props) {
+  const router = useRouter();
   const [loadingPage, setLoadingPage] = useState(false);
 
-  const signOut = () => {
-    // Axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/redtail-logout`, {
-    //   withCredentials: true,
-    // });
+  const signOut = async () => {
+    Axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/logout`, {
+      withCredentials: true,
+    });
     // Adding delay so the logout process isn't so quick and jarring to the user
-    return delay(1000);
+    await delay(1000);
+    router.reload();
   };
 
   const handleClose = (e) => {
@@ -59,7 +62,7 @@ export default function SettingsModal(props) {
             className={styles.close}
           ></input>
         </div>
-        <div className={styles.signIn}>
+        <div className={styles.settingsSignIn}>
           <div className={styles.settingsTitle}>CleanUp Tool</div>
           <div className={styles.settingsSubTitle}>Settings</div>
         </div>
