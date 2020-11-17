@@ -502,7 +502,7 @@ export default function DataCleanupPage(props) {
 
   const handleUndo = (e) => {
     e.preventDefault();
-    setFormData(originalFormData);
+    setFormData(JSON.parse(JSON.stringify(originalFormData))); // force pass by val not ref
   };
 
   const handleSubmit = (e) => {
