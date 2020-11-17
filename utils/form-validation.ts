@@ -3,6 +3,7 @@ import {
   AddressUpdate,
   EmailUpdate,
   PhoneUpdate,
+  UrlUpdate,
 } from "../interfaces/redtail-contact-update.interface";
 
 export const contactRecordSchema = yup.object().shape({
@@ -59,14 +60,14 @@ export const isPhoneInvalid = (phone: PhoneUpdate): boolean =>
     phone.number.length > phone.country_code.toString().length
   );
 
-export const isAllEmailValid = (emails: EmailUpdate[]): boolean => {
-  for (const email of emails) {
-    if (!emailSchema.isValidSync(email)) {
-      return false;
-    }
-  }
-  return true;
-};
+export const urlSchema = yup.object().shape({
+  address: yup
+    .string()
+    .matches(
+      /((https?):\/\/)?(www.)?[a-z0-9-]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#-]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/
+    )
+    .required(),
+});
 
 export const isAllAddressValid = (addresses: AddressUpdate[]): boolean => {
   for (const address of addresses) {
@@ -77,9 +78,27 @@ export const isAllAddressValid = (addresses: AddressUpdate[]): boolean => {
   return true;
 };
 
+export const isAllEmailValid = (emails: EmailUpdate[]): boolean => {
+  for (const email of emails) {
+    if (!emailSchema.isValidSync(email)) {
+      return false;
+    }
+  }
+  return true;
+};
+
 export const isAllPhoneValid = (phones: PhoneUpdate[]): boolean => {
   for (const phone of phones) {
     if (isPhoneInvalid(phone)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+export const isAllUrlValid = (urls: UrlUpdate[]): boolean => {
+  for (const url of urls) {
+    if (!urlSchema.isValidSync(url)) {
       return false;
     }
   }

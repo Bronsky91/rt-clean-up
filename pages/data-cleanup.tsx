@@ -20,9 +20,10 @@ import {
 import { setLocalStorage } from "../utils/set-local-storage";
 import TextField from "../components/text-field";
 import DropDownField from "../components/drop-down-field";
-import EmailFields from "../components/email-field";
-import PhoneFields from "../components/phone-field";
-import AddressFields from "../components/address-field";
+import AddressFields from "../components/address-fields";
+import EmailFields from "../components/email-fields";
+import PhoneFields from "../components/phone-fields";
+import UrlFields from "../components/url-fields";
 import DateField from "../components/date-field";
 import {
   ContactListEntry,
@@ -47,6 +48,7 @@ import {
   isAllAddressValid,
   isAllEmailValid,
   isAllPhoneValid,
+  isAllUrlValid,
 } from "../utils/form-validation";
 
 export default function DataCleanupPage(props) {
@@ -278,14 +280,17 @@ export default function DataCleanupPage(props) {
       if (formData.contactRecord) {
         allValid = contactRecordSchema.isValidSync(formData.contactRecord);
       }
-      if (formData.emails && allValid) {
-        allValid = isAllEmailValid(formData.emails);
-      }
       if (formData.addresses && allValid) {
         allValid = isAllAddressValid(formData.addresses);
       }
+      if (formData.emails && allValid) {
+        allValid = isAllEmailValid(formData.emails);
+      }
       if (formData.phones && allValid) {
         allValid = isAllPhoneValid(formData.phones);
+      }
+      if (formData.urls && allValid) {
+        allValid = isAllUrlValid(formData.urls);
       }
     }
     setIsFormValid(allValid);
@@ -869,6 +874,59 @@ export default function DataCleanupPage(props) {
                         <label
                           className={`${styles.floatingLabel} ${styles.long}`}
                         >
+                          Phone Number
+                        </label>
+                      </div>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.short}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.short}`}
+                        >
+                          Type
+                        </label>
+                      </div>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.medium}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.medium}`}
+                        >
+                          Primary?
+                        </label>
+                      </div>
+                    </div>
+                    <PhoneFields
+                      contact={formData}
+                      handleArrChange={handleArrChange} // Used by Type and Primary inputs
+                      handlePhoneChange={handlePhoneChange} // Used by Phone Number input
+                      dropdownData={dropdownData}
+                      removeContactField={removeContactField}
+                    ></PhoneFields>
+                    <div className={styles.formRowEven}>
+                      <button
+                        className={styles.addButton}
+                        onClick={addContactField("phones")}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.formColumn}>
+                    <div className={styles.formRow}>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.short}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.short}`}
+                        >
+                          Title
+                        </label>
+                      </div>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.long}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.long}`}
+                        >
                           Email Address
                         </label>
                       </div>
@@ -921,7 +979,7 @@ export default function DataCleanupPage(props) {
                         <label
                           className={`${styles.floatingLabel} ${styles.long}`}
                         >
-                          Phone Number
+                          Website
                         </label>
                       </div>
                       <div
@@ -934,26 +992,19 @@ export default function DataCleanupPage(props) {
                         </label>
                       </div>
                       <div
-                        className={`${styles.floatingHeader} ${styles.medium}`}
-                      >
-                        <label
-                          className={`${styles.floatingLabel} ${styles.medium}`}
-                        >
-                          Primary?
-                        </label>
-                      </div>
+                        className={`${styles.floatingHeader} ${styles.short}`}
+                      ></div>
                     </div>
-                    <PhoneFields
+                    <UrlFields
                       contact={formData}
-                      handleArrChange={handleArrChange} // Used by Type and Primary inputs
-                      handlePhoneChange={handlePhoneChange} // Used by Phone Number input
+                      handleArrChange={handleArrChange}
                       dropdownData={dropdownData}
                       removeContactField={removeContactField}
-                    ></PhoneFields>
+                    ></UrlFields>
                     <div className={styles.formRowEven}>
                       <button
                         className={styles.addButton}
-                        onClick={addContactField("phones")}
+                        onClick={addContactField("urls")}
                       />
                     </div>
                   </div>
