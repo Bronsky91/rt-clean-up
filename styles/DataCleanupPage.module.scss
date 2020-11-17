@@ -1,10 +1,15 @@
-$field-height: 4rem;
+$field-height: 3.5rem;
+$thickMargin: 0.4rem 0.1rem;
+$thinMargin: 0.2rem 0.1rem;
 $radio-size: 2.2rem;
 $add-icon-size: 3.5rem;
 $delete-icon-size: 2.2rem;
-$solo-field-width: 13rem;
-$short-field-divider: 2;
-$long-field-multiplyer: 1.75;
+$extraShort: 4rem;
+$short: 6rem;
+$smedium: 8rem;
+$medium: 14rem;
+$long: 22rem;
+$extraLong: 25rem;
 
 .container {
   display: flex;
@@ -12,29 +17,69 @@ $long-field-multiplyer: 1.75;
   margin-top: 2em;
 }
 
-.margined {
-  margin: 0.2rem;
+.thinMargin {
+  margin: $thinMargin;
+}
+
+.thickMargin {
+  margin: $thickMargin;
+}
+
+.extraShort {
+  height: $field-height;
+  width: $extraShort;
+  min-width: $extraShort;
+  max-width: $extraShort;
 }
 
 .short {
   height: $field-height;
-  width: $solo-field-width / $short-field-divider;
-  min-width: $solo-field-width / $short-field-divider;
-  max-width: $solo-field-width / $short-field-divider;
+  width: $short;
+  min-width: $short;
+  max-width: $short;
+}
+
+.smedium {
+  height: $field-height;
+  width: $smedium;
+  min-width: $smedium;
+  max-width: $smedium;
 }
 
 .medium {
   height: $field-height;
-  width: $solo-field-width;
-  min-width: $solo-field-width;
-  max-width: $solo-field-width;
+  width: $medium;
+  min-width: $medium;
+  max-width: $medium;
 }
 
 .long {
   height: $field-height;
-  width: $solo-field-width * $long-field-multiplyer;
-  min-width: $solo-field-width * $long-field-multiplyer;
-  max-width: $solo-field-width * $long-field-multiplyer;
+  width: $long;
+  min-width: $long;
+  max-width: $long;
+}
+
+.extraLong {
+  height: $field-height;
+  width: $extraLong;
+  min-width: $extraLong;
+  max-width: $extraLong;
+}
+
+.centered {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  align-content: center;
+  justify-content: space-evenly;
+}
+
+.aligned {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  align-content: center;
 }
 
 .mergedField {
@@ -61,18 +106,26 @@ $long-field-multiplyer: 1.75;
 }
 
 .floatingHeader {
+  display: flex;
+  justify-content: center;
+  height: $field-height;
   background-color: #4357ab;
-  margin: 0.2rem;
+  margin: $thickMargin;
 }
 
 .floatingLabel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.h2 {
   color: white;
-  height: $field-height;
-  display: inline-block;
-  text-align: left;
   padding-left: 0.5rem;
   font-size: 1.4rem;
   line-height: 250%;
+  font-weight: normal;
 }
 
 .radioInput {
@@ -84,7 +137,6 @@ $long-field-multiplyer: 1.75;
 }
 
 .invalidInputContainer {
-  margin: 0.2rem;
   position: relative;
   width: 100%;
 }
@@ -100,6 +152,11 @@ $long-field-multiplyer: 1.75;
 
 .invalidInput {
   background-color: #faf0f0;
+  border: 1px solid rgb(118, 118, 118) !important;
+  border-radius: 0 !important;
+  &:hover {
+    border: 1px solid rgb(59, 59, 59) !important;
+  }
 }
 
 .invalidInputMessage {
@@ -123,13 +180,8 @@ $long-field-multiplyer: 1.75;
   color: #3f4f7a;
 }
 
-.buttonRow {
-  display: flex;
-  flex-direction: row;
-}
-
 .buttonColumn {
-  margin-left: 12em !important;
+  margin-left: 7em !important;
   justify-content: center;
 }
 
@@ -184,8 +236,14 @@ $long-field-multiplyer: 1.75;
   cursor: pointer;
 }
 
+.buttonRow {
+  display: flex;
+  flex-direction: row;
+  height: 7.2rem;
+  align-items: center;
+}
+
 .contactPrevButton {
-  margin-top: 5rem;
   width: 7.2rem;
   height: 7.2rem;
   background-image: url("/arrowcircle-left.png");
@@ -203,7 +261,6 @@ $long-field-multiplyer: 1.75;
 }
 
 .contactNextButton {
-  margin-top: 5rem;
   width: 7.2rem;
   height: 7.2rem;
   background-image: url("/arrowcircle-right.png");
@@ -218,6 +275,41 @@ $long-field-multiplyer: 1.75;
     color: #cccccc;
     background-image: url("/arrowcircle-right-disabled.png");
   }
+}
+
+.contactId {
+  width: 152px;
+  height: 54px;
+  font-family: SegoeUI;
+  font-size: 41px;
+  font-weight: 600;
+  letter-spacing: 2.87px;
+  text-align: center;
+  color: #4357ab;
+}
+
+.timestamp {
+  margin: 0 auto;
+  height: 21px;
+  font-family: SegoeUI;
+  font-size: 15px;
+  line-height: 1;
+  text-align: center;
+  color: #8e8e8e;
+}
+
+.saved {
+  color: #43ab92;
+  font-weight: bold;
+}
+
+.deleteIcon {
+  width: $delete-icon-size * 0.75;
+  min-width: $delete-icon-size * 0.75;
+  max-width: $delete-icon-size * 0.75;
+  height: $delete-icon-size * 0.75;
+  min-height: $delete-icon-size * 0.75;
+  max-height: $delete-icon-size * 0.75;
 }
 
 .deleteButton {
@@ -256,7 +348,7 @@ $long-field-multiplyer: 1.75;
   display: flex;
   flex-flow: column nowrap;
   margin: 0.6rem 0 0.6rem 1.8rem; // t r b l
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.9);
   width: 80vw;
   height: 84vh;
 }
@@ -279,7 +371,7 @@ $long-field-multiplyer: 1.75;
 .formColumn {
   display: flex;
   flex-flow: column nowrap;
-  margin: 0.5rem;
+  margin: 1rem;
 }
 
 .formRow {
@@ -307,14 +399,14 @@ $long-field-multiplyer: 1.75;
 // Note: Phone classes marked !important to overwrite react-phone-input-2 default CSS
 // =============================================================
 .phoneContainer {
-  margin: 0.2rem !important;
+  margin: ($thinMargin) !important;
 }
 
 .phoneInput {
   height: $field-height !important;
-  width: $solo-field-width * $long-field-multiplyer !important;
-  min-width: $solo-field-width * $long-field-multiplyer !important;
-  max-width: $solo-field-width * $long-field-multiplyer !important;
+  width: $long !important;
+  min-width: $long !important;
+  max-width: $long !important;
   border: 1px solid rgb(118, 118, 118) !important;
   border-radius: 0 !important;
   &:hover {
@@ -325,9 +417,9 @@ $long-field-multiplyer: 1.75;
 .phoneButton {
   margin-right: 0 !important;
   height: $field-height !important;
-  width: $solo-field-width * $long-field-multiplyer * 0.2 !important;
-  min-width: $solo-field-width * $long-field-multiplyer * 0.2 !important;
-  max-width: $solo-field-width * $long-field-multiplyer * 0.2 !important;
+  width: $long * 0.2 !important;
+  min-width: $long * 0.2 !important;
+  max-width: $long * 0.2 !important;
   border: 1px solid rgb(118, 118, 118) !important;
   border-radius: 0 !important;
   &:hover {
@@ -339,39 +431,3 @@ $long-field-multiplyer: 1.75;
   position: fixed !important;
 }
 // =============================================================
-
-.contactId {
-  width: 152px;
-  margin-top: 6rem;
-  height: 54px;
-  font-family: SegoeUI;
-  font-size: 41px;
-  font-weight: 600;
-  letter-spacing: 2.87px;
-  text-align: center;
-  color: #4357ab;
-}
-
-.savedMsg {
-  margin: 0 auto;
-  width: 151px;
-  height: 60px;
-  font-family: SegoeUI;
-  font-size: 45px;
-  font-weight: 600;
-  line-height: 1.33;
-  letter-spacing: 3.15px;
-  text-align: center;
-  color: #43ab92;
-  justify-self: center;
-}
-
-.timestamp {
-  margin: 0 auto;
-  height: 21px;
-  font-family: Poppins;
-  font-size: 15px;
-  line-height: 1;
-  text-align: center;
-  color: #8e8e8e;
-}

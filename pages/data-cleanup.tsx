@@ -20,9 +20,10 @@ import {
 import { setLocalStorage } from "../utils/set-local-storage";
 import TextField from "../components/text-field";
 import DropDownField from "../components/drop-down-field";
-import EmailFields from "../components/email-field";
-import PhoneFields from "../components/phone-field";
-import AddressFields from "../components/address-field";
+import AddressFields from "../components/address-fields";
+import EmailFields from "../components/email-fields";
+import PhoneFields from "../components/phone-fields";
+import UrlFields from "../components/url-fields";
 import DateField from "../components/date-field";
 import {
   ContactListEntry,
@@ -47,6 +48,7 @@ import {
   isAllAddressValid,
   isAllEmailValid,
   isAllPhoneValid,
+  isAllUrlValid,
 } from "../utils/form-validation";
 
 export default function DataCleanupPage(props) {
@@ -278,14 +280,17 @@ export default function DataCleanupPage(props) {
       if (formData.contactRecord) {
         allValid = contactRecordSchema.isValidSync(formData.contactRecord);
       }
-      if (formData.emails && allValid) {
-        allValid = isAllEmailValid(formData.emails);
-      }
       if (formData.addresses && allValid) {
         allValid = isAllAddressValid(formData.addresses);
       }
+      if (formData.emails && allValid) {
+        allValid = isAllEmailValid(formData.emails);
+      }
       if (formData.phones && allValid) {
         allValid = isAllPhoneValid(formData.phones);
+      }
+      if (formData.urls && allValid) {
+        allValid = isAllUrlValid(formData.urls);
       }
     }
     setIsFormValid(allValid);
@@ -829,14 +834,15 @@ export default function DataCleanupPage(props) {
                       disabled={contactNextDisabled}
                     />
                   </div>
-                  <div className={styles.timestamp}>
-                    Updated{" "}
+                  <div
+                    className={`${styles.timestamp} ${
+                      isSaved ? styles.saved : ""
+                    }`}
+                  >
+                    {isSaved ? "Saved " : "Updated "}
                     {redtailDateToFormatedString(
                       formData.contactRecord.updated_at
                     )}
-                  </div>
-                  <div className={styles.savedMsg}>
-                    {isSaved ? "Saved!" : ""}
                   </div>
 
                   <div className={styles.saveButtonContainer}>
@@ -867,16 +873,7 @@ export default function DataCleanupPage(props) {
                         <label
                           className={`${styles.floatingLabel} ${styles.short}`}
                         >
-                          Title
-                        </label>
-                      </div>
-                      <div
-                        className={`${styles.floatingHeader} ${styles.long}`}
-                      >
-                        <label
-                          className={`${styles.floatingLabel} ${styles.long}`}
-                        >
-                          Email Address
+                          <h2 className={styles.h2}>Primary</h2>
                         </label>
                       </div>
                       <div
@@ -885,17 +882,95 @@ export default function DataCleanupPage(props) {
                         <label
                           className={`${styles.floatingLabel} ${styles.short}`}
                         >
-                          Type
+                          <h2 className={styles.h2}>Title</h2>
                         </label>
                       </div>
                       <div
-                        className={`${styles.floatingHeader} ${styles.medium}`}
+                        className={`${styles.floatingHeader} ${styles.long}`}
                       >
                         <label
-                          className={`${styles.floatingLabel} ${styles.medium}`}
+                          className={`${styles.floatingLabel} ${styles.long}`}
                         >
-                          Primary?
+                          <h2 className={styles.h2}>Phone Number</h2>
                         </label>
+                      </div>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.short}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.short}`}
+                        >
+                          <h2 className={styles.h2}>Type</h2>
+                        </label>
+                      </div>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.centered} ${styles.extraShort}`}
+                      >
+                        <img
+                          src="/delete-icon.png"
+                          className={styles.deleteIcon}
+                        />
+                      </div>
+                    </div>
+                    <PhoneFields
+                      contact={formData}
+                      handleArrChange={handleArrChange} // Used by Type and Primary inputs
+                      handlePhoneChange={handlePhoneChange} // Used by Phone Number input
+                      dropdownData={dropdownData}
+                      removeContactField={removeContactField}
+                    ></PhoneFields>
+                    <div className={styles.formRowEven}>
+                      <button
+                        className={styles.addButton}
+                        onClick={addContactField("phones")}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.formColumn}>
+                    <div className={styles.formRow}>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.short}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.short}`}
+                        >
+                          <h2 className={styles.h2}>Primary</h2>
+                        </label>
+                      </div>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.short}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.short}`}
+                        >
+                          <h2 className={styles.h2}>Title</h2>
+                        </label>
+                      </div>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.long}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.long}`}
+                        >
+                          <h2 className={styles.h2}>Email Address</h2>
+                        </label>
+                      </div>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.short}`}
+                      >
+                        <label
+                          className={`${styles.floatingLabel} ${styles.short}`}
+                        >
+                          <h2 className={styles.h2}>Type</h2>
+                        </label>
+                      </div>
+                      <div
+                        className={`${styles.floatingHeader} ${styles.centered} ${styles.extraShort}`}
+                      >
+                        <img
+                          src="/delete-icon.png"
+                          className={styles.deleteIcon}
+                        />
                       </div>
                     </div>
                     <EmailFields
@@ -919,7 +994,7 @@ export default function DataCleanupPage(props) {
                         <label
                           className={`${styles.floatingLabel} ${styles.short}`}
                         >
-                          Title
+                          <h2 className={styles.h2}>Title</h2>
                         </label>
                       </div>
                       <div
@@ -928,7 +1003,7 @@ export default function DataCleanupPage(props) {
                         <label
                           className={`${styles.floatingLabel} ${styles.long}`}
                         >
-                          Phone Number
+                          <h2 className={styles.h2}>Website</h2>
                         </label>
                       </div>
                       <div
@@ -937,30 +1012,28 @@ export default function DataCleanupPage(props) {
                         <label
                           className={`${styles.floatingLabel} ${styles.short}`}
                         >
-                          Type
+                          <h2 className={styles.h2}>Type</h2>
                         </label>
                       </div>
                       <div
-                        className={`${styles.floatingHeader} ${styles.medium}`}
+                        className={`${styles.floatingHeader} ${styles.centered} ${styles.extraShort}`}
                       >
-                        <label
-                          className={`${styles.floatingLabel} ${styles.medium}`}
-                        >
-                          Primary?
-                        </label>
+                        <img
+                          src="/delete-icon.png"
+                          className={styles.deleteIcon}
+                        />
                       </div>
                     </div>
-                    <PhoneFields
+                    <UrlFields
                       contact={formData}
-                      handleArrChange={handleArrChange} // Used by Type and Primary inputs
-                      handlePhoneChange={handlePhoneChange} // Used by Phone Number input
+                      handleArrChange={handleArrChange}
                       dropdownData={dropdownData}
                       removeContactField={removeContactField}
-                    ></PhoneFields>
+                    ></UrlFields>
                     <div className={styles.formRowEven}>
                       <button
                         className={styles.addButton}
-                        onClick={addContactField("phones")}
+                        onClick={addContactField("urls")}
                       />
                     </div>
                   </div>
@@ -974,37 +1047,28 @@ export default function DataCleanupPage(props) {
                       <label
                         className={`${styles.floatingLabel} ${styles.short}`}
                       >
-                        Title
-                      </label>
-                    </div>
-                    <div className={`${styles.floatingHeader} ${styles.long}`}>
-                      <label
-                        className={`${styles.floatingLabel} ${styles.long}`}
-                      >
-                        Street Address
-                      </label>
-                    </div>
-                    <div className={`${styles.floatingHeader} ${styles.long}`}>
-                      <label
-                        className={`${styles.floatingLabel} ${styles.long}`}
-                      >
-                        Secondary Address
-                      </label>
-                    </div>
-                    <div
-                      className={`${styles.floatingHeader} ${styles.medium}`}
-                    >
-                      <label
-                        className={`${styles.floatingLabel} ${styles.medium}`}
-                      >
-                        City
+                        <h2 className={styles.h2}>Primary</h2>
                       </label>
                     </div>
                     <div className={`${styles.floatingHeader} ${styles.short}`}>
                       <label
                         className={`${styles.floatingLabel} ${styles.short}`}
                       >
-                        State
+                        <h2 className={styles.h2}>Title</h2>
+                      </label>
+                    </div>
+                    <div className={`${styles.floatingHeader} ${styles.long}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.long}`}
+                      >
+                        <h2 className={styles.h2}>Street Address</h2>
+                      </label>
+                    </div>
+                    <div className={`${styles.floatingHeader} ${styles.long}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.long}`}
+                      >
+                        <h2 className={styles.h2}>Secondary Address</h2>
                       </label>
                     </div>
                     <div
@@ -1013,14 +1077,14 @@ export default function DataCleanupPage(props) {
                       <label
                         className={`${styles.floatingLabel} ${styles.medium}`}
                       >
-                        Zip
+                        <h2 className={styles.h2}>City</h2>
                       </label>
                     </div>
                     <div className={`${styles.floatingHeader} ${styles.short}`}>
                       <label
                         className={`${styles.floatingLabel} ${styles.short}`}
                       >
-                        Type
+                        <h2 className={styles.h2}>State</h2>
                       </label>
                     </div>
                     <div
@@ -1029,8 +1093,23 @@ export default function DataCleanupPage(props) {
                       <label
                         className={`${styles.floatingLabel} ${styles.medium}`}
                       >
-                        Primary?
+                        <h2 className={styles.h2}>Zip</h2>
                       </label>
+                    </div>
+                    <div className={`${styles.floatingHeader} ${styles.short}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.short}`}
+                      >
+                        <h2 className={styles.h2}>Type</h2>
+                      </label>
+                    </div>
+                    <div
+                      className={`${styles.floatingHeader} ${styles.centered} ${styles.extraShort}`}
+                    >
+                      <img
+                        src="/delete-icon.png"
+                        className={styles.deleteIcon}
+                      />
                     </div>
                   </div>
                   <AddressFields

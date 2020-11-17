@@ -3,7 +3,7 @@
   flex-flow: column nowrap;
   justify-items: center;
   margin: 0.6rem 0 0.6rem 1.8rem; // t r b l
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.9);
   width: auto;
   height: 84vh;
 }
@@ -77,6 +77,7 @@
 
 .contactPageInput {
   color: rgba(67, 87, 171, 0.86);
+  background-color: transparent;
   font-family: SegoeUI;
   font-size: 1.7rem;
   font-weight: bold;

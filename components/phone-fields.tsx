@@ -38,8 +38,20 @@ export default function PhoneFields(props) {
       {contact && contact.phones
         ? contact.phones.map((phone, index) => (
             <div className={styles.formRow} key={phone.key}>
+              <div
+                className={`${styles.thinMargin} ${styles.centered} ${styles.short}`}
+              >
+                <input
+                  className={styles.radioInput}
+                  type="radio"
+                  name="is_primary_phone"
+                  value=""
+                  checked={phone.is_primary}
+                  onChange={props.handleArrChange(index, "phones", phone.id)}
+                />
+              </div>
               <input
-                className={`${styles.margined} ${styles.short}`}
+                className={`${styles.thinMargin} ${styles.short}`}
                 type="text"
                 name="custom_type_title"
                 value={phone.custom_type_title}
@@ -66,7 +78,7 @@ export default function PhoneFields(props) {
               />
               <div>
                 <select
-                  className={`${styles.margined} ${styles.short}`}
+                  className={`${styles.thinMargin} ${styles.short}`}
                   onChange={props.handleArrChange(index, "phones", phone.id)}
                   name="phone_type"
                   value={phone.phone_type}
@@ -84,15 +96,9 @@ export default function PhoneFields(props) {
                   )}
                 </select>
               </div>
-              <div className={styles.formRowEven}>
-                <input
-                  className={styles.radioInput}
-                  type="radio"
-                  name="is_primary_phone"
-                  value=""
-                  checked={phone.is_primary}
-                  onChange={props.handleArrChange(index, "phones", phone.id)}
-                />
+              <div
+                className={`${styles.thinMargin} ${styles.centered} ${styles.extraShort}`}
+              >
                 <button
                   className={styles.deleteButton}
                   onClick={props.removeContactField("phones", index)}

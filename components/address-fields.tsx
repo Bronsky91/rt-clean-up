@@ -104,8 +104,24 @@ export default function AddressFields(props) {
             const validZip: boolean = zipSchema.isValidSync(address);
             return (
               <div className={styles.formRow} key={address.key}>
+                <div
+                  className={`${styles.thinMargin} ${styles.centered} ${styles.short}`}
+                >
+                  <input
+                    className={styles.radioInput}
+                    type="radio"
+                    name="is_primary_address"
+                    value=""
+                    checked={address.is_primary}
+                    onChange={props.handleArrChange(
+                      index,
+                      "addresses",
+                      address.id
+                    )}
+                  />
+                </div>
                 <input
-                  className={`${styles.margined} ${styles.short}`}
+                  className={`${styles.thinMargin} ${styles.short}`}
                   type="text"
                   name="custom_type_title"
                   value={address.custom_type_title || ""}
@@ -121,7 +137,9 @@ export default function AddressFields(props) {
                     ""
                   )}
                 />
-                <div className={styles.invalidInputContainer}>
+                <div
+                  className={`${styles.invalidInputContainer} ${styles.thinMargin}`}
+                >
                   {validStreetAddress ? (
                     ""
                   ) : (
@@ -142,7 +160,7 @@ export default function AddressFields(props) {
                   />
                 </div>
                 <input
-                  className={`${styles.margined} ${styles.long}`}
+                  className={`${styles.thinMargin} ${styles.long}`}
                   type="text"
                   name="secondary_address"
                   value={address.secondary_address || ""}
@@ -152,7 +170,9 @@ export default function AddressFields(props) {
                     address.id
                   )}
                 />
-                <div className={styles.invalidInputContainer}>
+                <div
+                  className={`${styles.invalidInputContainer} ${styles.thinMargin}`}
+                >
                   {validCity ? (
                     ""
                   ) : (
@@ -173,7 +193,9 @@ export default function AddressFields(props) {
                   />
                 </div>
                 <div>
-                  <div className={styles.invalidInputContainer}>
+                  <div
+                    className={`${styles.invalidInputContainer} ${styles.thinMargin}`}
+                  >
                     {validState ? (
                       ""
                     ) : (
@@ -205,7 +227,9 @@ export default function AddressFields(props) {
                     </select>
                   </div>
                 </div>
-                <div className={styles.invalidInputContainer}>
+                <div
+                  className={`${styles.invalidInputContainer} ${styles.thinMargin}`}
+                >
                   {validZip ? (
                     ""
                   ) : (
@@ -227,7 +251,7 @@ export default function AddressFields(props) {
                 </div>
                 <div>
                   <select
-                    className={`${styles.margined} ${styles.short}`}
+                    className={`${styles.thinMargin} ${styles.short}`}
                     onChange={props.handleArrChange(
                       index,
                       "addresses",
@@ -247,19 +271,9 @@ export default function AddressFields(props) {
                     )}
                   </select>
                 </div>
-                <div className={styles.formRowEven}>
-                  <input
-                    className={styles.radioInput}
-                    type="radio"
-                    name="is_primary_address"
-                    value=""
-                    checked={address.is_primary}
-                    onChange={props.handleArrChange(
-                      index,
-                      "addresses",
-                      address.id
-                    )}
-                  />
+                <div
+                  className={`${styles.thinMargin} ${styles.centered} ${styles.extraShort}`}
+                >
                   <button
                     className={styles.deleteButton}
                     onClick={props.removeContactField("addresses", index)}

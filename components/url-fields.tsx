@@ -3,9 +3,9 @@ import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.inter
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import styles from "../styles/DataCleanupPage.module.scss";
 import { createEmptyFormData } from "../utils/create-empty-form-data";
-import { emailSchema } from "../utils/form-validation";
+import { urlSchema } from "../utils/form-validation";
 
-export default function EmailFields(props) {
+export default function UrlFields(props) {
   const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
   const parentRef = useRef(null);
   const prevContactRef = useRef(emptyFormData);
@@ -23,7 +23,7 @@ export default function EmailFields(props) {
       contact &&
       prevContactState &&
       contact.contactRecord?.id === prevContactState.contactRecord?.id &&
-      contact.emails?.length > prevContactState.emails?.length
+      contact.urls?.length > prevContactState.urls?.length
     ) {
       const scrollHeight = parentRef.current.scrollHeight;
       const height = parentRef.current.clientHeight;
@@ -34,20 +34,22 @@ export default function EmailFields(props) {
 
   return (
     <div ref={parentRef} className={styles.formColumnScroll}>
-      {contact && contact.emails
-        ? contact.emails.map((email, index) => {
-            const validAddress: boolean = emailSchema.isValidSync(email);
+      {contact && contact.urls
+        ? contact.urls.map((url, index) => {
+            const validAddress: boolean = urlSchema.isValidSync(url);
             return (
-              <div className={styles.formRow} key={email.key}>
+              <div className={styles.formRow} key={url.key}>
                 <input
-                  className={`${styles.margined} ${styles.short}`}
+                  className={`${styles.thinMargin} ${styles.short}`}
                   type="text"
                   name="custom_type_title"
-                  value={email.custom_type_title || ""}
-                  onChange={props.handleArrChange(index, "emails", email.id)}
-                  onFocus={props.handleArrChange(index, "emails", email.id, "")}
+                  value={url.custom_type_title || ""}
+                  onChange={props.handleArrChange(index, "urls", url.id)}
+                  onFocus={props.handleArrChange(index, "urls", url.id, "")}
                 />
-                <div className={styles.invalidInputContainer}>
+                <div
+                  className={`${styles.invalidInputContainer} ${styles.thinMargin}`}
+                >
                   {validAddress ? (
                     ""
                   ) : (
@@ -59,22 +61,22 @@ export default function EmailFields(props) {
                     }`}
                     type="text"
                     name="address"
-                    value={email.address || ""}
-                    onChange={props.handleArrChange(index, "emails", email.id)}
+                    value={url.address || ""}
+                    onChange={props.handleArrChange(index, "urls", url.id)}
                   />
                 </div>
 
                 <div>
                   <select
-                    className={`${styles.margined} ${styles.short}`}
-                    onChange={props.handleArrChange(index, "emails", email.id)}
-                    name="email_type"
-                    value={email.email_type}
+                    className={`${styles.thinMargin} ${styles.short}`}
+                    onChange={props.handleArrChange(index, "urls", url.id)}
+                    name="url_type"
+                    value={url.url_type}
                   >
-                    {dropdownData && dropdownData.emailTypes ? (
-                      dropdownData.emailTypes.map((emailType, index) => (
-                        <option key={index} value={emailType.id || 0}>
-                          {emailType.name || ""}
+                    {dropdownData && dropdownData.urlTypes ? (
+                      dropdownData.urlTypes.map((urlType, index) => (
+                        <option key={index} value={urlType.id || 0}>
+                          {urlType.name || ""}
                         </option>
                       ))
                     ) : (
@@ -83,17 +85,12 @@ export default function EmailFields(props) {
                   </select>
                 </div>
 
-                <div className={styles.formRowEven}>
-                  <input
-                    className={styles.radioInput}
-                    type="radio"
-                    name="is_primary_email"
-                    checked={email.is_primary}
-                    onChange={props.handleArrChange(index, "emails", email.id)}
-                  />
+                <div
+                  className={`${styles.thinMargin} ${styles.centered} ${styles.extraShort}`}
+                >
                   <button
                     className={styles.deleteButton}
-                    onClick={props.removeContactField("emails", index)}
+                    onClick={props.removeContactField("urls", index)}
                   />
                 </div>
               </div>
