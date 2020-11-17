@@ -50,6 +50,7 @@ import {
   isAllPhoneValid,
   isAllUrlValid,
 } from "../utils/form-validation";
+import ContactInterceptModal from "../components/modals/contact-intercept-modal";
 
 export default function DataCleanupPage(props) {
   const router = useRouter();
@@ -92,6 +93,22 @@ export default function DataCleanupPage(props) {
   const [isLocalStorageValid, setIsLocalStorageValid] = useState(false);
   const [localStorageApplied, setLocalStorageApplied] = useState(false);
   const [isFormValid, setIsFormValid] = useState(true);
+
+  const [
+    isContactInterceptProceedPrev,
+    setIsContactInterceptProceedPrev,
+  ] = useState(false);
+
+  const [
+    contactInterceptModalIsOpen,
+    setContactInterceptModalIsOpen,
+  ] = useState(false);
+  const openContactInterceptModal = () => {
+    setContactInterceptModalIsOpen(true);
+  };
+  const closeContactInterceptModal = () => {
+    setContactInterceptModalIsOpen(false);
+  };
 
   useEffect(() => {
     // If authenticated, check LocalStorage for Form data, then load contact data in localStorageApplied useEffect hook
@@ -512,47 +529,51 @@ export default function DataCleanupPage(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSavingContact(true);
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/rt/contact-submit`,
-        { data: formData },
-        { withCredentials: true, validateStatus: (status) => status <= 500 }
-      )
-      .then(async (res) => {
-        setSavingContact(false);
-        if (res.status == 200) {
-          // Update contact list entry to ensure last name is current
-          if (isFiltered) {
-            setFilteredContactList(
-              filteredContactList.map((contact) =>
-                contact.id === formData.contactRecord.id
-                  ? { ...contact, lastName: formData.contactRecord.last_name }
-                  : contact
-              )
-            );
-          } else {
-            setContactList(
-              contactList.map((contact) =>
-                contact.id === formData.contactRecord.id
-                  ? { ...contact, lastName: formData.contactRecord.last_name }
-                  : contact
-              )
-            );
-          }
-          // Reload contact page from Redtail as a data validation measure
-          selectContact(formData.contactRecord.id, true); // True means the contact was just saved
-        } else {
-          alert(
-            "ERROR: Looks like something went wrong updating this contact\nPlease check form and try again."
-          );
-        }
-      });
+    saveContact();
   };
 
-  const handleContactPrevClick = (e) => {
-    e.preventDefault();
+  const saveContact = async (reloadContact: boolean = true) => {
+    setSavingContact(true);
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/rt/contact-submit`,
+      { data: formData },
+      { withCredentials: true, validateStatus: (status) => status <= 500 }
+    );
+    setSavingContact(false);
+    if (res.status == 200) {
+      // Update contact list entry to ensure last name is current
+      if (isFiltered) {
+        setFilteredContactList(
+          filteredContactList.map((contact) =>
+            contact.id === formData.contactRecord.id
+              ? { ...contact, lastName: formData.contactRecord.last_name }
+              : contact
+          )
+        );
+      } else {
+        setContactList(
+          contactList.map((contact) =>
+            contact.id === formData.contactRecord.id
+              ? { ...contact, lastName: formData.contactRecord.last_name }
+              : contact
+          )
+        );
+      }
+      if (reloadContact) {
+        // Reload contact page from Redtail as a data validation measure
+        selectContact(formData.contactRecord.id, true); // True means the contact was just saved
+      }
+    } else {
+      alert(
+        "ERROR: Looks like something went wrong updating this contact.\nPlease check form and try again."
+      );
+    }
+    /* .then(async (res) => {
+        
+      });*/
+  };
 
+  const contactPrevLoad = () => {
     const contactIndex: number = isFiltered
       ? filteredContactList
           .map((contact) => contact.id)
@@ -585,9 +606,7 @@ export default function DataCleanupPage(props) {
     }
   };
 
-  const handleContactNextClick = (e) => {
-    e.preventDefault();
-
+  const contactNextLoad = () => {
     const contactIndex: number = isFiltered
       ? filteredContactList
           .map((contact) => contact.id)
@@ -617,6 +636,32 @@ export default function DataCleanupPage(props) {
       } else if (contactIndex < contactsPerPage - 1) {
         selectContact(contactList[contactIndex + 1].id);
       }
+    }
+  };
+
+  const handleContactPrevClick = async (e) => {
+    e.preventDefault();
+    if (props.isFormDirty && !isFormValid) {
+      setIsContactInterceptProceedPrev(true);
+      setContactInterceptModalIsOpen(true);
+    } else if (props.isFormDirty && isFormValid) {
+      await saveContact(false); // false param prevents page reload after save
+      contactPrevLoad();
+    } else {
+      contactPrevLoad();
+    }
+  };
+
+  const handleContactNextClick = async (e) => {
+    e.preventDefault();
+    if (props.isFormDirty && !isFormValid) {
+      setIsContactInterceptProceedPrev(false);
+      setContactInterceptModalIsOpen(true);
+    } else if (props.isFormDirty && isFormValid) {
+      await saveContact(false); // false param prevents page reload after save
+      contactNextLoad();
+    } else {
+      contactNextLoad();
     }
   };
 
@@ -1130,6 +1175,14 @@ export default function DataCleanupPage(props) {
           </LoadingOverlay>
         </LoadingOverlay>
       </div>
+
+      <ContactInterceptModal
+        modalIsOpen={contactInterceptModalIsOpen}
+        closeModal={closeContactInterceptModal}
+        isContactInterceptProceedPrev={isContactInterceptProceedPrev}
+        contactPrevLoad={contactPrevLoad}
+        contactNextLoad={contactNextLoad}
+      ></ContactInterceptModal>
     </LoadingOverlay>
   );
 }

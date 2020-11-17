@@ -1,13 +1,14 @@
 import Modal from "react-modal";
 import styles from "../../styles/RedtailModal.module.scss";
-import { useRouter } from "next/router";
 
-export default function NavInterceptModal(props) {
-  const router = useRouter();
-
+export default function ContactInterceptModal(props) {
   const handleProceed = () => {
+    if (props.isContactInterceptProceedPrev) {
+      props.contactPrevLoad();
+    } else {
+      props.contactNextLoad();
+    }
     props.closeModal();
-    router.push(props.interceptedRoute);
   };
 
   const handleCancel = () => {
@@ -25,7 +26,6 @@ export default function NavInterceptModal(props) {
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
     },
-    overlay: { zIndex: 1000 },
   };
 
   return (
