@@ -10,6 +10,7 @@ import {
   streetAddressSchema,
   zipSchema,
 } from "../utils/form-validation";
+import { formatZipInput } from "../utils/format-zip-input";
 
 export default function AddressFields(props) {
   const emptyFormData: Readonly<RedtailContactUpdate> = createEmptyFormData();
@@ -37,6 +38,11 @@ export default function AddressFields(props) {
       parentRef.current.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
     }
   }, [contact]);
+
+  const zipChangeHandler = (index: number, targetID: number) => (e) => {
+    const zip = formatZipInput(e.target.value);
+    props.handleArrChange(index, "addresses", targetID, zip)(e);
+  };
 
   const states: StateAbbr[] = [
     { long: "", short: "" },
@@ -236,11 +242,7 @@ export default function AddressFields(props) {
                     type="text"
                     name="zip"
                     value={address.zip || ""}
-                    onChange={props.handleArrChange(
-                      index,
-                      "addresses",
-                      address.id
-                    )}
+                    onChange={zipChangeHandler(index, address.id)}
                   />
                 </div>
                 <div>

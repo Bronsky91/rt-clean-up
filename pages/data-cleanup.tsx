@@ -386,10 +386,11 @@ export default function DataCleanupPage(props) {
   const handleArrChange = (
     index: number,
     arrName: string,
-    targetID: number
+    targetID: number,
+    value?: string
   ) => (e) => {
     const targetName: string = e.target.name;
-    const targetValue: string = e.target.value;
+    const targetValue: string = value !== undefined ? value : e.target.value;
     const newArr = [...formData[arrName]];
 
     if (targetName.startsWith("is_primary")) {
