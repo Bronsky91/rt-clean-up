@@ -56,7 +56,6 @@ export default function EmailFields(props) {
                   name="custom_type_title"
                   value={email.custom_type_title || ""}
                   onChange={props.handleArrChange(index, "emails", email.id)}
-                  onFocus={props.handleArrChange(index, "emails", email.id, "")}
                 />
                 <div
                   className={`${styles.invalidInputContainer} ${styles.thinMargin}`}

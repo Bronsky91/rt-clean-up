@@ -45,7 +45,6 @@ export default function UrlFields(props) {
                   name="custom_type_title"
                   value={url.custom_type_title || ""}
                   onChange={props.handleArrChange(index, "urls", url.id)}
-                  onFocus={props.handleArrChange(index, "urls", url.id, "")}
                 />
                 <div
                   className={`${styles.invalidInputContainer} ${styles.thinMargin}`}

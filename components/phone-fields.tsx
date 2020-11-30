@@ -56,7 +56,6 @@ export default function PhoneFields(props) {
                 name="custom_type_title"
                 value={phone.custom_type_title}
                 onChange={props.handleArrChange(index, "phones", phone.id)}
-                onFocus={props.handleArrChange(index, "phones", phone.id, "")}
               />
               <PhoneInput
                 containerClass={styles.phoneContainer}

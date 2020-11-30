@@ -130,12 +130,6 @@ export default function AddressFields(props) {
                     "addresses",
                     address.id
                   )}
-                  onFocus={props.handleArrChange(
-                    index,
-                    "addresses",
-                    address.id,
-                    ""
-                  )}
                 />
                 <div
                   className={`${styles.invalidInputContainer} ${styles.thinMargin}`}
