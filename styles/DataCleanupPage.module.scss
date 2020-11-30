@@ -1,6 +1,6 @@
 $field-height: 3.5rem;
-$thickMargin: 0.4rem 0.1rem;
 $thinMargin: 0.2rem 0.1rem;
+$thickMargin: 0.4rem 0.1rem;
 $radio-size: 2.2rem;
 $add-icon-size: 3.5rem;
 $delete-icon-size: 2.2rem;
@@ -190,50 +190,45 @@ $extraLong: 25rem;
   flex-direction: column;
 }
 
-.saveButton {
-  margin: 2rem auto;
-  opacity: 0.95;
-  box-shadow: 0 0.3rem 0.6rem 0 rgba(0, 0, 0, 0.16);
+.saveContact {
   background-color: #6896d6;
   font-size: 4.2rem;
-  font-weight: bold;
-  line-height: 1.32;
   letter-spacing: 0.287rem;
-  color: white;
-  text-align: center;
-  border: none;
   width: 15rem;
-  border-radius: 3rem;
-  &:disabled {
-    background-color: #cccccc;
-  }
 }
 
-.saveButton:hover {
-  cursor: pointer;
+.undoContact {
+  background-color: #d6687b;
+  font-size: 1.4rem;
+  letter-spacing: 0.147rem;
+  width: 7.5rem;
+  min-height: 2.5rem;
 }
 
-.undoButton {
+.deleteContact {
+  background-color: #d6687b;
+  font-size: 1.4rem;
+  letter-spacing: 0.147rem;
+  width: 7.5rem;
+  min-height: 2.5rem;
+}
+
+.formButton {
   margin: 0.5rem auto;
   opacity: 0.95;
   box-shadow: 0 0.3rem 0.6rem 0 rgba(0, 0, 0, 0.16);
-  background-color: #d6687b;
-  font-size: 2.1rem;
   font-weight: bold;
-  line-height: 1.33;
-  letter-spacing: 0.147rem;
+  line-height: 1.32;
   color: white;
   text-align: center;
   border: none;
-  width: 7.5rem;
   border-radius: 3rem;
   &:disabled {
     background-color: #cccccc;
   }
-}
-
-.undoButton:hover {
-  cursor: pointer;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .buttonRow {
@@ -385,6 +380,15 @@ $extraLong: 25rem;
   align-items: center;
   align-content: center;
   justify-content: space-evenly;
+  width: 100%;
+}
+
+.formRowSpaceAround {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
   width: 100%;
 }
 

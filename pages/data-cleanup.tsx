@@ -914,21 +914,28 @@ export default function DataCleanupPage(props) {
                 <div className={styles.saveButtonContainer}>
                   <button
                     type="submit"
-                    className={styles.saveButton}
+                    className={`${styles.formButton} ${styles.saveContact}`}
                     disabled={!props.isFormDirty || !isFormValid}
                   >
                     SAVE
                   </button>
-                  <button
-                    className={styles.undoButton}
-                    onClick={handleUndo}
-                    disabled={!props.isFormDirty}
+                  <div
+                    className={`${styles.formRowEven} ${styles.thickMargin}`}
                   >
-                    UNDO
-                  </button>
-                  <button className={styles.undoButton} onClick={handleDelete}>
-                    Delete
-                  </button>
+                    <button
+                      className={`${styles.formButton} ${styles.undoContact}`}
+                      onClick={handleUndo}
+                      disabled={!props.isFormDirty}
+                    >
+                      UNDO
+                    </button>
+                    <button
+                      className={`${styles.formButton} ${styles.deleteContact}`}
+                      onClick={handleDelete}
+                    >
+                      DELETE
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
