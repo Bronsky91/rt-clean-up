@@ -25,3 +25,8 @@ export interface DataCleanUpLocalStorage {
   selectedContactID?: number;
   dropdownData?: Readonly<RedtailSettingsData>;
 }
+
+export interface ContactSpinner {
+  msg?: string;
+  on: boolean;
+}
