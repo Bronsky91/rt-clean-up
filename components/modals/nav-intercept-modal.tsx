@@ -29,12 +29,7 @@ export default function NavInterceptModal(props) {
   };
 
   return (
-    <Modal
-      isOpen={props.modalIsOpen}
-      style={customStyles}
-      contentLabel="Test"
-      ariaHideApp={false}
-    >
+    <Modal isOpen={props.modalIsOpen} style={customStyles} ariaHideApp={false}>
       <div className={styles.container}>
         <div className={styles.h1}>
           <span className={styles.warning}>WARNING:</span>
@@ -42,7 +37,7 @@ export default function NavInterceptModal(props) {
           Unsaved changes will be lost, are you sure you wish to navigate away?
         </div>
 
-        <div className={styles.navInterceptButtonContainer}>
+        <div className={styles.buttonContainer}>
           <button className={styles.blueButton} onClick={handleProceed}>
             PROCEED
           </button>

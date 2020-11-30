@@ -52,6 +52,7 @@ import {
   isAllUrlValid,
 } from "../utils/form-validation";
 import ContactInterceptModal from "../components/modals/contact-intercept-modal";
+import DeleteContactModal from "../components/modals/delete-contact-modal";
 
 export default function DataCleanupPage(props) {
   const router = useRouter();
@@ -110,6 +111,16 @@ export default function DataCleanupPage(props) {
   };
   const closeContactInterceptModal = () => {
     setContactInterceptModalIsOpen(false);
+  };
+
+  const [deleteContactModalIsOpen, setDeleteContactModalIsOpen] = useState(
+    false
+  );
+  const openDeleteContactModal = () => {
+    setDeleteContactModalIsOpen(true);
+  };
+  const closeDeleteContactModal = () => {
+    setDeleteContactModalIsOpen(false);
   };
 
   useEffect(() => {
@@ -535,8 +546,7 @@ export default function DataCleanupPage(props) {
 
   const handleDelete = (e) => {
     e.preventDefault();
-    // TODO: Warning modal before deleteContact()
-    deleteContact();
+    openDeleteContactModal();
   };
 
   const deleteContact = async () => {
@@ -665,7 +675,7 @@ export default function DataCleanupPage(props) {
     e.preventDefault();
     if (props.isFormDirty && !isFormValid) {
       setIsContactInterceptProceedPrev(true);
-      setContactInterceptModalIsOpen(true);
+      openContactInterceptModal();
     } else if (props.isFormDirty && isFormValid) {
       await saveContact(false); // false param prevents page reload after save
       contactPrevLoad();
@@ -678,7 +688,7 @@ export default function DataCleanupPage(props) {
     e.preventDefault();
     if (props.isFormDirty && !isFormValid) {
       setIsContactInterceptProceedPrev(false);
-      setContactInterceptModalIsOpen(true);
+      openContactInterceptModal();
     } else if (props.isFormDirty && isFormValid) {
       await saveContact(false); // false param prevents page reload after save
       contactNextLoad();
@@ -1186,6 +1196,11 @@ export default function DataCleanupPage(props) {
         contactPrevLoad={contactPrevLoad}
         contactNextLoad={contactNextLoad}
       ></ContactInterceptModal>
+      <DeleteContactModal>
+        modalIsOpen={deleteContactModalIsOpen}
+        closeModal={closeDeleteContactModal}
+        deleteContact={deleteContact}
+      </DeleteContactModal>
     </LoadingOverlay>
   );
 }
