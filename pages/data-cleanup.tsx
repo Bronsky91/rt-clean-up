@@ -87,6 +87,8 @@ export default function DataCleanupPage(props) {
   const [contactSpinner, setContactSpinner] = useState(emptyContactSpinner);
   const [contactPrevDisabled, setContactPrevDisabled] = useState(false);
   const [contactNextDisabled, setContactNextDisabled] = useState(false);
+  const [contactDeleted, setContactDeleted] = useState(false);
+  const [contactDeletedNewIndex, setContactDeletedNewIndex] = useState(0);
   const [selectedFilter, setSelectedFilter] = useState("status_id");
   const [filterData, setFilterData] = useState(emptyFilterData);
   const [appliedFilterData, setAppliedFilterData] = useState(emptyFilterData);
@@ -549,17 +551,92 @@ export default function DataCleanupPage(props) {
     openDeleteContactModal();
   };
 
+  useEffect(() => {
+    // when contact is flagged as deleted, reload appropriate new page and contact index
+    if (contactDeleted) {
+      changePage(
+        isFiltered ? filterPageData.currentPage : pageData.currentPage,
+        contactDeletedNewIndex
+      );
+      setContactDeleted(false);
+    }
+  }, [contactDeleted]);
+
   const deleteContact = async () => {
+    const deleteID = formData.contactRecord.id;
+    // process deletion
     setContactSpinner({ msg: "Deleting Contact", on: true });
     const res = await axios.delete(
-      `${process.env.NEXT_PUBLIC_API_URL}/rt/delete-contact?id=${formData.contactRecord.id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/rt/delete-contact?id=${deleteID}`,
       { withCredentials: true }
     );
     setContactSpinner({ on: false });
     if (res.status === 200) {
-      // TODO: Change page to same page to reload list?
-      // changePage(pageData.currentPage, contactsPerPage - 1);
-      contactNextLoad();
+      // refresh contact data to clear out deleted contact
+      if (isFiltered) {
+        const currentIndex = filteredContactList.findIndex(
+          (contact) => contact.id === formData.contactRecord.id
+        );
+        const isLastContact = currentIndex === filteredContactList.length - 1;
+        const isFirstContactOnPage = currentIndex === filterPageData.startIndex;
+
+        // if contact is at the end of the list as well as the first (and thus only) contact on the current page, the page will need rolled back 1
+        const updatedPage =
+          isLastContact && isFirstContactOnPage
+            ? filterPageData.currentPage - 1
+            : filterPageData.currentPage;
+        const startIndex = contactsPerPage * updatedPage - contactsPerPage;
+
+        // if contact is at the end of the list, index should roll back 1, otherwise stay the same
+        setContactDeletedNewIndex(
+          isLastContact
+            ? currentIndex - 1 - startIndex
+            : currentIndex - startIndex
+        );
+
+        // update filtered page data and contact list, then set contactDeleted to true so changePage can be called after new values have rendered
+        setFilterPageData({
+          ...filterPageData,
+          currentPage: updatedPage,
+          startIndex: startIndex,
+          endIndex: contactsPerPage * updatedPage,
+        });
+        setFilteredContactList(
+          filteredContactList.filter((contact) => {
+            return contact.id !== deleteID;
+          })
+        );
+      } else {
+        const currentIndex = contactList.findIndex(
+          (contact) => contact.id === formData.contactRecord.id
+        );
+        const isLastContact =
+          currentIndex +
+            pageData.currentPage * contactsPerPage -
+            contactsPerPage ===
+          pageData.totalContacts - 1;
+        const isFirstContactOnPage = currentIndex === 0;
+
+        // if contact is at end of the list and the first on a subsequent page, index needs set to prior page's final contact and page needs rolled back 1
+        setContactDeletedNewIndex(
+          isLastContact
+            ? isFirstContactOnPage
+              ? pageData.currentPage > 1
+                ? contactsPerPage - 1
+                : 0
+              : currentIndex - 1
+            : currentIndex
+        );
+        const updatedPage =
+          isLastContact && isFirstContactOnPage
+            ? pageData.currentPage - 1
+            : pageData.currentPage;
+        setPageData({
+          ...pageData,
+          currentPage: updatedPage,
+        });
+      }
+      setContactDeleted(true);
     } else {
       alert(
         "ERROR: Looks like something went wrong deleting this contact.\nPlease reload the page and try again."
@@ -607,12 +684,12 @@ export default function DataCleanupPage(props) {
 
   const contactPrevLoad = () => {
     const contactIndex: number = isFiltered
-      ? filteredContactList
-          .map((contact) => contact.id)
-          .indexOf(formData.contactRecord.id)
-      : contactList
-          .map((contact) => contact.id)
-          .indexOf(formData.contactRecord.id);
+      ? filteredContactList.findIndex(
+          (contact) => contact.id === formData.contactRecord.id
+        )
+      : contactList.findIndex(
+          (contact) => contact.id === formData.contactRecord.id
+        );
     if (contactIndex === -1) return; // -1 indicates current contact's ID was not found in contact list
 
     if (isFiltered) {
@@ -640,12 +717,12 @@ export default function DataCleanupPage(props) {
 
   const contactNextLoad = () => {
     const contactIndex: number = isFiltered
-      ? filteredContactList
-          .map((contact) => contact.id)
-          .indexOf(formData.contactRecord.id)
-      : contactList
-          .map((contact) => contact.id)
-          .indexOf(formData.contactRecord.id);
+      ? filteredContactList.findIndex(
+          (contact) => contact.id === formData.contactRecord.id
+        )
+      : contactList.findIndex(
+          (contact) => contact.id === formData.contactRecord.id
+        );
     if (contactIndex === -1) return; // -1 indicates current contact's ID was not found in contact list
 
     if (isFiltered) {
@@ -1196,11 +1273,12 @@ export default function DataCleanupPage(props) {
         contactPrevLoad={contactPrevLoad}
         contactNextLoad={contactNextLoad}
       ></ContactInterceptModal>
-      <DeleteContactModal>
+
+      <DeleteContactModal
         modalIsOpen={deleteContactModalIsOpen}
         closeModal={closeDeleteContactModal}
         deleteContact={deleteContact}
-      </DeleteContactModal>
+      ></DeleteContactModal>
     </LoadingOverlay>
   );
 }
