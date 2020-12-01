@@ -33,6 +33,7 @@ import {
   RedtailContactListRec,
 } from "../interfaces/redtail-contact-list.interface";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
+import { ContactSpinner } from "../interfaces/linkpoint-form-interface";
 import {
   ContactTypes,
   RedtailContactUpdate,
@@ -51,6 +52,7 @@ import {
   isAllUrlValid,
 } from "../utils/form-validation";
 import ContactInterceptModal from "../components/modals/contact-intercept-modal";
+import DeleteContactModal from "../components/modals/delete-contact-modal";
 
 export default function DataCleanupPage(props) {
   const router = useRouter();
@@ -66,6 +68,8 @@ export default function DataCleanupPage(props) {
   const emptyContactList: Readonly<
     ContactListEntry[]
   > = createEmptyContactList();
+  const emptyContactSpinner: ContactSpinner = { on: false };
+
   const [formData, setFormData] = useState(emptyFormData);
   const [originalFormData, setOriginalFormData] = useState(emptyFormData);
   const [contactList, setContactList] = useState(emptyContactList);
@@ -80,10 +84,11 @@ export default function DataCleanupPage(props) {
   const [pageInputText, setPageInputText] = useState("");
   const [dropdownData, setDropdownData] = useState(emptyDropDowns);
   const [loadingPage, setLoadingPage] = useState(true);
-  const [loadingContact, setLoadingContact] = useState(false);
-  const [savingContact, setSavingContact] = useState(false);
+  const [contactSpinner, setContactSpinner] = useState(emptyContactSpinner);
   const [contactPrevDisabled, setContactPrevDisabled] = useState(false);
   const [contactNextDisabled, setContactNextDisabled] = useState(false);
+  const [contactDeleted, setContactDeleted] = useState(false);
+  const [contactDeletedNewIndex, setContactDeletedNewIndex] = useState(0);
   const [selectedFilter, setSelectedFilter] = useState("status_id");
   const [filterData, setFilterData] = useState(emptyFilterData);
   const [appliedFilterData, setAppliedFilterData] = useState(emptyFilterData);
@@ -108,6 +113,16 @@ export default function DataCleanupPage(props) {
   };
   const closeContactInterceptModal = () => {
     setContactInterceptModalIsOpen(false);
+  };
+
+  const [deleteContactModalIsOpen, setDeleteContactModalIsOpen] = useState(
+    false
+  );
+  const openDeleteContactModal = () => {
+    setDeleteContactModalIsOpen(true);
+  };
+  const closeDeleteContactModal = () => {
+    setDeleteContactModalIsOpen(false);
   };
 
   useEffect(() => {
@@ -451,7 +466,7 @@ export default function DataCleanupPage(props) {
   };
 
   const selectContact = (id: number, saved?: boolean) => {
-    setLoadingContact(true);
+    setContactSpinner({ on: true, msg: "Loading Contact" });
     setSelectedContactID(id);
     getContactAndPopulateForm(
       setOriginalFormData,
@@ -459,7 +474,7 @@ export default function DataCleanupPage(props) {
       formData,
       id
     ).then(() => {
-      setLoadingContact(false);
+      setContactSpinner({ on: false });
       setIsSaved(saved);
     });
   };
@@ -532,15 +547,113 @@ export default function DataCleanupPage(props) {
     saveContact();
   };
 
+  const handleDelete = (e) => {
+    e.preventDefault();
+    openDeleteContactModal();
+  };
+
+  useEffect(() => {
+    // when contact is flagged as deleted, reload appropriate new page and contact index
+    if (contactDeleted) {
+      changePage(
+        isFiltered ? filterPageData.currentPage : pageData.currentPage,
+        contactDeletedNewIndex
+      );
+      setContactDeleted(false);
+    }
+  }, [contactDeleted]);
+
+  const deleteContact = async () => {
+    const deleteID = formData.contactRecord.id;
+    // process deletion
+    setContactSpinner({ msg: "Deleting Contact", on: true });
+    const res = await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_URL}/rt/delete-contact?id=${deleteID}`,
+      { withCredentials: true }
+    );
+    setContactSpinner({ on: false });
+    if (res.status === 200) {
+      // refresh contact data to clear out deleted contact
+      if (isFiltered) {
+        const currentIndex = filteredContactList.findIndex(
+          (contact) => contact.id === formData.contactRecord.id
+        );
+        const isLastContact = currentIndex === filteredContactList.length - 1;
+        const isFirstContactOnPage = currentIndex === filterPageData.startIndex;
+
+        // if contact is at the end of the list as well as the first (and thus only) contact on the current page, the page will need rolled back 1
+        const updatedPage =
+          isLastContact && isFirstContactOnPage
+            ? filterPageData.currentPage - 1
+            : filterPageData.currentPage;
+        const startIndex = contactsPerPage * updatedPage - contactsPerPage;
+
+        // if contact is at the end of the list, index should roll back 1, otherwise stay the same
+        setContactDeletedNewIndex(
+          isLastContact
+            ? currentIndex - 1 - startIndex
+            : currentIndex - startIndex
+        );
+
+        // update filtered page data and contact list, then set contactDeleted to true so changePage can be called after new values have rendered
+        setFilterPageData({
+          ...filterPageData,
+          currentPage: updatedPage,
+          startIndex: startIndex,
+          endIndex: contactsPerPage * updatedPage,
+        });
+        setFilteredContactList(
+          filteredContactList.filter((contact) => {
+            return contact.id !== deleteID;
+          })
+        );
+      } else {
+        const currentIndex = contactList.findIndex(
+          (contact) => contact.id === formData.contactRecord.id
+        );
+        const isLastContact =
+          currentIndex +
+            pageData.currentPage * contactsPerPage -
+            contactsPerPage ===
+          pageData.totalContacts - 1;
+        const isFirstContactOnPage = currentIndex === 0;
+
+        // if contact is at end of the list and the first on a subsequent page, index needs set to prior page's final contact and page needs rolled back 1
+        setContactDeletedNewIndex(
+          isLastContact
+            ? isFirstContactOnPage
+              ? pageData.currentPage > 1
+                ? contactsPerPage - 1
+                : 0
+              : currentIndex - 1
+            : currentIndex
+        );
+        const updatedPage =
+          isLastContact && isFirstContactOnPage
+            ? pageData.currentPage - 1
+            : pageData.currentPage;
+        setPageData({
+          ...pageData,
+          currentPage: updatedPage,
+        });
+      }
+      setContactDeleted(true);
+    } else {
+      alert(
+        "ERROR: Looks like something went wrong deleting this contact.\nPlease reload the page and try again."
+      );
+    }
+  };
+
   const saveContact = async (reloadContact: boolean = true) => {
-    setSavingContact(true);
+    setContactSpinner({ msg: "Saving Contact", on: true });
     const res = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/rt/contact-submit`,
       { data: formData },
       { withCredentials: true, validateStatus: (status) => status <= 500 }
     );
-    setSavingContact(false);
-    if (res.status == 200) {
+    setContactSpinner({ msg: "", on: false });
+    if (res.status === 200) {
       // Update contact list entry to ensure last name is current
       if (isFiltered) {
         setFilteredContactList(
@@ -572,12 +685,12 @@ export default function DataCleanupPage(props) {
 
   const contactPrevLoad = () => {
     const contactIndex: number = isFiltered
-      ? filteredContactList
-          .map((contact) => contact.id)
-          .indexOf(formData.contactRecord.id)
-      : contactList
-          .map((contact) => contact.id)
-          .indexOf(formData.contactRecord.id);
+      ? filteredContactList.findIndex(
+          (contact) => contact.id === formData.contactRecord.id
+        )
+      : contactList.findIndex(
+          (contact) => contact.id === formData.contactRecord.id
+        );
     if (contactIndex === -1) return; // -1 indicates current contact's ID was not found in contact list
 
     if (isFiltered) {
@@ -605,12 +718,12 @@ export default function DataCleanupPage(props) {
 
   const contactNextLoad = () => {
     const contactIndex: number = isFiltered
-      ? filteredContactList
-          .map((contact) => contact.id)
-          .indexOf(formData.contactRecord.id)
-      : contactList
-          .map((contact) => contact.id)
-          .indexOf(formData.contactRecord.id);
+      ? filteredContactList.findIndex(
+          (contact) => contact.id === formData.contactRecord.id
+        )
+      : contactList.findIndex(
+          (contact) => contact.id === formData.contactRecord.id
+        );
     if (contactIndex === -1) return; // -1 indicates current contact's ID was not found in contact list
 
     if (isFiltered) {
@@ -640,7 +753,7 @@ export default function DataCleanupPage(props) {
     e.preventDefault();
     if (props.isFormDirty && !isFormValid) {
       setIsContactInterceptProceedPrev(true);
-      setContactInterceptModalIsOpen(true);
+      openContactInterceptModal();
     } else if (props.isFormDirty && isFormValid) {
       await saveContact(false); // false param prevents page reload after save
       contactPrevLoad();
@@ -653,7 +766,7 @@ export default function DataCleanupPage(props) {
     e.preventDefault();
     if (props.isFormDirty && !isFormValid) {
       setIsContactInterceptProceedPrev(false);
-      setContactInterceptModalIsOpen(true);
+      openContactInterceptModal();
     } else if (props.isFormDirty && isFormValid) {
       await saveContact(false); // false param prevents page reload after save
       contactNextLoad();
@@ -699,389 +812,222 @@ export default function DataCleanupPage(props) {
           setShowFilters={setShowFilters}
           selectedContactID={selectedContactID}
         ></ContactListPanel>
-        <LoadingOverlay active={savingContact} spinner text="Saving Contact">
-          <LoadingOverlay
-            active={loadingContact}
-            spinner
-            text="Loading Contact"
+        <LoadingOverlay
+          active={contactSpinner.on}
+          spinner
+          text={contactSpinner.msg}
+        >
+          <form
+            className={styles.editPanel}
+            autoComplete="off"
+            onSubmit={handleSubmit}
           >
-            <form
-              className={styles.editPanel}
-              autoComplete="off"
-              onSubmit={handleSubmit}
-            >
-              <div className={styles.formRow}>
-                <div className={styles.formColumn}>
-                  {isIndividual(formData) ? (
-                    <>
-                      <DropDownField
-                        label="Salutation"
-                        fieldName="salutation_id"
-                        fieldValue={formData.contactRecord?.salutation_id}
-                        dropDownItems={dropdownData.salutations}
-                        handleChange={handleChange}
-                      ></DropDownField>
+            <div className={styles.formRow}>
+              <div className={styles.formColumn}>
+                {isIndividual(formData) ? (
+                  <>
+                    <DropDownField
+                      label="Salutation"
+                      fieldName="salutation_id"
+                      fieldValue={formData.contactRecord?.salutation_id}
+                      dropDownItems={dropdownData.salutations}
+                      handleChange={handleChange}
+                    ></DropDownField>
 
-                      <TextField
-                        label="First Name"
-                        fieldName="first_name"
-                        fieldValue={formData.contactRecord?.first_name}
-                        handleChange={handleChange}
-                      ></TextField>
-                      <TextField
-                        label="Middle Name"
-                        fieldName="middle_name"
-                        fieldValue={formData.contactRecord?.middle_name}
-                        handleChange={handleChange}
-                      ></TextField>
+                    <TextField
+                      label="First Name"
+                      fieldName="first_name"
+                      fieldValue={formData.contactRecord?.first_name}
+                      handleChange={handleChange}
+                    ></TextField>
+                    <TextField
+                      label="Middle Name"
+                      fieldName="middle_name"
+                      fieldValue={formData.contactRecord?.middle_name}
+                      handleChange={handleChange}
+                    ></TextField>
 
-                      <TextField
-                        label="Last Name"
-                        fieldName="last_name"
-                        fieldValue={formData.contactRecord?.last_name}
-                        handleChange={handleChange}
-                      ></TextField>
+                    <TextField
+                      label="Last Name"
+                      fieldName="last_name"
+                      fieldValue={formData.contactRecord?.last_name}
+                      handleChange={handleChange}
+                    ></TextField>
 
-                      <TextField
-                        label="Nickname"
-                        fieldName="nickname"
-                        fieldValue={formData.contactRecord?.nickname}
-                        handleChange={handleChange}
-                      ></TextField>
+                    <TextField
+                      label="Nickname"
+                      fieldName="nickname"
+                      fieldValue={formData.contactRecord?.nickname}
+                      handleChange={handleChange}
+                    ></TextField>
 
-                      <DropDownField
-                        label="Gender"
-                        fieldName="gender_id"
-                        fieldValue={formData.contactRecord?.gender_id}
-                        dropDownItems={dropdownData.genderTypes}
-                        handleChange={handleChange}
-                      ></DropDownField>
-                    </>
-                  ) : (
-                    <>
-                      <TextField
-                        label="Company Name"
-                        fieldName="company_name"
-                        fieldValue={formData.contactRecord?.company_name}
-                        handleChange={handleChange}
-                      ></TextField>
-                    </>
+                    <DropDownField
+                      label="Gender"
+                      fieldName="gender_id"
+                      fieldValue={formData.contactRecord?.gender_id}
+                      dropDownItems={dropdownData.genderTypes}
+                      handleChange={handleChange}
+                    ></DropDownField>
+                  </>
+                ) : (
+                  <>
+                    <TextField
+                      label="Company Name"
+                      fieldName="company_name"
+                      fieldValue={formData.contactRecord?.company_name}
+                      handleChange={handleChange}
+                    ></TextField>
+                  </>
+                )}
+              </div>
+
+              <div className={styles.formColumn}>
+                <DropDownField
+                  label="Status"
+                  fieldName="status_id"
+                  fieldValue={formData.contactRecord?.status_id}
+                  dropDownItems={dropdownData.status_id}
+                  handleChange={handleChange}
+                ></DropDownField>
+
+                <DropDownField
+                  label="Category"
+                  fieldName="category_id"
+                  fieldValue={formData.contactRecord?.category_id}
+                  dropDownItems={dropdownData.category_id}
+                  handleChange={handleChange}
+                ></DropDownField>
+
+                <DropDownField
+                  label="Source"
+                  fieldName="source_id"
+                  fieldValue={formData.contactRecord?.source_id}
+                  dropDownItems={dropdownData.source_id}
+                  handleChange={handleChange}
+                ></DropDownField>
+
+                <TextField
+                  label="Referred By"
+                  fieldName="referred_by"
+                  fieldValue={formData.contactRecord?.referred_by}
+                  handleChange={handleChange}
+                ></TextField>
+
+                <DropDownField
+                  label="Servicing Advisor"
+                  fieldName="servicing_advisor_id"
+                  fieldValue={formData.contactRecord?.servicing_advisor_id}
+                  dropDownItems={dropdownData.servicingAdvisors}
+                  handleChange={handleChange}
+                ></DropDownField>
+
+                <DropDownField
+                  label="Writing Advisor"
+                  fieldName="writing_advisor_id"
+                  fieldValue={formData.contactRecord?.writing_advisor_id}
+                  dropDownItems={dropdownData.writingAdvisors}
+                  handleChange={handleChange}
+                ></DropDownField>
+              </div>
+
+              <div className={styles.formColumn}>
+                <TextField
+                  label="Tax ID"
+                  fieldName="tax_id"
+                  fieldValue={formData.contactRecord?.tax_id}
+                  handleChange={handleChange}
+                ></TextField>
+
+                <DateField
+                  label="Client Since"
+                  fieldName="client_since"
+                  fieldValue={formData.contactRecord?.client_since}
+                  handleDateChange={handleDateChange}
+                ></DateField>
+
+                {isIndividual(formData) ? (
+                  <>
+                    <DateField
+                      label="Date of Birth"
+                      fieldName="dob"
+                      fieldValue={formData.contactRecord?.dob}
+                      handleDateChange={handleDateChange}
+                    ></DateField>
+
+                    <DropDownField
+                      label="Marital Status"
+                      fieldName="marital_status_id"
+                      fieldValue={formData.contactRecord?.marital_status_id}
+                      dropDownItems={dropdownData.maritalTypes}
+                      handleChange={handleChange}
+                    ></DropDownField>
+
+                    <TextField
+                      label="Job Title"
+                      fieldName="job_title"
+                      fieldValue={formData.contactRecord?.job_title}
+                      handleChange={handleChange}
+                    ></TextField>
+                  </>
+                ) : null}
+              </div>
+
+              <div className={`${styles.formColumn} ${styles.buttonColumn}`}>
+                <div className={styles.buttonRow}>
+                  <button
+                    className={styles.contactPrevButton}
+                    onClick={handleContactPrevClick}
+                    disabled={contactPrevDisabled}
+                  />
+                  <div className={styles.contactId}>
+                    {formData.contactRecord.id}
+                  </div>
+                  <button
+                    className={styles.contactNextButton}
+                    onClick={handleContactNextClick}
+                    disabled={contactNextDisabled}
+                  />
+                </div>
+                <div
+                  className={`${styles.timestamp} ${
+                    isSaved ? styles.saved : ""
+                  }`}
+                >
+                  {isSaved ? "Saved " : "Updated "}
+                  {redtailDateToFormatedString(
+                    formData.contactRecord.updated_at
                   )}
                 </div>
 
-                <div className={styles.formColumn}>
-                  <DropDownField
-                    label="Status"
-                    fieldName="status_id"
-                    fieldValue={formData.contactRecord?.status_id}
-                    dropDownItems={dropdownData.status_id}
-                    handleChange={handleChange}
-                  ></DropDownField>
-
-                  <DropDownField
-                    label="Category"
-                    fieldName="category_id"
-                    fieldValue={formData.contactRecord?.category_id}
-                    dropDownItems={dropdownData.category_id}
-                    handleChange={handleChange}
-                  ></DropDownField>
-
-                  <DropDownField
-                    label="Source"
-                    fieldName="source_id"
-                    fieldValue={formData.contactRecord?.source_id}
-                    dropDownItems={dropdownData.source_id}
-                    handleChange={handleChange}
-                  ></DropDownField>
-
-                  <TextField
-                    label="Referred By"
-                    fieldName="referred_by"
-                    fieldValue={formData.contactRecord?.referred_by}
-                    handleChange={handleChange}
-                  ></TextField>
-
-                  <DropDownField
-                    label="Servicing Advisor"
-                    fieldName="servicing_advisor_id"
-                    fieldValue={formData.contactRecord?.servicing_advisor_id}
-                    dropDownItems={dropdownData.servicingAdvisors}
-                    handleChange={handleChange}
-                  ></DropDownField>
-
-                  <DropDownField
-                    label="Writing Advisor"
-                    fieldName="writing_advisor_id"
-                    fieldValue={formData.contactRecord?.writing_advisor_id}
-                    dropDownItems={dropdownData.writingAdvisors}
-                    handleChange={handleChange}
-                  ></DropDownField>
-                </div>
-
-                <div className={styles.formColumn}>
-                  <TextField
-                    label="Tax ID"
-                    fieldName="tax_id"
-                    fieldValue={formData.contactRecord?.tax_id}
-                    handleChange={handleChange}
-                  ></TextField>
-
-                  <DateField
-                    label="Client Since"
-                    fieldName="client_since"
-                    fieldValue={formData.contactRecord?.client_since}
-                    handleDateChange={handleDateChange}
-                  ></DateField>
-
-                  {isIndividual(formData) ? (
-                    <>
-                      <DateField
-                        label="Date of Birth"
-                        fieldName="dob"
-                        fieldValue={formData.contactRecord?.dob}
-                        handleDateChange={handleDateChange}
-                      ></DateField>
-
-                      <DropDownField
-                        label="Marital Status"
-                        fieldName="marital_status_id"
-                        fieldValue={formData.contactRecord?.marital_status_id}
-                        dropDownItems={dropdownData.maritalTypes}
-                        handleChange={handleChange}
-                      ></DropDownField>
-
-                      <TextField
-                        label="Job Title"
-                        fieldName="job_title"
-                        fieldValue={formData.contactRecord?.job_title}
-                        handleChange={handleChange}
-                      ></TextField>
-                    </>
-                  ) : null}
-                </div>
-
-                <div className={`${styles.formColumn} ${styles.buttonColumn}`}>
-                  <div className={styles.buttonRow}>
-                    <button
-                      className={styles.contactPrevButton}
-                      onClick={handleContactPrevClick}
-                      disabled={contactPrevDisabled}
-                    />
-                    <div className={styles.contactId}>
-                      {formData.contactRecord.id}
-                    </div>
-                    <button
-                      className={styles.contactNextButton}
-                      onClick={handleContactNextClick}
-                      disabled={contactNextDisabled}
-                    />
-                  </div>
-                  <div
-                    className={`${styles.timestamp} ${
-                      isSaved ? styles.saved : ""
-                    }`}
+                <div className={styles.saveButtonContainer}>
+                  <button
+                    type="submit"
+                    className={`${styles.formButton} ${styles.saveContact}`}
+                    disabled={!props.isFormDirty || !isFormValid}
                   >
-                    {isSaved ? "Saved " : "Updated "}
-                    {redtailDateToFormatedString(
-                      formData.contactRecord.updated_at
-                    )}
-                  </div>
-
-                  <div className={styles.saveButtonContainer}>
+                    SAVE
+                  </button>
+                  <div
+                    className={`${styles.formRowEven} ${styles.thickMargin}`}
+                  >
                     <button
-                      type="submit"
-                      className={styles.saveButton}
-                      disabled={!props.isFormDirty || !isFormValid}
-                    >
-                      SAVE
-                    </button>
-                    <button
-                      className={styles.undoButton}
+                      className={`${styles.formButton} ${styles.undoContact}`}
                       onClick={handleUndo}
                       disabled={!props.isFormDirty}
                     >
                       UNDO
                     </button>
+                    <button
+                      className={`${styles.formButton} ${styles.deleteContact}`}
+                      onClick={handleDelete}
+                    >
+                      DELETE
+                    </button>
                   </div>
                 </div>
               </div>
-              <div className={styles.formRow}>
-                <div className={styles.formRow}>
-                  <div className={styles.formColumn}>
-                    <div className={styles.formRow}>
-                      <div
-                        className={`${styles.floatingHeader} ${styles.short}`}
-                      >
-                        <label
-                          className={`${styles.floatingLabel} ${styles.short}`}
-                        >
-                          <h2 className={styles.h2}>Primary</h2>
-                        </label>
-                      </div>
-                      <div
-                        className={`${styles.floatingHeader} ${styles.short}`}
-                      >
-                        <label
-                          className={`${styles.floatingLabel} ${styles.short}`}
-                        >
-                          <h2 className={styles.h2}>Title</h2>
-                        </label>
-                      </div>
-                      <div
-                        className={`${styles.floatingHeader} ${styles.long}`}
-                      >
-                        <label
-                          className={`${styles.floatingLabel} ${styles.long}`}
-                        >
-                          <h2 className={styles.h2}>Phone Number</h2>
-                        </label>
-                      </div>
-                      <div
-                        className={`${styles.floatingHeader} ${styles.short}`}
-                      >
-                        <label
-                          className={`${styles.floatingLabel} ${styles.short}`}
-                        >
-                          <h2 className={styles.h2}>Type</h2>
-                        </label>
-                      </div>
-                      <div
-                        className={`${styles.floatingHeader} ${styles.centered} ${styles.extraShort}`}
-                      >
-                        <img
-                          src="/delete-icon.png"
-                          className={styles.deleteIcon}
-                        />
-                      </div>
-                    </div>
-                    <PhoneFields
-                      contact={formData}
-                      handleArrChange={handleArrChange} // Used by Type and Primary inputs
-                      handlePhoneChange={handlePhoneChange} // Used by Phone Number input
-                      dropdownData={dropdownData}
-                      removeContactField={removeContactField}
-                    ></PhoneFields>
-                    <div className={styles.formRowEven}>
-                      <button
-                        className={styles.addButton}
-                        onClick={addContactField("phones")}
-                      />
-                    </div>
-                  </div>
-                  <div className={styles.formColumn}>
-                    <div className={styles.formRow}>
-                      <div
-                        className={`${styles.floatingHeader} ${styles.short}`}
-                      >
-                        <label
-                          className={`${styles.floatingLabel} ${styles.short}`}
-                        >
-                          <h2 className={styles.h2}>Primary</h2>
-                        </label>
-                      </div>
-                      <div
-                        className={`${styles.floatingHeader} ${styles.short}`}
-                      >
-                        <label
-                          className={`${styles.floatingLabel} ${styles.short}`}
-                        >
-                          <h2 className={styles.h2}>Title</h2>
-                        </label>
-                      </div>
-                      <div
-                        className={`${styles.floatingHeader} ${styles.long}`}
-                      >
-                        <label
-                          className={`${styles.floatingLabel} ${styles.long}`}
-                        >
-                          <h2 className={styles.h2}>Email Address</h2>
-                        </label>
-                      </div>
-                      <div
-                        className={`${styles.floatingHeader} ${styles.short}`}
-                      >
-                        <label
-                          className={`${styles.floatingLabel} ${styles.short}`}
-                        >
-                          <h2 className={styles.h2}>Type</h2>
-                        </label>
-                      </div>
-                      <div
-                        className={`${styles.floatingHeader} ${styles.centered} ${styles.extraShort}`}
-                      >
-                        <img
-                          src="/delete-icon.png"
-                          className={styles.deleteIcon}
-                        />
-                      </div>
-                    </div>
-                    <EmailFields
-                      contact={formData}
-                      handleArrChange={handleArrChange}
-                      dropdownData={dropdownData}
-                      removeContactField={removeContactField}
-                    ></EmailFields>
-                    <div className={styles.formRowEven}>
-                      <button
-                        className={styles.addButton}
-                        onClick={addContactField("emails")}
-                      />
-                    </div>
-                  </div>
-                  <div className={styles.formColumn}>
-                    <div className={styles.formRow}>
-                      <div
-                        className={`${styles.floatingHeader} ${styles.short}`}
-                      >
-                        <label
-                          className={`${styles.floatingLabel} ${styles.short}`}
-                        >
-                          <h2 className={styles.h2}>Title</h2>
-                        </label>
-                      </div>
-                      <div
-                        className={`${styles.floatingHeader} ${styles.long}`}
-                      >
-                        <label
-                          className={`${styles.floatingLabel} ${styles.long}`}
-                        >
-                          <h2 className={styles.h2}>Website</h2>
-                        </label>
-                      </div>
-                      <div
-                        className={`${styles.floatingHeader} ${styles.short}`}
-                      >
-                        <label
-                          className={`${styles.floatingLabel} ${styles.short}`}
-                        >
-                          <h2 className={styles.h2}>Type</h2>
-                        </label>
-                      </div>
-                      <div
-                        className={`${styles.floatingHeader} ${styles.centered} ${styles.extraShort}`}
-                      >
-                        <img
-                          src="/delete-icon.png"
-                          className={styles.deleteIcon}
-                        />
-                      </div>
-                    </div>
-                    <UrlFields
-                      contact={formData}
-                      handleArrChange={handleArrChange}
-                      dropdownData={dropdownData}
-                      removeContactField={removeContactField}
-                    ></UrlFields>
-                    <div className={styles.formRowEven}>
-                      <button
-                        className={styles.addButton}
-                        onClick={addContactField("urls")}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
+            </div>
+            <div className={styles.formRow}>
               <div className={styles.formRow}>
                 <div className={styles.formColumn}>
                   <div className={styles.formRow}>
@@ -1099,45 +1045,11 @@ export default function DataCleanupPage(props) {
                         <h2 className={styles.h2}>Title</h2>
                       </label>
                     </div>
-                    <div
-                      className={`${styles.floatingHeader} ${styles.extraLong}`}
-                    >
-                      <label
-                        className={`${styles.floatingLabel} ${styles.extraLong}`}
-                      >
-                        <h2 className={styles.h2}>Street Address</h2>
-                      </label>
-                    </div>
-                    <div
-                      className={`${styles.floatingHeader} ${styles.extraLong}`}
-                    >
-                      <label
-                        className={`${styles.floatingLabel} ${styles.extraLong}`}
-                      >
-                        <h2 className={styles.h2}>Secondary Address</h2>
-                      </label>
-                    </div>
                     <div className={`${styles.floatingHeader} ${styles.long}`}>
                       <label
                         className={`${styles.floatingLabel} ${styles.long}`}
                       >
-                        <h2 className={styles.h2}>City</h2>
-                      </label>
-                    </div>
-                    <div className={`${styles.floatingHeader} ${styles.short}`}>
-                      <label
-                        className={`${styles.floatingLabel} ${styles.short}`}
-                      >
-                        <h2 className={styles.h2}>State</h2>
-                      </label>
-                    </div>
-                    <div
-                      className={`${styles.floatingHeader} ${styles.medium}`}
-                    >
-                      <label
-                        className={`${styles.floatingLabel} ${styles.medium}`}
-                      >
-                        <h2 className={styles.h2}>Zip</h2>
+                        <h2 className={styles.h2}>Phone Number</h2>
                       </label>
                     </div>
                     <div className={`${styles.floatingHeader} ${styles.short}`}>
@@ -1156,22 +1068,202 @@ export default function DataCleanupPage(props) {
                       />
                     </div>
                   </div>
-                  <AddressFields
+                  <PhoneFields
+                    contact={formData}
+                    handleArrChange={handleArrChange} // Used by Type and Primary inputs
+                    handlePhoneChange={handlePhoneChange} // Used by Phone Number input
+                    dropdownData={dropdownData}
+                    removeContactField={removeContactField}
+                  ></PhoneFields>
+                  <div className={styles.formRowEven}>
+                    <button
+                      className={styles.addButton}
+                      onClick={addContactField("phones")}
+                    />
+                  </div>
+                </div>
+                <div className={styles.formColumn}>
+                  <div className={styles.formRow}>
+                    <div className={`${styles.floatingHeader} ${styles.short}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.short}`}
+                      >
+                        <h2 className={styles.h2}>Primary</h2>
+                      </label>
+                    </div>
+                    <div className={`${styles.floatingHeader} ${styles.short}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.short}`}
+                      >
+                        <h2 className={styles.h2}>Title</h2>
+                      </label>
+                    </div>
+                    <div className={`${styles.floatingHeader} ${styles.long}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.long}`}
+                      >
+                        <h2 className={styles.h2}>Email Address</h2>
+                      </label>
+                    </div>
+                    <div className={`${styles.floatingHeader} ${styles.short}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.short}`}
+                      >
+                        <h2 className={styles.h2}>Type</h2>
+                      </label>
+                    </div>
+                    <div
+                      className={`${styles.floatingHeader} ${styles.centered} ${styles.extraShort}`}
+                    >
+                      <img
+                        src="/delete-icon.png"
+                        className={styles.deleteIcon}
+                      />
+                    </div>
+                  </div>
+                  <EmailFields
                     contact={formData}
                     handleArrChange={handleArrChange}
                     dropdownData={dropdownData}
                     removeContactField={removeContactField}
-                  ></AddressFields>
+                  ></EmailFields>
                   <div className={styles.formRowEven}>
                     <button
                       className={styles.addButton}
-                      onClick={addContactField("addresses")}
+                      onClick={addContactField("emails")}
+                    />
+                  </div>
+                </div>
+                <div className={styles.formColumn}>
+                  <div className={styles.formRow}>
+                    <div className={`${styles.floatingHeader} ${styles.short}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.short}`}
+                      >
+                        <h2 className={styles.h2}>Title</h2>
+                      </label>
+                    </div>
+                    <div className={`${styles.floatingHeader} ${styles.long}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.long}`}
+                      >
+                        <h2 className={styles.h2}>Website</h2>
+                      </label>
+                    </div>
+                    <div className={`${styles.floatingHeader} ${styles.short}`}>
+                      <label
+                        className={`${styles.floatingLabel} ${styles.short}`}
+                      >
+                        <h2 className={styles.h2}>Type</h2>
+                      </label>
+                    </div>
+                    <div
+                      className={`${styles.floatingHeader} ${styles.centered} ${styles.extraShort}`}
+                    >
+                      <img
+                        src="/delete-icon.png"
+                        className={styles.deleteIcon}
+                      />
+                    </div>
+                  </div>
+                  <UrlFields
+                    contact={formData}
+                    handleArrChange={handleArrChange}
+                    dropdownData={dropdownData}
+                    removeContactField={removeContactField}
+                  ></UrlFields>
+                  <div className={styles.formRowEven}>
+                    <button
+                      className={styles.addButton}
+                      onClick={addContactField("urls")}
                     />
                   </div>
                 </div>
               </div>
-            </form>
-          </LoadingOverlay>
+            </div>
+
+            <div className={styles.formRow}>
+              <div className={styles.formColumn}>
+                <div className={styles.formRow}>
+                  <div className={`${styles.floatingHeader} ${styles.short}`}>
+                    <label
+                      className={`${styles.floatingLabel} ${styles.short}`}
+                    >
+                      <h2 className={styles.h2}>Primary</h2>
+                    </label>
+                  </div>
+                  <div className={`${styles.floatingHeader} ${styles.short}`}>
+                    <label
+                      className={`${styles.floatingLabel} ${styles.short}`}
+                    >
+                      <h2 className={styles.h2}>Title</h2>
+                    </label>
+                  </div>
+                  <div
+                    className={`${styles.floatingHeader} ${styles.extraLong}`}
+                  >
+                    <label
+                      className={`${styles.floatingLabel} ${styles.extraLong}`}
+                    >
+                      <h2 className={styles.h2}>Street Address</h2>
+                    </label>
+                  </div>
+                  <div
+                    className={`${styles.floatingHeader} ${styles.extraLong}`}
+                  >
+                    <label
+                      className={`${styles.floatingLabel} ${styles.extraLong}`}
+                    >
+                      <h2 className={styles.h2}>Secondary Address</h2>
+                    </label>
+                  </div>
+                  <div className={`${styles.floatingHeader} ${styles.long}`}>
+                    <label className={`${styles.floatingLabel} ${styles.long}`}>
+                      <h2 className={styles.h2}>City</h2>
+                    </label>
+                  </div>
+                  <div className={`${styles.floatingHeader} ${styles.short}`}>
+                    <label
+                      className={`${styles.floatingLabel} ${styles.short}`}
+                    >
+                      <h2 className={styles.h2}>State</h2>
+                    </label>
+                  </div>
+                  <div className={`${styles.floatingHeader} ${styles.medium}`}>
+                    <label
+                      className={`${styles.floatingLabel} ${styles.medium}`}
+                    >
+                      <h2 className={styles.h2}>Zip</h2>
+                    </label>
+                  </div>
+                  <div className={`${styles.floatingHeader} ${styles.short}`}>
+                    <label
+                      className={`${styles.floatingLabel} ${styles.short}`}
+                    >
+                      <h2 className={styles.h2}>Type</h2>
+                    </label>
+                  </div>
+                  <div
+                    className={`${styles.floatingHeader} ${styles.centered} ${styles.extraShort}`}
+                  >
+                    <img src="/delete-icon.png" className={styles.deleteIcon} />
+                  </div>
+                </div>
+                <AddressFields
+                  contact={formData}
+                  handleArrChange={handleArrChange}
+                  dropdownData={dropdownData}
+                  removeContactField={removeContactField}
+                ></AddressFields>
+                <div className={styles.formRowEven}>
+                  <button
+                    className={styles.addButton}
+                    onClick={addContactField("addresses")}
+                  />
+                </div>
+              </div>
+            </div>
+          </form>
         </LoadingOverlay>
       </div>
 
@@ -1182,6 +1274,12 @@ export default function DataCleanupPage(props) {
         contactPrevLoad={contactPrevLoad}
         contactNextLoad={contactNextLoad}
       ></ContactInterceptModal>
+
+      <DeleteContactModal
+        modalIsOpen={deleteContactModalIsOpen}
+        closeModal={closeDeleteContactModal}
+        deleteContact={deleteContact}
+      ></DeleteContactModal>
     </LoadingOverlay>
   );
 }

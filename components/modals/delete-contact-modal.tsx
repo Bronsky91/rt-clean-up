@@ -1,14 +1,10 @@
 import Modal from "react-modal";
 import styles from "../../styles/RedtailModal.module.scss";
 
-export default function ContactInterceptModal(props) {
-  const handleProceed = () => {
-    if (props.isContactInterceptProceedPrev) {
-      props.contactPrevLoad();
-    } else {
-      props.contactNextLoad();
-    }
+export default function DeleteContactModal(props) {
+  const handleDelete = () => {
     props.closeModal();
+    props.deleteContact();
   };
 
   const handleCancel = () => {
@@ -34,12 +30,12 @@ export default function ContactInterceptModal(props) {
         <div className={styles.h1}>
           <span className={styles.warning}>WARNING:</span>
           <br />
-          Unsaved changes will be lost, are you sure you wish to navigate away?
+          Are you sure you want to delete this contact?
         </div>
 
         <div className={styles.buttonContainer}>
-          <button className={styles.blueButton} onClick={handleProceed}>
-            PROCEED
+          <button className={styles.redButton} onClick={handleDelete}>
+            DELETE
           </button>
           <button className={styles.blueButton} onClick={handleCancel}>
             CANCEL
