@@ -64,6 +64,10 @@
   font-size: 2.4rem;
   text-align-last: left;
   border: none;
+  overflow-x: auto;
+  option {
+    display: table;
+  }
 }
 
 .contactPageRow {
