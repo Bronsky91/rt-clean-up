@@ -34,7 +34,8 @@ export default function ContactInterceptModal(props) {
         <div className={styles.h1}>
           <span className={styles.warning}>WARNING:</span>
           <br />
-          Unsaved changes will be lost, are you sure you wish to navigate away?
+          Form contains invalid data and cannot be saved until corrected. Are
+          you sure you wish to navigate away? Unsaved changes will be lost.
         </div>
 
         <div className={styles.buttonContainer}>
