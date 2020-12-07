@@ -311,18 +311,23 @@ export default function DataCleanupPage(props) {
     if (formData) {
       if (formData.contactRecord) {
         allValid = contactRecordSchema.isValidSync(formData.contactRecord);
+        console.log(`Last Name and TaxID are Valid: ${allValid}`);
       }
       if (formData.addresses && allValid) {
         allValid = isAllAddressValid(formData.addresses);
+        console.log(`Addresses are Valid: ${allValid}`);
       }
       if (formData.emails && allValid) {
         allValid = isAllEmailValid(formData.emails);
+        console.log(`Emails are Valid: ${allValid}`);
       }
       if (formData.phones && allValid) {
         allValid = isAllPhoneValid(formData.phones);
+        console.log(`Phones are Valid: ${allValid}`);
       }
       if (formData.urls && allValid) {
         allValid = isAllUrlValid(formData.urls);
+        console.log(`Websites are Valid: ${allValid}`);
       }
     }
     setIsFormValid(allValid);
