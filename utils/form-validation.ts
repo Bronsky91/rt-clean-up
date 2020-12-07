@@ -23,7 +23,12 @@ export const addressSchema = yup.object().shape({
   street_address: yup.string().min(1).required(),
   city: yup.string().min(1).required(),
   state: yup.string().min(2).required(),
-  zip: yup.string().min(5).matches(/^\d+$/).required(),
+  zip: yup
+    .string()
+    .min(5)
+    .max(10)
+    .matches(/^\d{5}(?:[-]\d{4})?$/)
+    .required(),
 });
 
 export const streetAddressSchema = yup.object().shape({
