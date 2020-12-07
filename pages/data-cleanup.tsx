@@ -312,23 +312,29 @@ export default function DataCleanupPage(props) {
       if (formData.contactRecord) {
         allValid = contactRecordSchema.isValidSync(formData.contactRecord);
         console.log(`Last Name and TaxID are Valid: ${allValid}`);
+        console.log(formData.contactRecord);
       }
       if (formData.addresses && allValid) {
         allValid = isAllAddressValid(formData.addresses);
         console.log(`Addresses are Valid: ${allValid}`);
+        console.log(formData.addresses);
       }
       if (formData.emails && allValid) {
         allValid = isAllEmailValid(formData.emails);
         console.log(`Emails are Valid: ${allValid}`);
+        console.log(formData.emails);
       }
       if (formData.phones && allValid) {
         allValid = isAllPhoneValid(formData.phones);
         console.log(`Phones are Valid: ${allValid}`);
+        console.log(formData.phones);
       }
       if (formData.urls && allValid) {
         allValid = isAllUrlValid(formData.urls);
         console.log(`Websites are Valid: ${allValid}`);
+        console.log(formData.urls);
       }
+      console.log(formData);
     }
     setIsFormValid(allValid);
   }, [formData]);
