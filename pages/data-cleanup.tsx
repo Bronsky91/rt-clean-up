@@ -334,7 +334,9 @@ export default function DataCleanupPage(props) {
         console.log(`Websites are Valid: ${allValid}`);
         console.log(formData.urls);
       }
+      console.log(`All form valid: ${allValid}`);
       console.log(formData);
+      console.log(`--------------------------------------------`);
     }
     setIsFormValid(allValid);
   }, [formData]);
