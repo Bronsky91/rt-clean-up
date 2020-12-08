@@ -418,7 +418,12 @@ export default function DataCleanupPage(props) {
     value?: string
   ) => (e) => {
     const targetName: string = e.target.name;
-    const targetValue: string = value !== undefined ? value : e.target.value;
+    const targetValue =
+      value !== undefined
+        ? value
+        : targetName.includes("type") // Make types numbers
+        ? Number(e.target.value)
+        : e.target.value;
     const newArr = [...formData[arrName]];
 
     if (targetName.startsWith("is_primary")) {
