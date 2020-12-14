@@ -421,7 +421,7 @@ export default function DataCleanupPage(props) {
     const targetValue =
       value !== undefined
         ? value
-        : targetName.includes("type") // Make types numbers
+        : targetName.includes("type") && !targetName.includes("custom") // Make types numbers but avoid custom types
         ? Number(e.target.value)
         : e.target.value;
     const newArr = [...formData[arrName]];
