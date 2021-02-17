@@ -315,7 +315,7 @@ export default function DataCleanupPage(props) {
           allValid = contactRecordSchema.isValidSync(formData.contactRecord);
           console.log(`Last Name and TaxID are Valid: ${allValid}`);
           console.log(formData.contactRecord);
-        } else if (formData.contactRecord.type == ContactTypes.Business) {
+        } else {
           allValid = taxSchema.isValidSync(formData.contactRecord);
           console.log(`TaxID is valid: ${allValid}`);
           console.log(formData.contactRecord);
