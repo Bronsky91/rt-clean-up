@@ -50,6 +50,7 @@ import {
   isAllEmailValid,
   isAllPhoneValid,
   isAllUrlValid,
+  taxSchema,
 } from "../utils/form-validation";
 import ContactInterceptModal from "../components/modals/contact-intercept-modal";
 import DeleteContactModal from "../components/modals/delete-contact-modal";
@@ -310,9 +311,15 @@ export default function DataCleanupPage(props) {
     let allValid = true;
     if (formData) {
       if (formData.contactRecord) {
-        allValid = contactRecordSchema.isValidSync(formData.contactRecord);
-        console.log(`Last Name and TaxID are Valid: ${allValid}`);
-        console.log(formData.contactRecord);
+        if (formData.contactRecord.type == ContactTypes.Individual) {
+          allValid = contactRecordSchema.isValidSync(formData.contactRecord);
+          console.log(`Last Name and TaxID are Valid: ${allValid}`);
+          console.log(formData.contactRecord);
+        } else if (formData.contactRecord.type == ContactTypes.Business) {
+          allValid = taxSchema.isValidSync(formData.contactRecord);
+          console.log(`TaxID is valid: ${allValid}`);
+          console.log(formData.contactRecord);
+        }
       }
       if (formData.addresses && allValid) {
         allValid = isAllAddressValid(formData.addresses);
