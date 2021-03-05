@@ -78,6 +78,15 @@ export default function SettingsModal(props) {
             </div>
           ) : (
             <>
+              <div
+                className={styles.blueButton}
+                onClick={() => {
+                  localStorage.clear();
+                  window.location.reload();
+                }}
+              >
+                Hard Refresh
+              </div>
               <div className={styles.blueButton} onClick={handleLogoutClick}>
                 Logout
               </div>

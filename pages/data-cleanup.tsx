@@ -215,7 +215,6 @@ export default function DataCleanupPage(props) {
               .sort((a, b) => a.id - b.id);
 
             setContactList(formattedContactList);
-
             // If contacts returned, select first one
             if (formattedContactList && formattedContactList.length >= 1) {
               selectContact(formattedContactList[0].id);
